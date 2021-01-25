@@ -1,5 +1,5 @@
-const farmerDefinition = (sequelize, DataTypes) => {
-  const Farmer = sequelize.define('Farmer', {
+const cattleDefinition = (sequelize, DataTypes) => {
+  const Cattle = sequelize.define('Cattle', {
     farmerId: { type: DataTypes.INTEGER },
     cattle: { type: DataTypes.STRING },
     cattleUID: { type: DataTypes.STRING },
@@ -11,7 +11,7 @@ const farmerDefinition = (sequelize, DataTypes) => {
     updatedAt: { type: DataTypes.DATE },
   }, {});
 
-  return Farmer;
+  return Cattle;
 };
 
-export default farmerDefinition;
+export default cattleDefinition;

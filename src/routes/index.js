@@ -1,7 +1,9 @@
 import Router from 'express';
-import profileRouter from './profileRoute';
+import farmerRouter from './farmerRoute';
+import cattleRouter from './cattleRoute';
 
 const router = Router();
-router.use(profileRouter);
+router.use(farmerRouter);
+router.use(cattleRouter);
 
 export default router;

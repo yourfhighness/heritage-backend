@@ -1,8 +1,6 @@
 import dotenv from 'dotenv';
 
 dotenv.config();
-
-/* Here we connected development database and production database */
 const generateCredentials = (database, host) => ({
   username: process.env.DATABASE_USERNAME,
   password: process.env.DATABASE_PASSWORD,

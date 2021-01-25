@@ -3,7 +3,7 @@ const cattleOne = {
   cattle: 'cow',
   cattleUID: 990033723102,
   cattleName: 'Sahiwal',
-  category: 'Milking',
+  category: 'milking',
   age: '2016-01-09',
   weight: 415,
   createdAt: new Date(),

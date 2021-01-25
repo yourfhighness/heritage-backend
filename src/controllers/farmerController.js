@@ -1,8 +1,8 @@
 import { INTERNAL_SERVER_ERROR, CREATED } from 'http-status';
 import helper from '../Helpers/responseHelper';
 
-class ProfileController {
-  static async CreateFamerProfile(req, res) {
+class FarmerController {
+  static async createFamer(req, res) {
     try {
       helper.handleSuccess(CREATED, 'Farmer profile created successfull');
       return helper.response(res);
@@ -13,4 +13,4 @@ class ProfileController {
   }
 }
 
-export default ProfileController;
+export default FarmerController;
