@@ -45,6 +45,12 @@ const validateRegisterFarmer = (req, res, next) => {
           'string.empty': 'unitName is not allowed to be empty',
           'string.min': 'unitName length must be at least 2 characters long',
         }),
+      mccName: Joi.string().trim().min(2).required()
+        .messages({
+          'any.required': 'mccName is required',
+          'string.empty': 'mccName is not allowed to be empty',
+          'string.min': 'mccName length must be at least 2 characters long',
+        }),
       mccCode: Joi.string().trim().min(2).required()
         .messages({
           'any.required': 'mccCode is required',
@@ -57,11 +63,11 @@ const validateRegisterFarmer = (req, res, next) => {
           'string.empty': 'userCode is not allowed to be empty',
           'string.min': 'userCode length must be at least 2 characters long',
         }),
-      password: Joi.string().min(8).max(12).required()
+      password: Joi.string().min(6).max(12).required()
         .messages({
           'any.required': '"password" is a required',
           'string.empty': 'password is not allowed to be empty',
-          'string.min': 'password length must be at least 8 characters long',
+          'string.min': 'password length must be at least 6 characters long',
           'string.max': 'password length must be at least 12 characters long',
         }),
       confirmPassword: Joi.string().required().valid(Joi.ref('password')),
@@ -251,8 +257,17 @@ const validateUpdateFarmer = (req, res, next) => {
         .max(new Date().toISOString().split('T')[0]),
       phone: customJoi.string().phoneNumber({ format: 'international', strict: true }),
       unitName: Joi.string().min(2),
+      mccName: Joi.string().min(2),
       mccCode: Joi.string().min(2),
       userCode: Joi.string().min(2),
+      password: Joi.string().min(6).max(12)
+        .messages({
+          'any.required': '"password" is a required',
+          'string.empty': 'password is not allowed to be empty',
+          'string.min': 'password length must be at least 6 characters long',
+          'string.max': 'password length must be at least 12 characters long',
+        }),
+      confirmPassword: Joi.string().valid(Joi.ref('password')),
     })
     .options({ abortEarly: false });
 

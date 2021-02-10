@@ -1,4 +1,4 @@
-const ResetCodeDefinition = (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes) => {
   const ResetCode = sequelize.define('ResetCode', {
     farmerId: { type: DataTypes.INTEGER },
     phone: { type: DataTypes.STRING },
@@ -9,5 +9,3 @@ const ResetCodeDefinition = (sequelize, DataTypes) => {
 
   return ResetCode;
 };
-
-export default ResetCodeDefinition;

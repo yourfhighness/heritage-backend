@@ -1,4 +1,4 @@
-const farmerDefinition = (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes) => {
   const Farmer = sequelize.define('Farmer', {
     profilePicture: { type: DataTypes.STRING },
     farmerName: { type: DataTypes.STRING },
@@ -6,6 +6,7 @@ const farmerDefinition = (sequelize, DataTypes) => {
     age: { type: DataTypes.DATE },
     phone: { type: DataTypes.STRING },
     unitName: { type: DataTypes.STRING },
+    mccName: { type: DataTypes.STRING },
     mccCode: { type: DataTypes.STRING },
     userCode: { type: DataTypes.STRING },
     isVerified: { type: DataTypes.BOOLEAN },
@@ -16,5 +17,3 @@ const farmerDefinition = (sequelize, DataTypes) => {
 
   return Farmer;
 };
-
-export default farmerDefinition;

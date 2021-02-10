@@ -1,4 +1,4 @@
-const milkingDefinition = (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes) => {
   const Milking = sequelize.define('Milking', {
     cattleId: { type: DataTypes.INTEGER },
     milkProduction: { type: DataTypes.INTEGER },
@@ -19,5 +19,3 @@ const milkingDefinition = (sequelize, DataTypes) => {
 
   return Milking;
 };
-
-export default milkingDefinition;

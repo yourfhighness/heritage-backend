@@ -1,4 +1,4 @@
-const appointmentDefinition = (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes) => {
   const Appointment = sequelize.define('Appointment', {
     doctorId: { type: DataTypes.INTEGER },
     farmerId: { type: DataTypes.INTEGER },
@@ -15,5 +15,3 @@ const appointmentDefinition = (sequelize, DataTypes) => {
 
   return Appointment;
 };
-
-export default appointmentDefinition;

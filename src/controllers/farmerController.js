@@ -1,4 +1,5 @@
-import { INTERNAL_SERVER_ERROR, SERVICE_UNAVAILABLE, CREATED, OK } from 'http-status';
+import { INTERNAL_SERVER_ERROR, SERVICE_UNAVAILABLE, CREATED, BAD_REQUEST, OK } from 'http-status';
+import imageService from '../services/cloudinaryHelper';
 import responseHelper from '../Helpers/responseHelper';
 import farmerHelper from '../Helpers/farmerHelper';
 
@@ -26,7 +27,16 @@ class FarmerController {
 
   static async updateFamer(req, res) {
     try {
-      const data = await farmerHelper.updateFarmerProfile(req.farmer.id, req.body);
+      let document;
+      if (req.files.profilePicture) {
+        document = await imageService(req.files.profilePicture);
+        if (document === 'Error' || document === undefined) {
+          responseHelper.handleError(BAD_REQUEST, 'Please check good internet and use correct type of files(jpg, png or pdf).');
+          return responseHelper.response(res);
+        }
+      }
+
+      const data = await farmerHelper.updateFarmerProfile(req.farmer.id, document, req.body);
       if (data) {
         responseHelper.handleSuccess(OK, 'Farmer profile updated successfull', data);
         return responseHelper.response(res);

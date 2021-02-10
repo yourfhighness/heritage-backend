@@ -1,4 +1,4 @@
-const FarmerSessionDefinition = (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes) => {
   const FarmerSession = sequelize.define('FarmerSession', {
     farmerId: { type: DataTypes.INTEGER },
     farmerName: { type: DataTypes.STRING },
@@ -9,5 +9,3 @@ const FarmerSessionDefinition = (sequelize, DataTypes) => {
 
   return FarmerSession;
 };
-
-export default FarmerSessionDefinition;

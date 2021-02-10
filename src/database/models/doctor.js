@@ -1,5 +1,4 @@
-/* Here we have Service table */
-const doctorDefinition = (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes) => {
   const Doctor = sequelize.define('Doctor', {
     status: { type: DataTypes.STRING },
     name: { type: DataTypes.STRING },
@@ -38,5 +37,3 @@ const doctorDefinition = (sequelize, DataTypes) => {
 
   return Doctor;
 };
-
-export default doctorDefinition;

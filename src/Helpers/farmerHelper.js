@@ -16,6 +16,7 @@ class FarmerHelpers {
       age: body.age,
       phone: body.phone,
       unitName: body.unitName,
+      mccName: body.mccName,
       mccCode: body.mccCode,
       userCode: body.userCode,
       isVerified: true,
@@ -31,14 +32,16 @@ class FarmerHelpers {
     return renewedCode;
   }
 
-  static async updateFarmerProfile(id, body) {
+  static async updateFarmerProfile(id, profilePicture, body) {
     const updateFarmer = await Farmer.update({
+      profilePicture,
       farmerName: body.farmerName,
       gender: body.gender,
       age: body.age,
       phone: body.phone,
-      mccCode: body.mccCode,
+      unitName: body.unitName,
       mccName: body.mccName,
+      mccCode: body.mccCode,
       userCode: body.petWeight,
       isVerified: body.isVerified,
       password: body.password,

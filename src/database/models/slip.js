@@ -1,4 +1,4 @@
-const slipDefinition = (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes) => {
   const Slip = sequelize.define('Slip', {
     cattleId: { type: DataTypes.INTEGER },
     shift: { type: DataTypes.STRING },
@@ -20,5 +20,3 @@ const slipDefinition = (sequelize, DataTypes) => {
 
   return Slip;
 };
-
-export default slipDefinition;

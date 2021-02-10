@@ -120,6 +120,11 @@ class CattleHelpers {
     return weeklySlips;
   }
 
+  static async viewAllCattle(attribute, value) {
+    const allSlips = await Cattle.findAll({ where: { [attribute]: value } });
+    return allSlips;
+  }
+
   static async saveCattle(cattle, farmerId) {
     const savedCattle = await Cattle.create({
       profilePicture: cattle.profilePicture,
@@ -214,23 +219,23 @@ class CattleHelpers {
     return null;
   }
 
-  static async countMilking() {
-    const retrievedData = await Cattle.count({ where: { category: 'milking' } });
+  static async countMilking(attribute, value) {
+    const retrievedData = await Cattle.count({ where: { [Op.and]: [{ [attribute]: value }, { category: 'milking' }] } });
     return retrievedData;
   }
 
-  static async countHeifer() {
-    const retrievedData = await Cattle.count({ where: { category: 'heifer' } });
+  static async countHeifer(attribute, value) {
+    const retrievedData = await Cattle.count({ where: { [Op.and]: [{ [attribute]: value }, { category: 'heifer' }] } });
     return retrievedData;
   }
 
-  static async countDry() {
-    const retrievedData = await Cattle.count({ where: { category: 'dry' } });
+  static async countDry(attribute, value) {
+    const retrievedData = await Cattle.count({ where: { [Op.and]: [{ [attribute]: value }, { category: 'dry' }] } });
     return retrievedData;
   }
 
-  static async countCalf() {
-    const retrievedData = await Cattle.count({ where: { category: 'calf' } });
+  static async countCalf(attribute, value) {
+    const retrievedData = await Cattle.count({ where: { [Op.and]: [{ [attribute]: value }, { category: 'calf' }] } });
     return retrievedData;
   }
 }

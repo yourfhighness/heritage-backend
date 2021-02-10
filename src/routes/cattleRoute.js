@@ -12,9 +12,10 @@ import {
 
 const cattleRouter = Router();
 cattleRouter
-  .get('/count-cattles', cattle.countCattles)
+  .get('/count-cattles', verifySesion, cattle.countCattles)
   .post('/save-slip/:cattleId', verifySesion, validateSlip, cattle.saveCattleSlip)
 
+  .get('/view-all-cattle', verifySesion, cattle.viewAllCattles)
   .get('/view-cattle/:cattleId', verifySesion, cattle.viewCattle)
   .get('/view-daily-slips/:cattleId', verifySesion, cattle.viewDailyCattleSlips)
   .get('/view-weekly-slips/:cattleId', verifySesion, cattle.viewWeeklyCattleSlips)

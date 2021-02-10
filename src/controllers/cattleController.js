@@ -13,7 +13,7 @@ class CattleController {
 
       const data = await cattleHelper.saveCattle(req.body, req.farmer.id);
       if (data) {
-        responseHelper.handleSuccess(CREATED, 'Cattle registered successfull', data);
+        responseHelper.handleSuccess(CREATED, 'Cattle registered successfully', data);
         return responseHelper.response(res);
       }
 
@@ -28,13 +28,35 @@ class CattleController {
   static async countCattles(req, res) {
     try {
       const data = {
-        milking: await cattleHelper.countMilking(),
-        heifer: await cattleHelper.countHeifer(),
-        dry: await cattleHelper.countDry(),
-        calf: await cattleHelper.countCalf(),
+        milking: await cattleHelper.countMilking('farmerId', req.farmer.id),
+        heifer: await cattleHelper.countHeifer('farmerId', req.farmer.id),
+        dry: await cattleHelper.countDry('farmerId', req.farmer.id),
+        calf: await cattleHelper.countCalf('farmerId', req.farmer.id),
       };
 
-      responseHelper.handleSuccess(OK, 'Cattle counted successfull', data);
+      responseHelper.handleSuccess(OK, 'Cattle counted successfully', data);
+      return responseHelper.response(res);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
+  static async viewAllCattles(req, res) {
+    try {
+      const data = await cattleHelper.viewAllCattle('id', req.farmer.id);
+
+      if (!data) {
+        responseHelper.handleError(NOT_FOUND, `Cattles not found`);
+        return responseHelper.response(res);
+      }
+
+      if (data) {
+        responseHelper.handleSuccess(OK, 'Cattles viewed successfully', data);
+        return responseHelper.response(res);
+      }
+
+      responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
       return responseHelper.response(res);
     } catch (error) {
       responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
@@ -47,7 +69,7 @@ class CattleController {
       const data = await cattleHelper.cattleExist('id', req.params.cattleId);
 
       if (data) {
-        responseHelper.handleSuccess(OK, 'Cattle profile viewed successfull', data);
+        responseHelper.handleSuccess(OK, 'Cattle profile viewed successfully', data);
         return responseHelper.response(res);
       }
 
@@ -76,7 +98,7 @@ class CattleController {
         const data = await cattleHelper.updateCattleProfile(req.params.cattleId, req.body);
 
         if (data) {
-          responseHelper.handleSuccess(OK, 'Cattle profile viewed successfull', data);
+          responseHelper.handleSuccess(OK, 'Cattle profile viewed successfully', data);
           return responseHelper.response(res);
         }
       }
@@ -118,7 +140,7 @@ class CattleController {
 
         const data = await cattleHelper.saveCattleSlip(req.body, req.params.cattleId);
         if (data) {
-          responseHelper.handleSuccess(CREATED, 'Slip saved successfull', data);
+          responseHelper.handleSuccess(CREATED, 'Slip saved successfully', data);
           return responseHelper.response(res);
         }
       }
@@ -156,7 +178,7 @@ class CattleController {
 
         const data = await cattleHelper.updateCattleSlip(req.params.slipId, req.body);
         if (data) {
-          responseHelper.handleSuccess(OK, 'Milk slip updated successfull', data);
+          responseHelper.handleSuccess(OK, 'Milk slip updated successfully', data);
           return responseHelper.response(res);
         }
       }
@@ -191,7 +213,7 @@ class CattleController {
         }
 
         if (data) {
-          responseHelper.handleSuccess(OK, 'Daily Slips viewed successfull', data);
+          responseHelper.handleSuccess(OK, 'Daily Slips viewed successfully', data);
           return responseHelper.response(res);
         }
       }
@@ -226,7 +248,7 @@ class CattleController {
         }
 
         if (data) {
-          responseHelper.handleSuccess(OK, 'Daily Slips viewed successfull', data);
+          responseHelper.handleSuccess(OK, 'Daily Slips viewed successfully', data);
           return responseHelper.response(res);
         }
       }
@@ -261,7 +283,7 @@ class CattleController {
         }
 
         if (data) {
-          responseHelper.handleSuccess(OK, 'Daily Slips viewed successfull', data);
+          responseHelper.handleSuccess(OK, 'Daily Slips viewed successfully', data);
           return responseHelper.response(res);
         }
       }
@@ -296,7 +318,7 @@ class CattleController {
         }
 
         if (data) {
-          responseHelper.handleSuccess(OK, 'Daily Slips viewed successfull', data);
+          responseHelper.handleSuccess(OK, 'Daily Slips viewed successfully', data);
           return responseHelper.response(res);
         }
       }
@@ -331,7 +353,7 @@ class CattleController {
         }
 
         if (data) {
-          responseHelper.handleSuccess(OK, 'Daily Slips viewed successfull', data);
+          responseHelper.handleSuccess(OK, 'Daily Slips viewed successfully', data);
           return responseHelper.response(res);
         }
       }
@@ -366,7 +388,7 @@ class CattleController {
         }
 
         if (data) {
-          responseHelper.handleSuccess(OK, 'Daily Slips viewed successfull', data);
+          responseHelper.handleSuccess(OK, 'Daily Slips viewed successfully', data);
           return responseHelper.response(res);
         }
       }
@@ -401,7 +423,7 @@ class CattleController {
         }
 
         if (data) {
-          responseHelper.handleSuccess(OK, 'Daily Slips viewed successfull', data);
+          responseHelper.handleSuccess(OK, 'Daily Slips viewed successfully', data);
           return responseHelper.response(res);
         }
       }

@@ -52,7 +52,7 @@ class AuthController {
       if (passwordExist) {
         const data = {
           session: await sessionHelper.generateSession(req.farmer.id, req.farmer.farmerName, req.farmer.userCode, req.farmer.phone, req.farmer.isVerified),
-          farmer: { id: req.farmer.id, farmerName: req.farmer.farmerName, userCode: req.farmer.userCode, phone: req.farmer.phone, verified: req.farmer.isVerified },
+          farmer: req.farmer,
         };
 
         responseHelper.handleSuccess(OK, 'Farmer logged in successfull', data);
