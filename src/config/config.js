@@ -8,6 +8,9 @@ const generateCredentials = (database, host) => ({
   host,
   dialect: 'postgres',
   logging: false,
+  dialectOptions: {
+    ssl: { rejectUnauthorized: false },
+  },
 });
 
 const development = generateCredentials(
