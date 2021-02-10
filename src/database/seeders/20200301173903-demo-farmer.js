@@ -1,17 +1,31 @@
+import passwordHelper from '../../Helpers/passwordHelper';
+
 const userOne = {
-  userName: 'Arjun',
+  profilePicture: 'https://media-exp1.licdn.com/dms/image/C5603AQGOa0HFf1180Q/profile-displayphoto-shrink_200_200/0/1580515635328?e=1617235200&v=beta&t=etBBU13eKaMCFHjwzPrY4xd3_uLayn6wTgeJp4E_whU',
+  farmerName: 'Arjun',
   gender: 'male',
-  phone: '+910000000000',
-  locationId: 11001100,
+  age: '1994-09-15',
+  phone: '+917021007499',
+  unitName: 'Shantipuram',
+  mccCode: '9252131',
+  userCode: '7500',
+  isVerified: true,
+  password: passwordHelper.hashPassword('Qwerty@123'),
   createdAt: new Date(),
   updatedAt: new Date(),
 };
 
 const userTwo = {
-  userName: 'Joshua',
+  profilePicture: 'https://media-exp1.licdn.com/dms/image/C4D03AQHU8lKhq5pTqw/profile-displayphoto-shrink_200_200/0/1600778354473?e=1617235200&v=beta&t=aPgNEhfMlA5MXQSQ_5iXL4fD1gY3w89EsGunzwwrVm8',
+  farmerName: 'Joshua',
   gender: 'male',
-  phone: '+911111111111',
-  locationId: 11001100,
+  age: '1996-10-11',
+  phone: '+250789619442',
+  unitName: 'Shantipuram',
+  mccCode: '2252601',
+  userCode: '7600',
+  isVerified: true,
+  password: passwordHelper.hashPassword('Qwerty@123'),
   createdAt: new Date(),
   updatedAt: new Date(),
 };

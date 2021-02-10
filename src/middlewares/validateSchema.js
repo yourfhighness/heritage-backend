@@ -6,9 +6,10 @@ const validateSchema = (schema, body, res, next) => {
 
   if (error) {
     const errors = error.details.map((err) => err.message);
-    helper.handleError(BAD_REQUEST, errors);
+    helper.handleError(BAD_REQUEST, errors[0].replace(/"/g, ''));
     return helper.response(res);
   }
+
   return next();
 };
 
