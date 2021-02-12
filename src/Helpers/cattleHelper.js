@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import Sequelize, { Op } from 'sequelize';
 import models from '../database/models';
 
 const { Cattle, Milking, Slip } = models;
@@ -29,9 +29,9 @@ class CattleHelpers {
     return dailySlips;
   }
 
-  static async viewPeriodicallyCattleSlips(attribute, value, period) {
+  static async viewPeriodicallyCattleSlips(attribute, value, range, period) {
     const targetOne = new Date();
-    targetOne.setDate(targetOne.getDate() - period);
+    targetOne.setDate(targetOne.getDate() - range);
     const startDate = targetOne.toISOString().split('T')[0];
 
     const targetTwo = new Date();
@@ -39,7 +39,13 @@ class CattleHelpers {
     const endDate = targetTwo.toISOString().split('T')[0];
 
     const weeklySlips = await Slip.findAll({
-      where: { [Op.and]: [{ [attribute]: value }, { createdAt: { [Op.gt]: startDate } }, { createdAt: { [Op.lt]: endDate } }] },
+      where: {
+        [Op.and]: [{ [attribute]: value },
+          { createdAt: { [Op.gt]: startDate } },
+          { createdAt: { [Op.lt]: endDate } }],
+      },
+      attributes: [[Sequelize.fn('SUM', Sequelize.col('amount')), 'totalAmount'], [Sequelize.fn('date_trunc', period, Sequelize.col('createdAt')), 'date']],
+      group: ['date'],
     });
     return weeklySlips;
   }
@@ -125,9 +131,9 @@ class CattleHelpers {
     return allSlips;
   }
 
-  static async saveCattle(cattle, farmerId) {
+  static async saveCattle(cattle, profilePicture, farmerId) {
     const savedCattle = await Cattle.create({
-      profilePicture: cattle.profilePicture,
+      profilePicture,
       farmerId,
       status: cattle.status,
       cattle: cattle.cattle,
@@ -164,13 +170,14 @@ class CattleHelpers {
     return slip;
   }
 
-  static async saveCattleSlip(slip, cattleId) {
+  static async saveCattleSlip(slip, farmerId, cattleId) {
     const saveSlip = await Slip.create({
-      cattleId,
-      Shift: slip.Shift.toLowerCase(),
+      farmerId,
+      cattleId: cattleId || null,
+      shift: slip.shift,
       quantity: slip.quantity,
       fat: slip.fat,
-      snf: slip.sfn,
+      snf: slip.snf,
       amount: slip.amount,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -179,8 +186,10 @@ class CattleHelpers {
     return saveSlip;
   }
 
-  static async updateCattleProfile(cattleId, cattle) {
+  static async updateCattleProfile(cattleId, profilePicture, cattle) {
     const updateCattle = await Cattle.update({
+      profilePicture,
+      status: cattle.status,
       cattle: cattle.cattle,
       cattleUID: cattle.cattleUID,
       cattleName: cattle.cattleName,
@@ -206,17 +215,20 @@ class CattleHelpers {
   }
 
   static async updateCattleSlip(slipId, slip) {
-    console.log(slipId);
     const updatedSlip = await Slip.update({
       shift: slip.shift,
       quantity: slip.quantity,
       fat: slip.fat,
-      snf: slip.sfn,
+      snf: slip.snf,
       amount: slip.amount,
     }, { where: { id: slipId } });
 
     if (updatedSlip) { return this.slipExist('id', slipId); }
     return null;
+  }
+
+  static async deleteCattleSlip(slipId) {
+    await Slip.destroy({ where: { id: slipId } });
   }
 
   static async countMilking(attribute, value) {

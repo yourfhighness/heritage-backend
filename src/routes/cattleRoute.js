@@ -1,4 +1,5 @@
 import Router from 'express';
+import multiparty from 'connect-multiparty';
 import cattle from '../controllers/cattleController';
 import { verifySesion } from '../middlewares/verifyMiddlewares';
 import {
@@ -10,23 +11,29 @@ import {
   validatePeriodicallySlip,
 } from '../middlewares/schemaMiddleware';
 
+const multipart = multiparty();
 const cattleRouter = Router();
 cattleRouter
   .get('/count-cattles', verifySesion, cattle.countCattles)
+  .delete('/delete-slip/:slipId', verifySesion, cattle.deleteCattleSlip)
+  .post('/save-slip', verifySesion, validateSlip, cattle.saveFarmerSlip)
   .post('/save-slip/:cattleId', verifySesion, validateSlip, cattle.saveCattleSlip)
 
   .get('/view-all-cattle', verifySesion, cattle.viewAllCattles)
   .get('/view-cattle/:cattleId', verifySesion, cattle.viewCattle)
+  .get('/view-daily-slips', verifySesion, cattle.viewDailyFamerSlips)
   .get('/view-daily-slips/:cattleId', verifySesion, cattle.viewDailyCattleSlips)
   .get('/view-weekly-slips/:cattleId', verifySesion, cattle.viewWeeklyCattleSlips)
   .get('/view-cattle-all-slips/:cattleId', verifySesion, cattle.viewCattleAllSlips)
   .get('/view-monthly-slips/:cattleId', verifySesion, cattle.viewMonthlyCattleSlips)
   .get('/view-annualy-slips/:cattleId', verifySesion, cattle.viewAnnualyCattleSlips)
-  .post('/filter-cattle-slips/:cattleId', validateFilterSlip, verifySesion, cattle.filterCattleSlips)
-  .post('/view-periodcally-slips/:cattleId', validatePeriodicallySlip, verifySesion, cattle.viewPeriodicallyCattleSlips)
+  .post('/filter-cattle-slips', verifySesion, validateFilterSlip, cattle.filterFarmerSlips)
+  .post('/filter-cattle-slips/:cattleId', verifySesion, validateFilterSlip, cattle.filterCattleSlips)
+  .post('/view-periodcally-farmer-slips', verifySesion, validatePeriodicallySlip, cattle.viewPeriodicallyFarmerSlips)
+  .post('/view-periodcally-cattle-slips/:cattleId', verifySesion, validatePeriodicallySlip, cattle.viewPeriodicallyCattleSlips)
 
-  .post('/register-cattle', verifySesion, validateRegisterCattle, cattle.registerCattle)
-  .patch('/upate-cattle/:cattleId', verifySesion, validateUpdateCattle, cattle.updateCattle)
-  .patch('/update-daily-slips/:slipId', verifySesion, validateUpdateSlip, cattle.updateCattleSlip);
+  .patch('/update-daily-slips/:slipId', verifySesion, validateUpdateSlip, cattle.updateCattleSlip)
+  .post('/register-cattle', multipart, verifySesion, validateRegisterCattle, cattle.registerCattle)
+  .patch('/upate-cattle/:cattleId', multipart, verifySesion, validateUpdateCattle, cattle.updateCattle);
 
 export default cattleRouter;

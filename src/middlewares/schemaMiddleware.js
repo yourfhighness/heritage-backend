@@ -80,7 +80,7 @@ const validateRegisterFarmer = (req, res, next) => {
 const validateRegisterCattle = (req, res, next) => {
   const registerSchema = Joi.object()
     .keys({
-      profilePicture: Joi.string().trim().min(5).required()
+      profilePicture: Joi.string().trim().min(5)
         .messages({
           'any.required': 'profilePicture is required',
           'string.empty': 'profilePicture is not allowed to be empty',
@@ -279,7 +279,7 @@ const validateUpdateCattle = (req, res, next) => {
     .keys({
       profilePicture: Joi.string().min(5),
       status: Joi.string().valid('healthy', 'sick', 'heat'),
-      cattle: Joi.string().valid('cattle', 'buffalo'),
+      cattle: Joi.string().valid('cow', 'buffalo'),
       cattleUID: Joi.number().min(12),
       cattleName: Joi.string().min(2),
       category: Joi.string().valid('calf', 'heifer', 'milking', 'dry'),
@@ -335,13 +335,13 @@ const validateSlip = (req, res, next) => {
         }),
       quantity: Joi.number().required()
         .messages({
-          'any.required': 'amount is required',
-          'string.empty': 'amount is not allowed to be empty',
+          'any.required': 'quantity is required',
+          'string.empty': 'quantity is not allowed to be empty',
         }),
       fat: Joi.string().trim().required()
         .messages({
-          'any.required': 'snf is required',
-          'string.empty': 'snf is not allowed to be empty',
+          'any.required': 'fat is required',
+          'string.empty': 'fat is not allowed to be empty',
         }),
       snf: Joi.string().trim().required()
         .messages({
@@ -406,7 +406,12 @@ const validateFilterSlip = (req, res, next) => {
 const validatePeriodicallySlip = (req, res, next) => {
   const periodicallySchema = Joi.object()
     .keys({
-      period: Joi.number().required().valid(6, 31, 365)
+      range: Joi.number().required().valid(6, 31, 365)
+        .messages({
+          'any.required': 'range is required',
+          'string.empty': 'range is not allowed to be empty',
+        }),
+      period: Joi.number().required().valid('day', 'month')
         .messages({
           'any.required': 'period is required',
           'string.empty': 'period is not allowed to be empty',

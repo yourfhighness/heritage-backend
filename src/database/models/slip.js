@@ -1,5 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Slip = sequelize.define('Slip', {
+    farmerId: { type: DataTypes.INTEGER },
     cattleId: { type: DataTypes.INTEGER },
     shift: { type: DataTypes.STRING },
     quantity: { type: DataTypes.INTEGER },

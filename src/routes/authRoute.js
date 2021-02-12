@@ -15,7 +15,7 @@ const multipart = multiparty();
 const authRouter = Router();
 authRouter
   .post('/reset-otp', validateResetLink, auth.requestOTP)
-  .get('/verify-otp', validateSignupOTP, verifySignupOTP, auth.verifyOTP)
+  .post('/verify-otp', validateSignupOTP, verifySignupOTP, auth.verifyOTP)
   .post('/login-farmer', validateLogin, accountIsVerified, auth.loginFamer)
   .post('/reset-password', validatePassword, verifyCode, auth.resetPassword)
   .post('/reset-userCode', validateResetCode, verifyCode, auth.resetUserCode)

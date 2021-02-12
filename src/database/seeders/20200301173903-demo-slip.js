@@ -1,4 +1,5 @@
 const slipSampleCaseOne = {
+  farmerId: 1,
   cattleId: 1,
   shift: 'morning',
   quantity: 15,
@@ -10,6 +11,7 @@ const slipSampleCaseOne = {
 };
 
 const slipSampleCaseTwo = {
+  farmerId: 1,
   cattleId: 1,
   shift: 'evening',
   quantity: 14,
@@ -21,6 +23,7 @@ const slipSampleCaseTwo = {
 };
 
 const slipOne = {
+  farmerId: 1,
   cattleId: 1,
   shift: 'morning',
   quantity: 15,
@@ -32,6 +35,7 @@ const slipOne = {
 };
 
 const slipTwo = {
+  farmerId: 1,
   cattleId: 1,
   shift: 'evening',
   quantity: 14,
@@ -43,6 +47,7 @@ const slipTwo = {
 };
 
 const slipThree = {
+  farmerId: 1,
   cattleId: 1,
   shift: 'morning',
   quantity: 15,
@@ -54,6 +59,7 @@ const slipThree = {
 };
 
 const slipFour = {
+  farmerId: 1,
   cattleId: 1,
   shift: 'evening',
   quantity: 14,
@@ -65,6 +71,7 @@ const slipFour = {
 };
 
 const slipFive = {
+  farmerId: 1,
   cattleId: 1,
   shift: 'morning',
   quantity: 15,
@@ -76,6 +83,7 @@ const slipFive = {
 };
 
 const slipSix = {
+  farmerId: 1,
   cattleId: 1,
   shift: 'evening',
   quantity: 14,
@@ -87,6 +95,7 @@ const slipSix = {
 };
 
 const slipSeven = {
+  farmerId: 1,
   cattleId: 1,
   shift: 'morning',
   quantity: 15,
@@ -98,6 +107,7 @@ const slipSeven = {
 };
 
 const slipEight = {
+  farmerId: 1,
   cattleId: 1,
   shift: 'evening',
   quantity: 15,
@@ -109,6 +119,7 @@ const slipEight = {
 };
 
 const slipNine = {
+  farmerId: 1,
   cattleId: 1,
   shift: 'morning',
   quantity: 15,
@@ -120,6 +131,7 @@ const slipNine = {
 };
 
 const slipTen = {
+  farmerId: 1,
   cattleId: 1,
   shift: 'evening',
   quantity: 14,
@@ -131,6 +143,7 @@ const slipTen = {
 };
 
 const slipEleven = {
+  farmerId: 1,
   cattleId: 1,
   shift: 'morning',
   quantity: 15,
@@ -142,6 +155,7 @@ const slipEleven = {
 };
 
 const slipTwelve = {
+  farmerId: 1,
   cattleId: 1,
   shift: 'evening',
   quantity: 14,

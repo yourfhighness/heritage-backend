@@ -1,6 +1,7 @@
 const cattleOne = {
   profilePicture: 'https://kj1bcdn.b-cdn.net/media/28069/gir.png',
   farmerId: 1,
+  status: "healthy",
   cattle: 'cow',
   cattleUID: 990033723102,
   cattleName: 'Sahiwal',
@@ -15,6 +16,7 @@ const cattleOne = {
 const cattleTwo = {
   profilePicture: 'https://www.rockefellerfoundation.org/wp-content/uploads/Indian-Woman-Milking-a-Cow.jpg',
   farmerId: 2,
+  status: "healthy",
   cattle: 'Buffalo',
   cattleUID: 720033823139,
   cattleName: 'duhlia',
@@ -29,6 +31,7 @@ const cattleTwo = {
 const cattleThree = {
   profilePicture: 'https://shramajeewiki.com/images/English/00148056.jpg',
   farmerId: 1,
+  status: "healthy",
   cattle: 'cow',
   cattleUID: 193440372555,
   cattleName: 'desan',

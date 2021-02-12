@@ -1,4 +1,5 @@
-import { SERVICE_UNAVAILABLE, INTERNAL_SERVER_ERROR, NOT_FOUND, CONFLICT, CREATED, OK } from 'http-status';
+import { SERVICE_UNAVAILABLE, INTERNAL_SERVER_ERROR, NOT_FOUND, BAD_REQUEST, CONFLICT, CREATED, OK } from 'http-status';
+import imageService from '../services/cloudinaryHelper';
 import responseHelper from '../Helpers/responseHelper';
 import cattleHelper from '../Helpers/cattleHelper';
 
@@ -11,7 +12,18 @@ class CattleController {
         return responseHelper.response(res);
       }
 
-      const data = await cattleHelper.saveCattle(req.body, req.farmer.id);
+      if (!req.files.profilePicture) {
+        responseHelper.handleError(BAD_REQUEST, 'Please cattle profile picture is required.');
+        return responseHelper.response(res);
+      }
+
+      const document = await imageService(req.files.profilePicture);
+      if (document === 'Error' || document === undefined) {
+        responseHelper.handleError(BAD_REQUEST, 'Please check good internet and use correct type of files(jpg, png or pdf).');
+        return responseHelper.response(res);
+      }
+
+      const data = await cattleHelper.saveCattle(req.body, document, req.farmer.id);
       if (data) {
         responseHelper.handleSuccess(CREATED, 'Cattle registered successfully', data);
         return responseHelper.response(res);
@@ -44,7 +56,7 @@ class CattleController {
 
   static async viewAllCattles(req, res) {
     try {
-      const data = await cattleHelper.viewAllCattle('id', req.farmer.id);
+      const data = await cattleHelper.viewAllCattle('farmerId', req.farmer.id);
 
       if (!data) {
         responseHelper.handleError(NOT_FOUND, `Cattles not found`);
@@ -95,10 +107,23 @@ class CattleController {
       }
 
       if (cattleExist) {
-        const data = await cattleHelper.updateCattleProfile(req.params.cattleId, req.body);
+        if (req.files.profilePicture) {
+          const document = await imageService(req.files.profilePicture);
+          if (document === 'Error' || document === undefined) {
+            responseHelper.handleError(BAD_REQUEST, 'Please check good internet and use correct type of files(jpg, png or pdf).');
+            return responseHelper.response(res);
+          }
 
+          const data = await cattleHelper.updateCattleProfile(req.params.cattleId, document, req.body);
+          if (data) {
+            responseHelper.handleSuccess(OK, 'Cattle profile updated successfully', data);
+            return responseHelper.response(res);
+          }
+        }
+
+        const data = await cattleHelper.updateCattleProfile(req.params.cattleId, cattleExist.profilePicture, req.body);
         if (data) {
-          responseHelper.handleSuccess(OK, 'Cattle profile viewed successfully', data);
+          responseHelper.handleSuccess(OK, 'Cattle profile updated successfully', data);
           return responseHelper.response(res);
         }
       }
@@ -153,6 +178,43 @@ class CattleController {
     }
   }
 
+  static async saveFarmerSlip(req, res) {
+    try {
+      const cattleExist = await cattleHelper.cattleExist('farmerId', req.farmer.id);
+
+      if (!cattleExist) {
+        responseHelper.handleError(NOT_FOUND, `Cattles not found`);
+        return responseHelper.response(res);
+      }
+
+      if (cattleExist) {
+        if (cattleExist.farmerId !== req.farmer.id) {
+          responseHelper.handleError(NOT_FOUND, `Cattle not belong to you`);
+          return responseHelper.response(res);
+        }
+
+        const Cattle = await cattleHelper.viewDailyCattleSlips('farmerId', req.farmer.id);
+        const slips = Cattle.find((slip) => slip.shift === req.body.shift);
+        if (slips) {
+          responseHelper.handleError(CONFLICT, `Cattle's ${req.body.shift} shift slip already saved`);
+          return responseHelper.response(res);
+        }
+
+        const data = await cattleHelper.saveCattleSlip(req.body, req.farmer.id);
+        if (data) {
+          responseHelper.handleSuccess(CREATED, 'Slip saved successfully', data);
+          return responseHelper.response(res);
+        }
+      }
+
+      responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
+      return responseHelper.response(res);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
   static async updateCattleSlip(req, res) {
     try {
       const slipExist = await cattleHelper.slipExist('id', req.params.slipId);
@@ -162,25 +224,33 @@ class CattleController {
       }
 
       if (slipExist) {
-        if (req.body.shift) {
-          const shiftExist = await cattleHelper.slipExist('shift', req.body.shift);
-          if (shiftExist) {
-            responseHelper.handleError(CONFLICT, `Cattle's ${req.body.shift} shift slip already saved`);
-            return responseHelper.response(res);
-          }
-        }
-
-        const cattleExist = await cattleHelper.cattleExist('id', slipExist.cattleId);
-        if (!cattleExist || cattleExist.farmerId !== req.farmer.id) {
-          responseHelper.handleError(NOT_FOUND, `Milk slip with id ${req.params.slipId} not found`);
-          return responseHelper.response(res);
-        }
-
         const data = await cattleHelper.updateCattleSlip(req.params.slipId, req.body);
         if (data) {
           responseHelper.handleSuccess(OK, 'Milk slip updated successfully', data);
           return responseHelper.response(res);
         }
+      }
+
+      responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
+      return responseHelper.response(res);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
+  static async deleteCattleSlip(req, res) {
+    try {
+      const slipExist = await cattleHelper.slipExist('id', req.params.slipId);
+      if (!slipExist) {
+        responseHelper.handleError(NOT_FOUND, `Milk slip with id ${req.params.slipId} not found`);
+        return responseHelper.response(res);
+      }
+
+      if (slipExist) {
+        await cattleHelper.deleteCattleSlip(req.params.slipId);
+        responseHelper.handleSuccess(OK, 'Milk slip deleted successfully');
+        return responseHelper.response(res);
       }
 
       responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
@@ -226,6 +296,41 @@ class CattleController {
     }
   }
 
+  static async viewDailyFamerSlips(req, res) {
+    try {
+      const cattleExist = await cattleHelper.cattleExist('farmerId', req.farmer.id);
+
+      if (!cattleExist) {
+        responseHelper.handleError(NOT_FOUND, 'Farmer has no any cattle');
+        return responseHelper.response(res);
+      }
+
+      if (cattleExist) {
+        if (cattleExist.farmerId !== req.farmer.id) {
+          responseHelper.handleError(NOT_FOUND, `Cattles slip not belong to you`);
+          return responseHelper.response(res);
+        }
+
+        const data = await cattleHelper.viewDailyCattleSlips('farmerId', req.farmer.id);
+        if (data.length === 0) {
+          responseHelper.handleError(NOT_FOUND, `Farmer has no records yet`);
+          return responseHelper.response(res);
+        }
+
+        if (data) {
+          responseHelper.handleSuccess(OK, 'Daily Slips viewed successfully', data);
+          return responseHelper.response(res);
+        }
+      }
+
+      responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
+      return responseHelper.response(res);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
   static async viewPeriodicallyCattleSlips(req, res) {
     try {
       const cattleExist = await cattleHelper.cattleExist('id', req.params.cattleId);
@@ -241,7 +346,7 @@ class CattleController {
           return responseHelper.response(res);
         }
 
-        const data = await cattleHelper.viewPeriodicallyCattleSlips('cattleId', req.params.cattleId, req.body.period);
+        const data = await cattleHelper.viewPeriodicallyCattleSlips('cattleId', req.params.cattleId, req.body.range, req.body.period);
         if (data.length === 0) {
           responseHelper.handleError(NOT_FOUND, `Cattle has no records yet`);
           return responseHelper.response(res);
@@ -251,6 +356,27 @@ class CattleController {
           responseHelper.handleSuccess(OK, 'Daily Slips viewed successfully', data);
           return responseHelper.response(res);
         }
+      }
+
+      responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
+      return responseHelper.response(res);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
+  static async viewPeriodicallyFarmerSlips(req, res) {
+    try {
+      const data = await cattleHelper.viewPeriodicallyCattleSlips('farmerId', req.farmer.id, req.body.range, req.body.period);
+      if (data.length === 0) {
+        responseHelper.handleError(NOT_FOUND, `Cattle has no records yet`);
+        return responseHelper.response(res);
+      }
+
+      if (data) {
+        responseHelper.handleSuccess(OK, 'Daily Slips viewed successfully', data);
+        return responseHelper.response(res);
       }
 
       responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
@@ -426,6 +552,28 @@ class CattleController {
           responseHelper.handleSuccess(OK, 'Daily Slips viewed successfully', data);
           return responseHelper.response(res);
         }
+      }
+
+      responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
+      return responseHelper.response(res);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
+  static async filterFarmerSlips(req, res) {
+    try {
+      const data = await cattleHelper.filterCattleSlips('farmerId', req.farmer.id, req.body.from, req.body.to);
+
+      if (data.length === 0) {
+        responseHelper.handleError(NOT_FOUND, `Farmer has no records yet`);
+        return responseHelper.response(res);
+      }
+
+      if (data) {
+        responseHelper.handleSuccess(OK, 'Daily Slips viewed successfully', data);
+        return responseHelper.response(res);
       }
 
       responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
