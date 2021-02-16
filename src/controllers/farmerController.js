@@ -6,7 +6,7 @@ import farmerHelper from '../Helpers/farmerHelper';
 class FarmerController {
   static async createFamer(req, res) {
     try {
-      responseHelper.handleSuccess(CREATED, 'Farmer profile created successfull');
+      responseHelper.handleSuccess(CREATED, 'Farmer profile created successfully');
       return responseHelper.response(res);
     } catch (error) {
       responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
@@ -17,7 +17,7 @@ class FarmerController {
   static async viewFamer(req, res) {
     try {
       const data = req.farmer;
-      responseHelper.handleSuccess(OK, 'Farmer profile viewed successfull', data);
+      responseHelper.handleSuccess(OK, 'Farmer profile viewed successfully', data);
       return responseHelper.response(res);
     } catch (error) {
       responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
@@ -38,7 +38,7 @@ class FarmerController {
 
       const data = await farmerHelper.updateFarmerProfile(req.farmer.id, document, req.body);
       if (data) {
-        responseHelper.handleSuccess(OK, 'Farmer profile updated successfull', data);
+        responseHelper.handleSuccess(OK, 'Farmer profile updated successfully', data);
         return responseHelper.response(res);
       }
 

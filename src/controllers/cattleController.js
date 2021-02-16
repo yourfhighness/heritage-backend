@@ -6,10 +6,12 @@ import cattleHelper from '../Helpers/cattleHelper';
 class CattleController {
   static async registerCattle(req, res) {
     try {
-      const cattleExist = await cattleHelper.cattleExist('cattleUID', req.body.cattleUID);
-      if (cattleExist) {
-        responseHelper.handleError(CONFLICT, `Cattle with ${req.body.cattleUID} exist`);
-        return responseHelper.response(res);
+      if (req.body.cattleUID) {
+        const cattleExist = await cattleHelper.cattleExist('cattleUID', req.body.cattleUID);
+        if (cattleExist) {
+          responseHelper.handleError(CONFLICT, `Cattle with ${req.body.cattleUID} already exist`);
+          return responseHelper.response(res);
+        }
       }
 
       if (!req.files.profilePicture) {
@@ -58,7 +60,7 @@ class CattleController {
     try {
       const data = await cattleHelper.viewAllCattle('farmerId', req.farmer.id);
 
-      if (!data) {
+      if (data.length < 1) {
         responseHelper.handleError(NOT_FOUND, `Cattles not found`);
         return responseHelper.response(res);
       }
@@ -80,13 +82,36 @@ class CattleController {
     try {
       const data = await cattleHelper.cattleExist('id', req.params.cattleId);
 
+      if (!data) {
+        responseHelper.handleError(NOT_FOUND, `Cattle profile with id ${req.params.cattleId} not found`);
+        return responseHelper.response(res);
+      }
+
       if (data) {
         responseHelper.handleSuccess(OK, 'Cattle profile viewed successfully', data);
         return responseHelper.response(res);
       }
 
+      responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
+      return responseHelper.response(res);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
+  static async deleteCattle(req, res) {
+    try {
+      const data = await cattleHelper.cattleDeleteExist(req.params.cattleId, req.farmer.id);
+
       if (!data) {
         responseHelper.handleError(NOT_FOUND, `Cattle profile with id ${req.params.cattleId} not found`);
+        return responseHelper.response(res);
+      }
+
+      if (data) {
+        await cattleHelper.deleteCattle(req.params.cattleId);
+        responseHelper.handleSuccess(OK, 'Cattle profile deleted successfully');
         return responseHelper.response(res);
       }
 
@@ -104,6 +129,14 @@ class CattleController {
       if (!cattleExist || cattleExist.farmerId !== req.farmer.id) {
         responseHelper.handleError(NOT_FOUND, `Cattle profile with id ${req.params.cattleId} not found`);
         return responseHelper.response(res);
+      }
+
+      if (req.body.cattleUID) {
+        const cattleUID = await cattleHelper.cattleExist('cattleUID', req.body.cattleUID);
+        if (cattleUID && cattleExist.farmerId !== req.farmer.id) {
+          responseHelper.handleError(CONFLICT, `Cattle with ${req.body.cattleUID} already exist`);
+          return responseHelper.response(res);
+        }
       }
 
       if (cattleExist) {
@@ -370,7 +403,7 @@ class CattleController {
     try {
       const data = await cattleHelper.viewPeriodicallyCattleSlips('farmerId', req.farmer.id, req.body.range, req.body.period);
       if (data.length === 0) {
-        responseHelper.handleError(NOT_FOUND, `Cattle has no records yet`);
+        responseHelper.handleError(NOT_FOUND, `Farmer has no records yet`);
         return responseHelper.response(res);
       }
 

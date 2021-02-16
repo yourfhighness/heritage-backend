@@ -17,6 +17,17 @@ class CattleHelpers {
     return cattle;
   }
 
+  static async cattleDeleteExist(cattleId, farmerId) {
+    const appointment = await Cattle.findOne({
+      where: { [Op.and]: [{ id: cattleId }, { farmerId }] },
+    });
+    return appointment;
+  }
+
+  static async deleteCattle(cattleId) {
+    await Cattle.destroy({ where: { id: cattleId } });
+  }
+
   static async viewDailyCattleSlips(attribute, value) {
     const Start = new Date().setHours(0, 0, 0, 0);
     const now = new Date();
@@ -44,7 +55,7 @@ class CattleHelpers {
           { createdAt: { [Op.gt]: startDate } },
           { createdAt: { [Op.lt]: endDate } }],
       },
-      attributes: [[Sequelize.fn('SUM', Sequelize.col('amount')), 'totalAmount'], [Sequelize.fn('date_trunc', period, Sequelize.col('createdAt')), 'date']],
+      attributes: [[Sequelize.fn('SUM', Sequelize.col('amount')), 'totalAmount'], [Sequelize.fn('SUM', Sequelize.col('quantity')), 'totalQuantity'], [Sequelize.fn('date_trunc', period, Sequelize.col('createdAt')), 'date']],
       group: ['date'],
     });
     return weeklySlips;
@@ -107,8 +118,20 @@ class CattleHelpers {
     targetOne.setDate(targetOne.getDate() + 1);
     const endDate = targetOne.toISOString().split('T')[0];
 
-    const filteredSlips = await Slip.findAll({ where: { [Op.and]: [{ [attribute]: value }, { createdAt: { [Op.gt]: Start, [Op.lt]: endDate } }] } });
-    return filteredSlips;
+    const filteredGroupSlips = await Slip.findAll({
+      where: { [Op.and]: [{ [attribute]: value }, { createdAt: { [Op.gt]: Start, [Op.lt]: endDate } }] },
+
+      attributes: [[Sequelize.fn('SUM', Sequelize.col('amount')), 'totalAmount'], [Sequelize.fn('SUM', Sequelize.col('quantity')), 'totalQuantity'], [Sequelize.fn('date_trunc', 'day', Sequelize.col('createdAt')), 'date']],
+      group: ['date'],
+    });
+
+    const filteredUngroupSlips = await Slip.findAll({
+      where: { [Op.and]: [{ [attribute]: value }, { createdAt: { [Op.gt]: Start, [Op.lt]: endDate } }] },
+
+      attributes: ['shift', 'quantity', 'amount', [Sequelize.fn('date_trunc', 'day', Sequelize.col('createdAt')), 'date']],
+    });
+
+    return { filteredGroupSlips, filteredUngroupSlips };
   }
 
   static async viewCattleSlips(attribute, value) {

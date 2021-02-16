@@ -46,7 +46,7 @@ class Appointment {
           Promise.all(resPromises)
             .then(async (result) => {
               const data = await appointmentHelper.saveAppointment(req.params.cattleId, req.farmer.id, PrescriptionId, result, req.body);
-              responseHelper.handleSuccess(OK, 'Appointment saved successfull', data);
+              responseHelper.handleSuccess(OK, 'Appointment saved successfully', data);
               return responseHelper.response(res);
             })
             .catch((error) => {
@@ -65,7 +65,7 @@ class Appointment {
 
           const data = await appointmentHelper.saveAppointment(req.params.cattleId, req.farmer.id, PrescriptionId, [document], req.body);
           if (data) {
-            responseHelper.handleSuccess(OK, 'Appointment saved successfull', data);
+            responseHelper.handleSuccess(OK, 'Appointment saved successfully', data);
             return responseHelper.response(res);
           }
         }
@@ -88,7 +88,29 @@ class Appointment {
       }
 
       if (data) {
-        responseHelper.handleSuccess(OK, 'Appointment viewed successfull', data);
+        responseHelper.handleSuccess(OK, 'Appointment viewed successfully', data);
+        return responseHelper.response(res);
+      }
+
+      responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
+      return responseHelper.response(res);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
+  static async deleteAppointment(req, res) {
+    try {
+      const data = await appointmentHelper.viewAppointment(req.params.appointmentId, req.farmer.id);
+      if (!data) {
+        responseHelper.handleError(NOT_FOUND, `Appointment with id ${req.params.appointmentId} not found`);
+        return responseHelper.response(res);
+      }
+
+      if (data) {
+        await appointmentHelper.deleteAppointment(req.params.appointmentId);
+        responseHelper.handleSuccess(OK, 'Appointment deleted successfully');
         return responseHelper.response(res);
       }
 
@@ -109,7 +131,7 @@ class Appointment {
       const countAllData = viewedAppointments.count;
 
       if (viewedAppointments.rows.length === 0) {
-        responseHelper.handleError(NOT_FOUND, `Upcoming Appointments not found on ${pages}`);
+        responseHelper.handleError(NOT_FOUND, `Upcoming Appointments not found at the moment`);
         return responseHelper.response(res);
       }
 
@@ -130,7 +152,7 @@ class Appointment {
       const countAllData = viewedAppointments.count;
 
       if (viewedAppointments.rows.length === 0) {
-        responseHelper.handleError(NOT_FOUND, `Upcoming Appointments not found on ${pages}`);
+        responseHelper.handleError(NOT_FOUND, `Past Appointments not found at the moment`);
         return responseHelper.response(res);
       }
 

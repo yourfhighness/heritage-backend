@@ -1,8 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
   const Doctor = sequelize.define('Doctor', {
     status: { type: DataTypes.STRING },
-    name: { type: DataTypes.STRING },
+    doctorName: { type: DataTypes.STRING },
     gender: { type: DataTypes.STRING },
+    phone: { type: DataTypes.STRING },
+    email: { type: DataTypes.STRING },
+    password: { type: DataTypes.STRING },
     specialization: { type: DataTypes.STRING },
     treatment: { type: DataTypes.STRING },
     city: { type: DataTypes.STRING },
@@ -19,8 +22,6 @@ module.exports = (sequelize, DataTypes) => {
     establishmentlocality: { type: DataTypes.STRING },
     medicalregproofdocument: { type: DataTypes.STRING },
     identityproofdocument: { type: DataTypes.STRING },
-    phone: { type: DataTypes.STRING },
-    email: { type: DataTypes.STRING },
     addressname: { type: DataTypes.STRING },
     latitude: { type: DataTypes.DECIMAL(11, 2) },
     longitude: { type: DataTypes.DECIMAL(11, 2) },

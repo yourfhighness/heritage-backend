@@ -11,7 +11,7 @@ const up = (queryInterface, Sequelize) => queryInterface.createTable('Appointmen
   PrescriptionId: { type: Sequelize.INTEGER },
   status: { type: Sequelize.STRING },
   description: { type: Sequelize.STRING },
-  appointmentDate: { type: Sequelize.STRING },
+  appointmentDate: { type: Sequelize.DATE },
   appointmentStartTime: { type: Sequelize.STRING },
   photos: { type: Sequelize.ARRAY(Sequelize.STRING(1000)) },
   createdAt: { allowNull: false, type: Sequelize.DATE },

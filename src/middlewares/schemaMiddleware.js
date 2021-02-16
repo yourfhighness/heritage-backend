@@ -80,11 +80,10 @@ const validateRegisterFarmer = (req, res, next) => {
 const validateRegisterCattle = (req, res, next) => {
   const registerSchema = Joi.object()
     .keys({
-      profilePicture: Joi.string().trim().min(5)
+      profilePicture: Joi.string().trim()
         .messages({
           'any.required': 'profilePicture is required',
           'string.empty': 'profilePicture is not allowed to be empty',
-          'string.min': 'profilePicture length must be at least 5 characters long',
         }),
       status: Joi.string().trim().min(2).required()
         .valid('healthy', 'sick', 'heat')
@@ -100,10 +99,11 @@ const validateRegisterCattle = (req, res, next) => {
           'string.empty': 'cattle is not allowed to be empty',
           'string.min': 'cattle length must be at least 2 characters long',
         }),
-      cattleUID: Joi.number().required()
+      cattleUID: Joi.string().min(12).allow(null, '')
         .messages({
           'any.required': 'cattleUID is required',
           'string.empty': 'cattleUID is not allowed to be empty',
+          'string.min': 'cattle length must be at least 12 characters long',
         }),
       cattleName: Joi.string().trim().min(2)
         .required()
@@ -172,7 +172,7 @@ const validateLogin = (req, res, next) => {
         'string.empty': 'phone is not allowed to be empty',
         'phoneNumber.invalid': 'phone did not seem to be a phone number',
       }),
-      password: Joi.string().min(8).max(12).required()
+      password: Joi.string().min(6).max(12).required()
         .messages({
           'any.required': '"password" is a required',
           'string.empty': 'password is not allowed to be empty',
@@ -277,7 +277,7 @@ const validateUpdateFarmer = (req, res, next) => {
 const validateUpdateCattle = (req, res, next) => {
   const updateSchema = Joi.object()
     .keys({
-      profilePicture: Joi.string().min(5),
+      profilePicture: Joi.string(),
       status: Joi.string().valid('healthy', 'sick', 'heat'),
       cattle: Joi.string().valid('cow', 'buffalo'),
       cattleUID: Joi.number().min(12),
@@ -425,11 +425,6 @@ const validatePeriodicallySlip = (req, res, next) => {
 const validateAppointment = (req, res, next) => {
   const appointmentSchema = Joi.object()
     .keys({
-      doctorId: Joi.required()
-        .messages({
-          'any.required': 'doctorId is required',
-          'string.empty': 'doctorId is not allowed to be empty',
-        }),
       description: Joi.string().min(10).required()
         .messages({
           'any.required': 'description is required',
@@ -443,12 +438,12 @@ const validateAppointment = (req, res, next) => {
           'any.required': 'appointmentDate is required',
           'string.empty': 'appointmentDate is not allowed to be empty',
         }),
-      appointmentStartTime: Joi.string().min(5).max(5).required()
+      appointmentStartTime: Joi.string().min(5).max(8).required()
         .messages({
           'any.required': 'appointmentStartTime is required',
           'string.empty': 'appointmentStartTime is not allowed to be empty',
-          'string.min': 'appointmentStartTime should be like 08:00 or 20:00',
-          'string.max': 'appointmentStartTime should be like 07:00 or 19:00',
+          'string.min': 'appointmentStartTime should be like 08:00 AM or 20:00 PM',
+          'string.max': 'appointmentStartTime should be like 07:00 AM or 19:00 PM',
         }),
 
       photos: Joi.string().trim().min(6)
@@ -463,9 +458,88 @@ const validateAppointment = (req, res, next) => {
   return validateSchema(appointmentSchema, req.body, res, next);
 };
 
+const validateViewByStatus = (req, res, next) => {
+  const appointmentSchema = Joi.object()
+    .keys({
+      status: Joi.string().min(4).required().valid('waiting', 'finished')
+        .messages({
+          'any.required': 'status is required',
+          'string.empty': 'status is not allowed to be empty',
+          'string.min': 'status should be 4 words minimum',
+        }),
+    })
+    .options({ abortEarly: false });
+
+  return validateSchema(appointmentSchema, req.body, res, next);
+};
+
+const validateAdminAndDoctorLogin = (req, res, next) => {
+  const loginSchema = Joi.object()
+    .keys({
+      email: Joi.string().email().required().messages({
+        'any.required': 'email is required',
+        'string.empty': 'email is not allowed to be empty',
+        'string.email': 'email must be a valid email',
+      }),
+      password: Joi.string().required().messages({
+        'any.required': 'password is required',
+        'string.empty': 'password is not allowed to be empty',
+      }),
+    })
+    .options({ abortEarly: false });
+
+  return validateSchema(loginSchema, req.body, res, next);
+};
+
+const validateUpdateAppointment = (req, res, next) => {
+  const updateSchema = Joi.object()
+    .keys({
+      status: Joi.string().min(4).required().valid('waiting', 'confirmed', 'finished', 'rejected')
+        .messages({
+          'any.required': 'status is required',
+          'string.empty': 'status is not allowed to be empty',
+          'string.min': 'status should be 4 words minimum',
+        }),
+    })
+    .options({ abortEarly: false });
+
+  return validateSchema(updateSchema, req.body, res, next);
+};
+
+const validateMedical = (req, res, next) => {
+  const medicalSchema = Joi.object()
+    .keys({
+      doctorId: Joi.number().required()
+        .messages({
+          'any.required': 'doctorId is required',
+          'string.empty': 'doctorId is not allowed to be empty',
+        }),
+      farmerId: Joi.number().required()
+        .messages({
+          'any.required': 'farmerId is required',
+          'string.empty': 'farmerId is not allowed to be empty',
+        }),
+      cattleId: Joi.number().required()
+        .messages({
+          'any.required': 'cattleId is required',
+          'string.empty': 'cattleId is not allowed to be empty',
+        }),
+      document: Joi.string().trim().min(6)
+        .messages({
+          'any.required': 'document is required',
+          'string.empty': 'document is not allowed to be empty',
+          'string.min': 'document length must be at least 6 characters long',
+        }),
+    })
+    .options({ abortEarly: false });
+
+  return validateSchema(medicalSchema, req.body, res, next);
+};
+
 export {
   validateSlip,
   validateLogin,
+  validateMedical,
   validatePassword,
   validateResetLink,
   validateResetCode,
@@ -475,7 +549,10 @@ export {
   validateAppointment,
   validateUpdateFarmer,
   validateUpdateCattle,
+  validateViewByStatus,
   validateRegisterFarmer,
   validateRegisterCattle,
   validatePeriodicallySlip,
+  validateUpdateAppointment,
+  validateAdminAndDoctorLogin,
 };

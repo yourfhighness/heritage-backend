@@ -1,6 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
-  const Farmer = sequelize.define('Farmer', {
+  const farmer = sequelize.define('Farmer', {
     profilePicture: { type: DataTypes.STRING },
+    status: { type: DataTypes.STRING },
     farmerName: { type: DataTypes.STRING },
     gender: { type: DataTypes.STRING },
     age: { type: DataTypes.DATE },
@@ -15,5 +16,25 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: { type: DataTypes.DATE },
   }, {});
 
-  return Farmer;
+  farmer.associate = (models) => {
+    farmer.hasMany(models.Appointment, {
+      foreignKey: 'farmerId',
+      as: 'Appointment',
+      onDelete: 'CASCADE',
+    });
+
+    farmer.hasMany(models.Cattle, {
+      foreignKey: 'farmerId',
+      as: 'Cattle',
+      onDelete: 'CASCADE',
+    });
+
+    farmer.hasMany(models.Medical, {
+      foreignKey: 'farmerId',
+      as: 'Medical',
+      onDelete: 'CASCADE',
+    });
+  };
+
+  return farmer;
 };

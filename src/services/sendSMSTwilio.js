@@ -15,5 +15,4 @@ const sendSMS = async (receiverPhone, code) => {
   return sentSMS;
 };
 
-
 export default sendSMS;

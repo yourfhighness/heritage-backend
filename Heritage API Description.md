@@ -3,7 +3,7 @@
 |----|--------|--------------------------------------|----------|--------------------------|-----------------------------------------|
 | 1  | POST   | /login-farmer                        |  200 OK  | public                   | login to the farmer account             |
 | 2  | POST   | /reset-link                          |  200 OK  | public                   | request a link to reset                 |
-| 3  | POST   | /reset-password                      |  200 OK  | private                  | reset account password                  |
+| 3  | POST   | /reset-password                      |  200 OK  | public                   | reset account password                  |
 | 4  | POST   | /reset-userCode                      |  200 OK  | private                  | reset account user code                 |
 | 5  | GET    | /count-cattles                       |  200 OK  | private                  | count all user cattles                  |
 | 6  | GET    | /view-cattle/:cattleId               |  200 OK  | private                  | view a single cattle details            |

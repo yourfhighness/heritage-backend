@@ -1,0 +1,11 @@
+http://nimbusit.biz/api/SmsApi/SendSingleApi?UserID=#USSERID#&Password=#Password#&SenderID=#SENDERID#&Phno=#PHONE#&Msg=#MSG#&EntityID=#EntityID#
+
+http://nimbusit.biz/api/SmsApi/SendSingleApi?UserID=arjunm&Password=nigh5793NI&SenderID=ARJSOL&Phno=917021007499&Msg=Test Message After Configuration&EntityID=140100000166
+
+
+Msg=Test Message After Configuration
+EntityID=140100000166
+Password=nigh5793NI
+Phno=917021007499
+SenderID=ARJSOL
+UserID=arjunm

@@ -1,4 +1,5 @@
 import OPTCode from 'generate-sms-verification-code';
+import handleFourOTP from './handleFourOTP';
 import models from '../database/models';
 
 const { ResetCode } = models;
@@ -9,8 +10,8 @@ class ResetCodeHelpers {
     return resetCode;
   }
 
-  static async expireCode(code) {
-    const ExpiredCode = await ResetCode.destroy({ where: { code } });
+  static async expireCode(attribute, value) {
+    const ExpiredCode = await ResetCode.destroy({ where: { [attribute]: value } });
     return ExpiredCode;
   }
 
@@ -30,16 +31,18 @@ class ResetCodeHelpers {
   }
 
   static async generateCode(farmerId, phone) {
-    const codeExist = await this.codeExist('farmerId', farmerId);
-    const generatedCode = OPTCode(8, { type: 'number' });
+    const codeExist = await this.codeExist('phone', phone);
+    let generatedCode = OPTCode(4, { type: 'number' });
+
+    generatedCode = await handleFourOTP(generatedCode);
 
     if (codeExist) {
-      this.renewCode(`${generatedCode}-${farmerId}`, codeExist.code);
-      return `${generatedCode}-${farmerId}`;
+      this.renewCode(`${generatedCode}`, codeExist.code);
+      return `${generatedCode}`;
     }
 
-    await this.saveCode(farmerId, phone, `${generatedCode}-${farmerId}`);
-    return `${generatedCode}-${farmerId}`;
+    await this.saveCode(farmerId, phone, `${generatedCode}`);
+    return `${generatedCode}`;
   }
 
   static async optmiseCode(code) {

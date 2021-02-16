@@ -20,6 +20,18 @@ module.exports = (sequelize, DataTypes) => {
       as: 'Milking',
       onDelete: 'CASCADE',
     });
+
+    Cattle.hasMany(models.Appointment, {
+      foreignKey: 'cattleId',
+      as: 'Appointment',
+      onDelete: 'CASCADE',
+    });
+
+    Cattle.belongsTo(models.Farmer, {
+      foreignKey: 'farmerId',
+      as: 'Farmer',
+      onDelete: 'CASCADE',
+    });
   };
 
   return Cattle;

@@ -1,4 +1,5 @@
 import models from '../database/models';
+import passwordHelper from './passwordHelper';
 
 const { Farmer } = models;
 
@@ -11,6 +12,7 @@ class FarmerHelpers {
   static async savefarmer(profilePicture, body) {
     const farmer = await Farmer.create({
       profilePicture,
+      status: 'waiting',
       farmerName: body.farmerName,
       gender: body.gender,
       age: body.age,
@@ -20,7 +22,7 @@ class FarmerHelpers {
       mccCode: body.mccCode,
       userCode: body.userCode,
       isVerified: true,
-      password: body.password,
+      password: passwordHelper.hashPassword(body.password),
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -44,7 +46,7 @@ class FarmerHelpers {
       mccCode: body.mccCode,
       userCode: body.petWeight,
       isVerified: body.isVerified,
-      password: body.password,
+      password: passwordHelper.hashPassword(body.password),
     }, { where: { id } });
 
     if (updateFarmer) {

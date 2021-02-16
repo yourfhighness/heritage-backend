@@ -8,6 +8,7 @@ import { validateAppointment } from '../middlewares/schemaMiddleware';
 const multipart = multiparty();
 const authRouter = Router();
 authRouter
+  .delete('/delete-appointment/:appointmentId', verifySesion, appointment.deleteAppointment)
   .get('/farmer-view-appointment/:appointmentId', verifySesion, appointment.viewAppointment)
   .get('/farmer-view-past-appointments', verifySesion, appointment.viewPastAppointment, paginate.paginateData)
   .get('/farmer-view-upcoming-appointments', verifySesion, appointment.viewUpcomingAppointment, paginate.paginateData)
