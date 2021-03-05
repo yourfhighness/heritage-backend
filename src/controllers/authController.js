@@ -18,19 +18,18 @@ class AuthController {
         return responseHelper.response(res);
       }
 
-      if (!req.files || !req.files.profilePicture || req.files.profilePicture.length < 1) {
-        responseHelper.handleError(BAD_REQUEST, 'Profile picture is required.');
-        return responseHelper.response(res);
-      }
-
-      const document = await imageService(req.files.profilePicture);
-      if (document === 'Error' || document === undefined) {
-        responseHelper.handleError(BAD_REQUEST, 'Please check good internet and use correct type of files(jpg, png or pdf).');
-        return responseHelper.response(res);
+      let document = null;
+      if (req.files && req.files.profilePicture) {
+        document = await imageService(req.files.profilePicture);
+        if (document === 'Error' || document === undefined) {
+          responseHelper.handleError(BAD_REQUEST, 'Please check good internet and use correct type of files(jpg, png or pdf).');
+          return responseHelper.response(res);
+        }
       }
 
       await resetCodeHelper.expireCode('phone', req.body.phone);
       const farmer = await farmerHelper.savefarmer(document, req.body);
+
       if (farmer) {
         const data = {
           session: await sessionHelper.generateFarmerSession(farmer.id, farmer.farmerName, farmer.userCode, farmer.phone, farmer.isVerified),

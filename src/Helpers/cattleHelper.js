@@ -197,6 +197,7 @@ class CattleHelpers {
     const saveSlip = await Slip.create({
       farmerId,
       cattleId: cattleId || null,
+      issueDate: slip.issueDate,
       shift: slip.shift,
       quantity: slip.quantity,
       fat: slip.fat,
@@ -239,6 +240,7 @@ class CattleHelpers {
 
   static async updateCattleSlip(slipId, slip) {
     const updatedSlip = await Slip.update({
+      issueDate: slip.issueDate,
       shift: slip.shift,
       quantity: slip.quantity,
       fat: slip.fat,

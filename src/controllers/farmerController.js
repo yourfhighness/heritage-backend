@@ -1,19 +1,9 @@
-import { INTERNAL_SERVER_ERROR, SERVICE_UNAVAILABLE, CREATED, BAD_REQUEST, OK } from 'http-status';
+import { INTERNAL_SERVER_ERROR, SERVICE_UNAVAILABLE, BAD_REQUEST, OK } from 'http-status';
 import imageService from '../services/cloudinaryHelper';
 import responseHelper from '../Helpers/responseHelper';
 import farmerHelper from '../Helpers/farmerHelper';
 
 class FarmerController {
-  static async createFamer(req, res) {
-    try {
-      responseHelper.handleSuccess(CREATED, 'Farmer profile created successfully');
-      return responseHelper.response(res);
-    } catch (error) {
-      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
-      return responseHelper.response(res);
-    }
-  }
-
   static async viewFamer(req, res) {
     try {
       const data = req.farmer;
@@ -36,7 +26,7 @@ class FarmerController {
         }
       }
 
-      const data = await farmerHelper.updateFarmerProfile(req.farmer.id, document, req.body);
+      const data = await farmerHelper.updateFarmerProfile(req.farmer.id, document, req.body, req.farmer.password);
       if (data) {
         responseHelper.handleSuccess(OK, 'Farmer profile updated successfully', data);
         return responseHelper.response(res);

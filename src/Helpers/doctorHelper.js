@@ -28,6 +28,10 @@ class DoctorHelpers {
             },
           ],
         },
+        {
+          model: Medical,
+          as: 'Medical',
+        },
       ],
     });
     return viewedData;
@@ -39,6 +43,20 @@ class DoctorHelpers {
       limit: skip,
       offset: start,
       order: [['id', 'DESC']],
+      include: [
+        {
+          model: Farmer,
+          as: 'Farmer',
+        },
+        {
+          model: Cattle,
+          as: 'Cattle',
+        },
+        {
+          model: Medical,
+          as: 'Medical',
+        },
+      ],
     });
     return viewedData;
   }
@@ -46,10 +64,10 @@ class DoctorHelpers {
   static async viewAppointmentByStatus(skip, start, doctorId, value) {
     if (value === 'waiting') {
       const viewedData = await Appointment.findAndCountAll({
-        where: { [Op.and]: [{ doctorId }], [Op.or]: [{ status: 'waiting' }, { status: 'confirmed' }],
-        },
+        where: { doctorId, [Op.or]: [{ status: 'waiting' }, { status: 'confirmed' }] },
         limit: skip,
         offset: start,
+        order: [['id', 'DESC']],
         include: [
           {
             model: Farmer,
@@ -58,6 +76,10 @@ class DoctorHelpers {
           {
             model: Cattle,
             as: 'Cattle',
+          },
+          {
+            model: Medical,
+            as: 'Medical',
           },
         ],
       });
@@ -66,10 +88,10 @@ class DoctorHelpers {
 
     if (value === 'finished') {
       const viewedData = await Appointment.findAndCountAll({
-        where: { [Op.and]: [{ doctorId }], [Op.or]: [{ status: 'finished' }, { status: 'rejected' }],
-        },
+        where: { doctorId, [Op.or]: [{ status: 'finished' }, { status: 'rejected' }] },
         limit: skip,
         offset: start,
+        order: [['id', 'DESC']],
         include: [
           {
             model: Farmer,
@@ -78,6 +100,10 @@ class DoctorHelpers {
           {
             model: Cattle,
             as: 'Cattle',
+          },
+          {
+            model: Medical,
+            as: 'Medical',
           },
         ],
       });
@@ -93,6 +119,11 @@ class DoctorHelpers {
     return updateData;
   }
 
+  static async updateAppointment(newAttribute, newValue, attribute, value) {
+    const updateData = await Appointment.update({ [newAttribute]: newValue }, { where: { [attribute]: value } });
+    return updateData;
+  }
+
   static async saveMedical(body, appointmentId, document) {
     const savedData = await Medical.create({
       doctorId: body.doctorId,
@@ -103,6 +134,8 @@ class DoctorHelpers {
       createdAt: new Date(),
       updatedAt: new Date(),
     });
+
+    await this.updateAppointment('PrescriptionId', savedData.id, 'id', appointmentId);
     return savedData;
   }
 }

@@ -7,7 +7,6 @@ import { validateUpdateFarmer } from '../middlewares/schemaMiddleware';
 const multipart = multiparty();
 const famerRouter = Router();
 famerRouter
-  .post('/famer', famer.createFamer)
   .get('/view-farmer', verifySesion, famer.viewFamer)
   .patch('/upate-farmer', verifySesion, multipart, validateUpdateFarmer, famer.updateFamer);
 

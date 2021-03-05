@@ -39,7 +39,7 @@ class Appointment {
           const resPromises = req.files.photos.map((file) => new Promise((resolve, reject) => {
             v2.uploader.upload(file.path, { use_filename: true, unique_filename: false }, (error, result) => {
               if (error) reject(error);
-              else resolve(result.url);
+              else resolve(result.secure_url);
             });
           }));
 

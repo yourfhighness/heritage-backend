@@ -34,7 +34,7 @@ class FarmerHelpers {
     return renewedCode;
   }
 
-  static async updateFarmerProfile(id, profilePicture, body) {
+  static async updateFarmerProfile(id, profilePicture, body, existingPassword) {
     const updateFarmer = await Farmer.update({
       profilePicture,
       farmerName: body.farmerName,
@@ -46,7 +46,7 @@ class FarmerHelpers {
       mccCode: body.mccCode,
       userCode: body.petWeight,
       isVerified: body.isVerified,
-      password: passwordHelper.hashPassword(body.password),
+      password: body.password ? passwordHelper.hashPassword(body.password) : existingPassword,
     }, { where: { id } });
 
     if (updateFarmer) {

@@ -12,14 +12,14 @@ const validateRegisterFarmer = (req, res, next) => {
           'any.required': 'profilePicture is required',
           'string.empty': 'profilePicture is not allowed to be empty',
         }),
-      farmerName: Joi.string().trim().min(2).required()
+      farmerName: Joi.string().trim().min(2).allow(null, '')
         .messages({
           'any.required': 'farmerName is required',
           'string.empty': 'farmerName is not allowed to be empty',
           'string.min': 'farmerName length must be at least 2 characters long',
         }),
       gender: Joi.string().trim().min(4).max(6)
-        .required()
+        .allow(null, '')
         .messages({
           'any.required': 'gender is required',
           'string.empty': 'gender is not allowed to be empty',
@@ -29,7 +29,7 @@ const validateRegisterFarmer = (req, res, next) => {
       age: Joi.date()
         .min(new Date('1990-01-01').toISOString().split('T')[0])
         .max(new Date().toISOString().split('T')[0])
-        .required()
+        .allow(null, '')
         .messages({
           'any.required': 'age is required',
           'string.empty': 'age is not allowed to be empty',
@@ -51,13 +51,13 @@ const validateRegisterFarmer = (req, res, next) => {
           'string.empty': 'mccName is not allowed to be empty',
           'string.min': 'mccName length must be at least 2 characters long',
         }),
-      mccCode: Joi.string().trim().min(2).required()
+      mccCode: Joi.string().trim().min(2).allow(null, '')
         .messages({
           'any.required': 'mccCode is required',
           'string.empty': 'mccCode is not allowed to be empty',
           'string.min': 'mccCode length must be at least 2 characters long',
         }),
-      userCode: Joi.string().trim().min(2).required()
+      userCode: Joi.string().trim().min(2).allow(null, '')
         .messages({
           'any.required': 'userCode is required',
           'string.empty': 'userCode is not allowed to be empty',
@@ -280,7 +280,7 @@ const validateUpdateCattle = (req, res, next) => {
       profilePicture: Joi.string(),
       status: Joi.string().valid('healthy', 'sick', 'heat'),
       cattle: Joi.string().valid('cow', 'buffalo'),
-      cattleUID: Joi.number().min(12),
+      cattleUID: Joi.number().min(12).allow(null, ''),
       cattleName: Joi.string().min(2),
       category: Joi.string().valid('calf', 'heifer', 'milking', 'dry'),
       age: Joi.date()
@@ -327,6 +327,11 @@ const validateSignupOTP = (req, res, next) => {
 const validateSlip = (req, res, next) => {
   const slipSchema = Joi.object()
     .keys({
+      issueDate: Joi.string().trim()
+        .messages({
+          'any.required': 'issueDate is required',
+          'string.empty': 'issueDate is not allowed to be empty',
+        }),
       shift: Joi.string().trim().required()
         .valid('morning', 'evening')
         .messages({
@@ -362,6 +367,11 @@ const validateSlip = (req, res, next) => {
 const validateUpdateSlip = (req, res, next) => {
   const updateSchema = Joi.object()
     .keys({
+      issueDate: Joi.string().trim()
+        .messages({
+          'any.required': 'issueDate is required',
+          'string.empty': 'issueDate is not allowed to be empty',
+        }),
       shift: Joi.string().trim()
         .valid('morning', 'evening')
         .messages({

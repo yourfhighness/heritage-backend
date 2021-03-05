@@ -64,6 +64,7 @@ class AdminHelpers {
         where: { [Op.or]: [{ status: 'waiting' }, { status: 'confirmed' }] },
         limit: skip,
         offset: start,
+        order: [['id', 'DESC']],
         include: [
           {
             model: Cattle,
@@ -79,6 +80,7 @@ class AdminHelpers {
         where: { [Op.or]: [{ status: 'finished' }, { status: 'rejected' }] },
         limit: skip,
         offset: start,
+        order: [['id', 'DESC']],
         include: [
           {
             model: Cattle,
