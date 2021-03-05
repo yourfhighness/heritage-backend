@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     farmerId: { type: DataTypes.INTEGER },
     cattleId: { type: DataTypes.INTEGER },
     appointmentId: { type: DataTypes.INTEGER },
-    document: { type: DataTypes.STRING },
+    document: { type: DataTypes.STRING(1000) },
     createdAt: { type: DataTypes.DATE },
     updatedAt: { type: DataTypes.DATE },
   }, {});

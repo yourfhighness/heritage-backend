@@ -5,7 +5,7 @@ const up = (queryInterface, Sequelize) => queryInterface.createTable('Admins', {
     primaryKey: true,
     type: Sequelize.INTEGER,
   },
-  profilePicture: { type: Sequelize.STRING },
+  profilePicture: { type: Sequelize.STRING(1000) },
   adminName: { type: Sequelize.STRING },
   gender: { type: Sequelize.STRING },
   age: { type: Sequelize.STRING },

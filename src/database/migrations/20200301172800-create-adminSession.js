@@ -7,7 +7,7 @@ const up = (queryInterface, Sequelize) => queryInterface.createTable('AdminSessi
   },
   adminId: { type: Sequelize.INTEGER },
   adminName: { type: Sequelize.STRING },
-  session: { type: Sequelize.STRING },
+  session: { type: Sequelize.STRING(1000) },
   createdAt: { allowNull: false, type: Sequelize.DATE },
   updatedAt: { allowNull: false, type: Sequelize.DATE },
 });

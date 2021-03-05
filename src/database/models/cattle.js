@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Cattle = sequelize.define('Cattle', {
-    profilePicture: { type: DataTypes.STRING },
+    profilePicture: { type: DataTypes.STRING(1000) },
     farmerId: { type: DataTypes.INTEGER },
     status: { type: DataTypes.STRING },
     cattle: { type: DataTypes.STRING },

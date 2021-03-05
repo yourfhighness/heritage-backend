@@ -1,6 +1,7 @@
 const slipSampleCaseOne = {
   farmerId: 1,
   cattleId: 1,
+  issueDate: new Date('2020-03-01 18:00:00.339+02'),
   shift: 'morning',
   quantity: 15,
   fat: '4.5%',
@@ -13,6 +14,7 @@ const slipSampleCaseOne = {
 const slipSampleCaseTwo = {
   farmerId: 1,
   cattleId: 1,
+  issueDate: new Date('2020-03-01 18:00:00.339+02'),
   shift: 'evening',
   quantity: 14,
   fat: '4.5%',
@@ -25,6 +27,7 @@ const slipSampleCaseTwo = {
 const slipOne = {
   farmerId: 1,
   cattleId: 1,
+  issueDate: new Date('2020-03-01 18:00:00.339+02'),
   shift: 'morning',
   quantity: 15,
   fat: '4.5%',
@@ -37,6 +40,7 @@ const slipOne = {
 const slipTwo = {
   farmerId: 1,
   cattleId: 1,
+  issueDate: new Date('2020-03-01 18:00:00.339+02'),
   shift: 'evening',
   quantity: 14,
   fat: '4.5%',
@@ -49,6 +53,7 @@ const slipTwo = {
 const slipThree = {
   farmerId: 1,
   cattleId: 1,
+  issueDate: new Date('2020-03-01 18:00:00.339+02'),
   shift: 'morning',
   quantity: 15,
   fat: '4.5%',
@@ -61,6 +66,7 @@ const slipThree = {
 const slipFour = {
   farmerId: 1,
   cattleId: 1,
+  issueDate: new Date('2020-03-01 18:00:00.339+02'),
   shift: 'evening',
   quantity: 14,
   fat: '4.5%',
@@ -73,6 +79,7 @@ const slipFour = {
 const slipFive = {
   farmerId: 1,
   cattleId: 1,
+  issueDate: new Date('2020-03-01 18:00:00.339+02'),
   shift: 'morning',
   quantity: 15,
   fat: '4.5%',
@@ -85,6 +92,7 @@ const slipFive = {
 const slipSix = {
   farmerId: 1,
   cattleId: 1,
+  issueDate: new Date('2020-03-01 18:00:00.339+02'),
   shift: 'evening',
   quantity: 14,
   fat: '4.5%',
@@ -97,6 +105,7 @@ const slipSix = {
 const slipSeven = {
   farmerId: 1,
   cattleId: 1,
+  issueDate: new Date('2020-03-01 18:00:00.339+02'),
   shift: 'morning',
   quantity: 15,
   fat: '4.5%',
@@ -109,6 +118,7 @@ const slipSeven = {
 const slipEight = {
   farmerId: 1,
   cattleId: 1,
+  issueDate: new Date('2020-03-01 18:00:00.339+02'),
   shift: 'evening',
   quantity: 15,
   fat: '4.5%',
@@ -121,6 +131,7 @@ const slipEight = {
 const slipNine = {
   farmerId: 1,
   cattleId: 1,
+  issueDate: new Date('2020-03-01 18:00:00.339+02'),
   shift: 'morning',
   quantity: 15,
   fat: '4.5%',
@@ -133,6 +144,7 @@ const slipNine = {
 const slipTen = {
   farmerId: 1,
   cattleId: 1,
+  issueDate: new Date('2020-03-01 18:00:00.339+02'),
   shift: 'evening',
   quantity: 14,
   fat: '4.5%',
@@ -145,6 +157,7 @@ const slipTen = {
 const slipEleven = {
   farmerId: 1,
   cattleId: 1,
+  issueDate: new Date('2020-03-01 18:00:00.339+02'),
   shift: 'morning',
   quantity: 15,
   fat: '4.5%',
@@ -157,6 +170,7 @@ const slipEleven = {
 const slipTwelve = {
   farmerId: 1,
   cattleId: 1,
+  issueDate: new Date('2020-03-01 18:00:00.339+02'),
   shift: 'evening',
   quantity: 14,
   fat: '4.5%',

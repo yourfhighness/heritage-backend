@@ -9,7 +9,7 @@ const up = (queryInterface, Sequelize) => queryInterface.createTable('Medicals',
   farmerId: { type: Sequelize.INTEGER },
   cattleId: { type: Sequelize.INTEGER },
   appointmentId: { type: Sequelize.INTEGER },
-  document: { type: Sequelize.STRING },
+  document: { type: Sequelize.STRING(1000) },
   createdAt: { allowNull: false, type: Sequelize.DATE },
   updatedAt: { allowNull: false, type: Sequelize.DATE },
 });

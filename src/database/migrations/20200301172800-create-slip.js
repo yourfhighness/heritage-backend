@@ -7,6 +7,7 @@ const up = (queryInterface, Sequelize) => queryInterface.createTable('Slips', {
   },
   farmerId: { type: Sequelize.INTEGER },
   cattleId: { type: Sequelize.INTEGER },
+  issueDate: { type: Sequelize.DATE },
   shift: { type: Sequelize.STRING },
   quantity: { type: Sequelize.INTEGER },
   fat: { type: Sequelize.STRING },

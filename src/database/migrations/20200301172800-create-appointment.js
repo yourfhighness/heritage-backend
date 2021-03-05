@@ -10,7 +10,7 @@ const up = (queryInterface, Sequelize) => queryInterface.createTable('Appointmen
   cattleId: { type: Sequelize.INTEGER },
   PrescriptionId: { type: Sequelize.INTEGER },
   status: { type: Sequelize.STRING },
-  description: { type: Sequelize.STRING },
+  description: { type: Sequelize.STRING(1000) },
   appointmentDate: { type: Sequelize.DATE },
   appointmentStartTime: { type: Sequelize.STRING },
   photos: { type: Sequelize.ARRAY(Sequelize.STRING(1000)) },
