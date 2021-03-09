@@ -280,7 +280,7 @@ const validateUpdateCattle = (req, res, next) => {
       profilePicture: Joi.string(),
       status: Joi.string().valid('healthy', 'sick', 'heat'),
       cattle: Joi.string().valid('cow', 'buffalo'),
-      cattleUID: Joi.number().min(12),
+      cattleUID: Joi.number().min(12).allow(null, ''),
       cattleName: Joi.string().min(2),
       category: Joi.string().valid('calf', 'heifer', 'milking', 'dry'),
       age: Joi.date()
