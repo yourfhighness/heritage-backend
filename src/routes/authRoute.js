@@ -1,11 +1,9 @@
 import Router from 'express';
 import multiparty from 'connect-multiparty';
-import busboyBodyParser from 'busboy-body-parser';
 
 import auth from '../controllers/authController';
 import admin from '../controllers/adminController';
 import doctor from '../controllers/doctorController';
-import file from '../controllers/filePracticeController';
 import {
   verifyCode,
   verifySignupOTP,
@@ -24,13 +22,10 @@ import {
   validateAdminAndDoctorLogin,
 } from '../middlewares/schemaMiddleware';
 
-const busboyBodyParse = busboyBodyParser({ multi: true });
 const multipart = multiparty();
 const authRouter = Router();
 
 authRouter
-  .post('/files', busboyBodyParse, file.uploadFile)
-
   .post('/reset-otp', validateResetLink, auth.resetOTP)
   .patch('/reset-password', validatePassword, verifyCode, auth.resetPassword)
   .patch('/reset-userCode', validateResetCode, verifyCode, auth.resetUserCode)

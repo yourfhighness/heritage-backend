@@ -1,4 +1,7 @@
 /* eslint-disable consistent-return */
+
+import AWS from 'aws-sdk';
+import Busboy from 'busboy';
 import { INTERNAL_SERVER_ERROR, UNAUTHORIZED, SERVICE_UNAVAILABLE, NOT_FOUND, BAD_REQUEST, OK } from 'http-status';
 
 import doctorHelper from '../Helpers/doctorHelper';
@@ -6,8 +9,45 @@ import sessionHelper from '../Helpers/sessionHelper';
 import responseHelper from '../Helpers/responseHelper';
 import paginateHelper from '../Helpers/paginateHelper';
 import passwordHelper from '../Helpers/passwordHelper';
-import imageService from '../services/cloudinaryHelper';
 
+const s3bucket = new AWS.S3({
+  Bucket: 'rivopets',
+  accessKeyId: 'AKIAVPPMXB5IOX5XGBXV',
+  secretAccessKey: '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',
+});
+
+const uploadToS3 = (file, appointmentExist, appointmentId, res) => {
+  try {
+    s3bucket.createBucket(() => {
+      const params = {
+        Bucket: 'rivopets',
+        Key: `${new Date().toGMTString()}-${file.name}`,
+        Body: file.data,
+      };
+
+      s3bucket.upload(params, async (err, result) => {
+        if (err) {
+          responseHelper.handleSuccess(BAD_REQUEST, err);
+          return responseHelper.response(res);
+        }
+
+        const data = await doctorHelper.saveMedical(appointmentExist, appointmentId, result.Location);
+        // if (data) {
+        responseHelper.handleSuccess(OK, 'Medical saved successfully', data);
+        return responseHelper.response(res);
+        // }
+
+        // responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
+        // return responseHelper.response(res);
+      });
+    });
+
+    return;
+  } catch (error) {
+    responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+    return responseHelper.response(res);
+  }
+};
 class DoctorController {
   static async doctorLogin(req, res) {
     try {
@@ -122,40 +162,20 @@ class DoctorController {
   }
 
   static async saveMedical(req, res) {
-    try {
-      if (!req.files.document) {
-        responseHelper.handleError(BAD_REQUEST, 'Please document is required.');
-        return responseHelper.response(res);
-      }
-
-      const appointmentExist = await doctorHelper.appointmentExist('id', req.params.appointmentId);
-      if (!appointmentExist) {
-        responseHelper.handleError(NOT_FOUND, `Appointment with id ${req.params.appointmentId} not found at the moment`);
-        return responseHelper.response(res);
-      }
-
-      let document;
-      if (req.files.document) {
-        document = await imageService(req.files.document);
-
-        if (document === 'Error' || document === undefined) {
-          responseHelper.handleError(BAD_REQUEST, 'Please check good internet and use correct type of files(jpg, png or pdf).');
-          return responseHelper.response(res);
-        }
-
-        const data = await doctorHelper.saveMedical(req.body, req.params.appointmentId, document);
-        if (data) {
-          responseHelper.handleSuccess(OK, 'Medical saved successfully', data);
-          return responseHelper.response(res);
-        }
-      } else {
-        responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
-        return responseHelper.response(res);
-      }
-    } catch (error) {
-      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+    if (!req.files.document) {
+      responseHelper.handleError(BAD_REQUEST, 'Please document is required.');
       return responseHelper.response(res);
     }
+
+    const appointmentExist = await doctorHelper.appointmentExist('id', req.params.appointmentId);
+    if (!appointmentExist) {
+      responseHelper.handleError(NOT_FOUND, `Appointment with id ${req.params.appointmentId} not found at the moment`);
+      return responseHelper.response(res);
+    }
+
+    const busboy = new Busboy({ headers: req.headers });
+    busboy.on('finish', () => { req.files.document.map((element) => uploadToS3(element, appointmentExist, req.params.appointmentId, res)); });
+    req.pipe(busboy);
   }
 }
 

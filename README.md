@@ -1,3 +1,3 @@
 # Heritage-backend
 
-Cattle Project
+Heritage Cattle Backend Project

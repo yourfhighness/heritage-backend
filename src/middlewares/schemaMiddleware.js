@@ -519,21 +519,6 @@ const validateUpdateAppointment = (req, res, next) => {
 const validateMedical = (req, res, next) => {
   const medicalSchema = Joi.object()
     .keys({
-      doctorId: Joi.number().required()
-        .messages({
-          'any.required': 'doctorId is required',
-          'string.empty': 'doctorId is not allowed to be empty',
-        }),
-      farmerId: Joi.number().required()
-        .messages({
-          'any.required': 'farmerId is required',
-          'string.empty': 'farmerId is not allowed to be empty',
-        }),
-      cattleId: Joi.number().required()
-        .messages({
-          'any.required': 'cattleId is required',
-          'string.empty': 'cattleId is not allowed to be empty',
-        }),
       document: Joi.string().trim().min(6)
         .messages({
           'any.required': 'document is required',
