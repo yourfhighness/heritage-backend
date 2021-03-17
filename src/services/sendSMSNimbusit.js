@@ -3,15 +3,14 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const Msg = process.env.MSG;
-const EntityID = process.env.ENTITYID;
+const UserID = process.env.USERID;
 const Password = process.env.PASSWORD;
 const SenderID = process.env.SENDERID;
-const UserID = process.env.USERID;
-const TextType = process.env.TEXTTYPE;
-const Format = process.env.FORMAT;
+const Msg = process.env.MESSAGE;
+const EntityID = process.env.ENTITYID;
+const TemplateID = process.env.TEMPLATEID;
 
-const sendSMSJsonAPI = async (receiverPhone, userName, code) => axios.get(`http://nimbusit.biz/api/SmsApi/SendSingleApi?FORMAT=${Format}&UserID=${UserID}&Password=${Password}&SenderID=${SenderID}&TEXTTYPE=${TextType}&Msg=${userName} ${Msg} ${code}&Phno=${receiverPhone}`);
-const sendSMSHTTPAPI = async (receiverPhone, userName, code) => axios.get(`http://nimbusit.biz/api/SmsApi/SendSingleApi?UserID=${UserID}&Password=${Password}&SenderID=${SenderID}&Phno=${receiverPhone}&Msg=${userName} ${Msg} ${code}&EntityID=${EntityID}`);
+const sendSMSJsonAPI = async (phone, message) => axios.get(`http://nimbusit.biz/api/SmsApi/SendSingleApi?UserID=${UserID}&Password=${Password}&SenderID=${SenderID}&Phno=${phone}&Msg=${message}.&EntityID=${EntityID}&TemplateID=${TemplateID}`);
+const sendSMSJsonAPIS = async (Phno, code) => axios.get(`http://nimbusit.biz/api/SmsApi/SendSingleApi?UserID=${UserID}&Password=${Password}&SenderID=${SenderID}&Phno=${Phno}&Msg=${Msg}${code}.&EntityID=${EntityID}&TemplateID=${TemplateID}`);
 
-export { sendSMSJsonAPI, sendSMSHTTPAPI };
+export { sendSMSJsonAPI, sendSMSJsonAPIS };

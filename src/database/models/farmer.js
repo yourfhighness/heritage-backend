@@ -1,7 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
   const farmer = sequelize.define('Farmer', {
     profilePicture: { type: DataTypes.STRING(1000) },
+    role: { type: DataTypes.STRING },
     status: { type: DataTypes.STRING },
+    steps: { type: DataTypes.STRING },
     farmerName: { type: DataTypes.STRING },
     gender: { type: DataTypes.STRING },
     age: { type: DataTypes.DATE },
@@ -9,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
     unitName: { type: DataTypes.STRING },
     mccName: { type: DataTypes.STRING },
     mccCode: { type: DataTypes.STRING },
+    regionName: { type: DataTypes.STRING },
+    pinCode: { type: DataTypes.STRING },
     userCode: { type: DataTypes.STRING },
     isVerified: { type: DataTypes.BOOLEAN },
     password: { type: DataTypes.STRING },

@@ -34,7 +34,7 @@ class AdminHelpers {
     const viewedData = await Doctor.findAndCountAll({
       limit: skip,
       offset: start,
-      order: [['id', 'DESC']],
+      order: [['updatedAt', 'DESC']],
     });
     return viewedData;
   }
@@ -43,7 +43,7 @@ class AdminHelpers {
     const viewedData = await Farmer.findAndCountAll({
       limit: skip,
       offset: start,
-      order: [['id', 'DESC']],
+      order: [['updatedAt', 'DESC']],
     });
     return viewedData;
   }
@@ -53,42 +53,78 @@ class AdminHelpers {
       where: { [Op.and]: [{ status: value }] },
       limit: skip,
       offset: start,
-      order: [['id', 'DESC']],
+      order: [['updatedAt', 'DESC']],
     });
     return viewedData;
   }
 
-  static async viewFarmersByStatus(skip, start, value) {
-    if (value === 'waiting') {
-      const viewedData = await Farmer.findAndCountAll({
-        where: { [Op.or]: [{ status: 'waiting' }, { status: 'confirmed' }] },
-        limit: skip,
-        offset: start,
-        order: [['id', 'DESC']],
-        include: [
-          {
-            model: Cattle,
-            as: 'Cattle',
-          },
-        ],
-      });
-      return viewedData;
+  static async viewFarmersByStatus(skip, start, regionName, value) {
+    if (regionName === 'HYDERABAD') {
+      if (value === 'waiting') {
+        const viewedData = await Farmer.findAndCountAll({
+          where: { [Op.or]: [{ status: 'waiting' }, { status: 'confirmed' }] },
+          limit: skip,
+          offset: start,
+          order: [['updatedAt', 'DESC']],
+          include: [
+            {
+              model: Cattle,
+              as: 'Cattle',
+            },
+          ],
+        });
+        return viewedData;
+      }
+
+      if (value === 'finished') {
+        const viewedData = await Farmer.findAndCountAll({
+          where: { [Op.or]: [{ status: 'finished' }, { status: 'rejected' }] },
+          limit: skip,
+          offset: start,
+          order: [['id', 'DESC']],
+          include: [
+            {
+              model: Cattle,
+              as: 'Cattle',
+            },
+          ],
+        });
+        return viewedData;
+      }
     }
 
-    if (value === 'finished') {
-      const viewedData = await Farmer.findAndCountAll({
-        where: { [Op.or]: [{ status: 'finished' }, { status: 'rejected' }] },
-        limit: skip,
-        offset: start,
-        order: [['id', 'DESC']],
-        include: [
-          {
-            model: Cattle,
-            as: 'Cattle',
-          },
-        ],
-      });
-      return viewedData;
+    if (regionName !== 'HYDERABAD') {
+      if (value === 'waiting') {
+        const viewedData = await Farmer.findAndCountAll({
+          where: { regionName, [Op.or]: [{ status: 'waiting' }, { status: 'confirmed' }] },
+          limit: skip,
+          offset: start,
+          order: [['updatedAt', 'DESC']],
+          include: [
+            {
+              model: Cattle,
+              as: 'Cattle',
+            },
+          ],
+        });
+        return viewedData;
+      }
+
+      if (value === 'finished') {
+        const viewedData = await Farmer.findAndCountAll({
+          where: { regionName, [Op.or]: [{ status: 'finished' }, { status: 'rejected' }] },
+          limit: skip,
+          offset: start,
+          order: [['id', 'DESC']],
+          include: [
+            {
+              model: Cattle,
+              as: 'Cattle',
+            },
+          ],
+        });
+        return viewedData;
+      }
     }
 
     return undefined;

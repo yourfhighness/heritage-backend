@@ -15,23 +15,18 @@ class AppointmentHelpers {
     return viewedData;
   }
 
-  static async saveAppointment(cattleId, farmerId, PrescriptionId, photos, body) {
-    const allDoctors = [];
-    const viewData = await this.viewAllDoctors();
+  static async saveAppointment(cattleId, farmerId, regionName, PrescriptionId, photos, body) {
+    let viewData;
 
-    for (let i = 0; i < viewData.length; i += 1) {
-      allDoctors.push(viewData[i].id);
-
-      // const occurancyDoctor = await this.findLowOccurancyDoctor('doctorId', viewData[i].id);
-      // for (let j = 0; j < occurancyDoctor.length; j += 1) {
-      //   if (occurancyDoctor.length > 0) {
-      //     allDoctors.push(occurancyDoctor[j].doctorId);
-      //   }
-      // }
+    if (regionName === null) {
+      viewData = await Doctor.findOne({ where: { regionName: 'HYDERABAD-1' } });
+    }
+    if (regionName !== null) {
+      viewData = await Doctor.findOne({ where: { regionName: regionName.toUpperCase() } });
     }
 
     const savedAppointment = await Appointment.create({
-      doctorId: allDoctors[Math.floor(Math.random() * allDoctors.length)],
+      doctorId: viewData.id,
       cattleId,
       farmerId,
       PrescriptionId,
@@ -62,7 +57,7 @@ class AppointmentHelpers {
       where: { farmerId, [Op.or]: [{ status: 'waiting' }, { status: 'confirmed' }] },
       limit: skip,
       offset: start,
-      order: [['id', 'DESC']],
+      order: [['updatedAt', 'DESC']],
       include: [
         {
           model: Farmer,
@@ -86,7 +81,7 @@ class AppointmentHelpers {
       where: { farmerId, [Op.or]: [{ status: 'finished' }, { status: 'rejected' }] },
       limit: skip,
       offset: start,
-      order: [['id', 'DESC']],
+      order: [['updatedAt', 'DESC']],
       include: [
         {
           model: Farmer,

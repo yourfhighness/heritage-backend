@@ -37,6 +37,7 @@ const up = (queryInterface, Sequelize) => queryInterface.createTable('Doctors', 
   consultationfees: { type: Sequelize.STRING },
   establishmenthours: { type: Sequelize.STRING },
   establishmentlocation: { type: Sequelize.STRING },
+  regionName: { type: Sequelize.STRING },
 
   createdAt: { allowNull: false, type: Sequelize.DATE },
   updatedAt: { allowNull: false, type: Sequelize.DATE },

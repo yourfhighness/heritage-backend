@@ -1,7 +1,7 @@
 import Sequelize, { Op } from 'sequelize';
 import models from '../database/models';
 
-const { Cattle, Milking, Slip } = models;
+const { Cattle, Milking, Slip, DynamicRecord, RegionUnitMccname } = models;
 class CattleHelpers {
   static async cattleExist(attribute, value) {
     const cattle = await Cattle.findOne({
@@ -18,10 +18,8 @@ class CattleHelpers {
   }
 
   static async cattleDeleteExist(cattleId, farmerId) {
-    const appointment = await Cattle.findOne({
-      where: { [Op.and]: [{ id: cattleId }, { farmerId }] },
-    });
-    return appointment;
+    const viewedData = await Cattle.findOne({ where: { [Op.and]: [{ id: cattleId }, { farmerId }] } });
+    return viewedData;
   }
 
   static async deleteCattle(cattleId) {
@@ -152,6 +150,41 @@ class CattleHelpers {
   static async viewAllCattle(attribute, value) {
     const allSlips = await Cattle.findAll({ where: { [attribute]: value } });
     return allSlips;
+  }
+
+  static async viewData(attribute, value) {
+    if (attribute && value) {
+      const viewData = await DynamicRecord.findAll({ where: { [attribute]: value } });
+      return viewData;
+    }
+
+    const viewData = await DynamicRecord.findAll();
+    return viewData;
+  }
+
+  static async selectData(value, skip, start) {
+    const viewData = await RegionUnitMccname.findAndCountAll({
+      where: { pinCode: value },
+      limit: skip,
+      offset: start,
+    });
+
+    return viewData;
+  }
+
+  static async saveData(body) {
+    const savedData = await Promise.all(body.unitName.map(async (element) => {
+      const data = await RegionUnitMccname.create({
+        regionName: body.regionName,
+        unitName: body.unitName[body.unitName.indexOf(element)],
+        mccName: body.mccName[body.unitName.indexOf(element)],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+      return data;
+    }));
+
+    return savedData;
   }
 
   static async saveCattle(cattle, profilePicture, farmerId) {

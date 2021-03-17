@@ -1,9 +1,28 @@
+import dotenv from 'dotenv';
 import { INTERNAL_SERVER_ERROR, SERVICE_UNAVAILABLE, BAD_REQUEST, OK } from 'http-status';
 import imageService from '../services/cloudinaryHelper';
 import responseHelper from '../Helpers/responseHelper';
 import farmerHelper from '../Helpers/farmerHelper';
 
+dotenv.config();
 class FarmerController {
+  static async saveFeedback(req, res) {
+    try {
+      if (req.body.feedback === process.env.EMPLOYEE) {
+        const updatedFarmer = await farmerHelper.updateFarmer('role', 'employee', 'id', req.farmer.id);
+        responseHelper.handleSuccess(OK, 'Farmer role updated to Employee role successfully', updatedFarmer);
+        return responseHelper.response(res);
+      }
+
+      const feedback = await farmerHelper.saveFeedback(req.farmer.id, req.body.feedback);
+      responseHelper.handleSuccess(OK, 'Feedback saved successfully', feedback);
+      return responseHelper.response(res);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
   static async viewFamer(req, res) {
     try {
       const data = req.farmer;

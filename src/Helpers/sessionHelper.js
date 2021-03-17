@@ -97,6 +97,21 @@ class SessionHelpers {
     const generatedSession = await jwt.verify(session, process.env.SECRET_KEY);
     return generatedSession;
   }
+
+  static async logoutFarmer(value) {
+    const deletedData = await FarmerSession.destroy({ where: { session: value } });
+    return deletedData;
+  }
+
+  static async logoutDoctor(value) {
+    const deletedData = await DoctorSession.destroy({ where: { session: value } });
+    return deletedData;
+  }
+
+  static async logoutAdmin(value) {
+    const deletedData = await AdminSession.destroy({ where: { session: value } });
+    return deletedData;
+  }
 }
 
 export default SessionHelpers;

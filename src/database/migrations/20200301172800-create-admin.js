@@ -12,6 +12,7 @@ const up = (queryInterface, Sequelize) => queryInterface.createTable('Admins', {
   email: { type: Sequelize.STRING },
   phone: { type: Sequelize.STRING },
   password: { type: Sequelize.STRING },
+  regionName: { type: Sequelize.STRING },
   createdAt: { allowNull: false, type: Sequelize.DATE },
   updatedAt: { allowNull: false, type: Sequelize.DATE },
 });

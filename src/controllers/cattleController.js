@@ -1,19 +1,12 @@
 import { SERVICE_UNAVAILABLE, INTERNAL_SERVER_ERROR, NOT_FOUND, BAD_REQUEST, CONFLICT, CREATED, OK } from 'http-status';
 import imageService from '../services/cloudinaryHelper';
 import responseHelper from '../Helpers/responseHelper';
+import paginateHelper from '../Helpers/paginateHelper';
 import cattleHelper from '../Helpers/cattleHelper';
 
 class CattleController {
   static async registerCattle(req, res) {
     try {
-      if (req.body.cattleUID) {
-        const cattleExist = await cattleHelper.cattleExist('cattleUID', req.body.cattleUID);
-        if (cattleExist) {
-          responseHelper.handleError(CONFLICT, `Cattle with ${req.body.cattleUID} already exist`);
-          return responseHelper.response(res);
-        }
-      }
-
       if (!req.files.profilePicture) {
         responseHelper.handleError(BAD_REQUEST, 'Please cattle profile picture is required.');
         return responseHelper.response(res);
@@ -78,6 +71,65 @@ class CattleController {
     }
   }
 
+  static async viewData(req, res) {
+    try {
+      if (req.body.type) {
+        const data = await cattleHelper.viewData('type', req.body.type);
+
+        if (data.length < 1) {
+          responseHelper.handleError(NOT_FOUND, `Data not found at the momment`);
+          return responseHelper.response(res);
+        }
+
+        if (data) {
+          responseHelper.handleSuccess(OK, 'Data viewed successfully', data);
+          return responseHelper.response(res);
+        }
+
+        responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
+        return responseHelper.response(res);
+      }
+
+      const data = await cattleHelper.viewData();
+      if (data.length < 1) {
+        responseHelper.handleError(NOT_FOUND, `Data not found`);
+        return responseHelper.response(res);
+      }
+
+      if (data) {
+        responseHelper.handleSuccess(OK, 'Data viewed successfully', data);
+        return responseHelper.response(res);
+      }
+
+      responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
+      return responseHelper.response(res);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
+  static async selectData(req, res, next) {
+    try {
+      const { start, end, pages, skip, paginate } = await paginateHelper.paginateData(req.query);
+      const data = await cattleHelper.selectData(req.body.pinCode, skip, start);
+
+      const allDatata = data.rows;
+      const countAllData = data.count;
+
+      if (data.rows.length === 0) {
+        responseHelper.handleError(NOT_FOUND, `This pincode ${req.body.pinCode} not found at the momment`);
+        return responseHelper.response(res);
+      }
+
+      req.data = { allDatata, countAllData, start, end, pages, skip, paginate };
+      return next();
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
   static async viewCattle(req, res) {
     try {
       const data = await cattleHelper.cattleExist('id', req.params.cattleId);
@@ -129,14 +181,6 @@ class CattleController {
       if (!cattleExist || cattleExist.farmerId !== req.farmer.id) {
         responseHelper.handleError(NOT_FOUND, `Cattle profile with id ${req.params.cattleId} not found`);
         return responseHelper.response(res);
-      }
-
-      if (req.body.cattleUID) {
-        const cattleUID = await cattleHelper.cattleExist('cattleUID', req.body.cattleUID);
-        if (cattleUID && cattleExist.farmerId !== req.farmer.id) {
-          responseHelper.handleError(CONFLICT, `Cattle with ${req.body.cattleUID} already exist`);
-          return responseHelper.response(res);
-        }
       }
 
       if (cattleExist) {

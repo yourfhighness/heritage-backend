@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     consultationfees: { type: DataTypes.STRING },
     establishmenthours: { type: DataTypes.STRING },
     establishmentlocation: { type: DataTypes.STRING },
+    regionName: { type: DataTypes.STRING },
     createdAt: { type: DataTypes.DATE },
     updatedAt: { type: DataTypes.DATE },
   }, {});

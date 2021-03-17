@@ -6,19 +6,23 @@ import admin from '../controllers/adminController';
 import doctor from '../controllers/doctorController';
 import {
   verifyCode,
+  verifySesion,
   verifySignupOTP,
   adminIsVerified,
   farmerIsVerified,
   doctorIsVerified,
+  verifyAdminSession,
+  verifyDoctorSession,
 } from '../middlewares/verifyMiddlewares';
 
 import {
   validateLogin,
-  validateRegisterFarmer,
   validatePassword,
   validateSignupOTP,
   validateResetLink,
   validateResetCode,
+  validateRegisterFarmer,
+  validateChangePassword,
   validateAdminAndDoctorLogin,
 } from '../middlewares/schemaMiddleware';
 
@@ -29,8 +33,13 @@ authRouter
   .post('/reset-otp', validateResetLink, auth.resetOTP)
   .patch('/reset-password', validatePassword, verifyCode, auth.resetPassword)
   .patch('/reset-userCode', validateResetCode, verifyCode, auth.resetUserCode)
+  .patch('/change-password', verifySesion, validateChangePassword, auth.changePassword)
 
-  .post('/verification-otp', validateResetLink, auth.verificationOTP)
+  .delete('/logout-farmer', verifySesion, auth.logoutFarmer)
+  .delete('/logout-admin', verifyAdminSession, auth.logoutAdmin)
+  .delete('/logout-doctor', verifyDoctorSession, auth.logoutDoctor)
+
+  .post('/verification-otp', validateResetLink, auth.generateOTP)
   .post('/verify-otp', validateSignupOTP, verifySignupOTP, auth.verifyOTP)
   .post('/register-farmer', multipart, validateRegisterFarmer, auth.registerFamer)
   .post('/verify-reset-otp', validateSignupOTP, verifySignupOTP, auth.verifyResetOTP)

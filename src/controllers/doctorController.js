@@ -32,13 +32,8 @@ const uploadToS3 = (file, appointmentExist, appointmentId, res) => {
         }
 
         const data = await doctorHelper.saveMedical(appointmentExist, appointmentId, result.Location);
-        // if (data) {
         responseHelper.handleSuccess(OK, 'Medical saved successfully', data);
         return responseHelper.response(res);
-        // }
-
-        // responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
-        // return responseHelper.response(res);
       });
     });
 
@@ -79,7 +74,35 @@ class DoctorController {
     try {
       const data = await doctorHelper.appointmentExist('id', req.params.id);
       if (!data) {
-        responseHelper.handleError(NOT_FOUND, `Appointment with not found at the moment`);
+        responseHelper.handleError(NOT_FOUND, `Appointment not found at the moment`);
+        return responseHelper.response(res);
+      }
+
+      if (data) {
+        responseHelper.handleSuccess(OK, 'Appointment viewed successfully', data);
+        return responseHelper.response(res);
+      }
+
+      responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
+      return responseHelper.response(res);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
+  static async searchFarmerAppointments(req, res) {
+    try {
+      let data = await doctorHelper.searchFarmer(req.body.phone, req.doctor.regionName);
+
+      if (!data) {
+        responseHelper.handleError(NOT_FOUND, `Farmer not found at the moment`);
+        return responseHelper.response(res);
+      }
+
+      data = await doctorHelper.searchAppointment('farmerId', data.id, req.body.status);
+      if (data.length < 1) {
+        responseHelper.handleError(NOT_FOUND, `Appointment not found at the moment`);
         return responseHelper.response(res);
       }
 
@@ -120,7 +143,7 @@ class DoctorController {
   static async viewAppointmentByStatus(req, res, next) {
     try {
       const { start, end, pages, skip, paginate } = await paginateHelper.paginateData(req.query);
-      const viewedAppointments = await doctorHelper.viewAppointmentByStatus(skip, start, req.doctor.id, req.body.status);
+      const viewedAppointments = await doctorHelper.viewAppointmentByStatus(skip, start, req.doctor.id, req.doctor.regionName, req.body.status);
 
       const allDatata = viewedAppointments.rows;
       const countAllData = viewedAppointments.count;

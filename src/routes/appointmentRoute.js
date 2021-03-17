@@ -12,6 +12,6 @@ authRouter
   .get('/farmer-view-appointment/:appointmentId', verifySesion, appointment.viewAppointment)
   .get('/farmer-view-past-appointments', verifySesion, appointment.viewPastAppointment, paginate.paginateData)
   .get('/farmer-view-upcoming-appointments', verifySesion, appointment.viewUpcomingAppointment, paginate.paginateData)
-  .post('/farmer-save-appointment/:cattleId', multipart, validateAppointment, verifySesion, appointment.saveAppointment);
+  .post('/farmer-save-appointment/:cattleId', verifySesion, multipart, validateAppointment, appointment.saveAppointment);
 
 export default authRouter;

@@ -71,19 +71,28 @@ const adminIsVerified = async (req, res, next) => {
 const verifySesion = async (req, res, next) => {
   try {
     const verify = jwt.verify(req.header('session'), process.env.SECRET_KEY);
-    const farmerExist = await farmerHelper.farmerExist('id', verify.farmerId);
-    const sessionExist = await sessionHelper.farmerSessionExist('session', req.header('session'));
+    if (verify.farmerId) {
+      const farmerExist = await farmerHelper.farmerExist('id', verify.farmerId);
+      const sessionExist = await sessionHelper.farmerSessionExist('session', req.header('session'));
 
-    if (farmerExist) {
-      if (sessionExist) {
-        req.farmer = farmerExist;
-        return next();
+      if (farmerExist) {
+        if (sessionExist) {
+          if (!req.header(process.env.DEV_SECRET_FARMER_KEY)) {
+            responseHelper.handleError(NOT_FOUND, process.env.DEV_SECRET_MSG);
+            return responseHelper.response(res);
+          }
+
+          req.farmer = farmerExist;
+          return next();
+        }
+        responseHelper.handleError(UNAUTHORIZED, 'Already logged out. Sign in and try again..');
+        return responseHelper.response(res);
       }
-      responseHelper.handleError(UNAUTHORIZED, 'Already logged out. Sign in and try again..');
+
+      responseHelper.handleError(NOT_FOUND, 'Account not found,  Please create account and try again.');
       return responseHelper.response(res);
     }
-
-    responseHelper.handleError(NOT_FOUND, 'Account not found,  Please create account and try again.');
+    responseHelper.handleError(NOT_FOUND, 'Farmer account not found,  Please create account and try again.');
     return responseHelper.response(res);
   } catch (error) {
     responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
@@ -94,20 +103,30 @@ const verifySesion = async (req, res, next) => {
 const verifyDoctorSession = async (req, res, next) => {
   try {
     const verify = jwt.verify(req.header('session'), process.env.SECRET_KEY);
-    const doctorExist = await doctorHelper.doctorExist('id', verify.doctorId);
-    const sessionExist = await sessionHelper.doctorSessionExist('session', req.header('session'));
+    if (verify.doctorId) {
+      const doctorExist = await doctorHelper.doctorExist('id', verify.doctorId);
+      const sessionExist = await sessionHelper.doctorSessionExist('session', req.header('session'));
 
-    if (doctorExist) {
-      if (sessionExist) {
-        req.doctor = doctorExist;
-        return next();
+      if (doctorExist) {
+        if (sessionExist) {
+          if (!req.header(process.env.DEV_SECRET_DOCTOR_KEY)) {
+            responseHelper.handleError(NOT_FOUND, process.env.DEV_SECRET_MSG);
+            return responseHelper.response(res);
+          }
+
+          req.doctor = doctorExist;
+          return next();
+        }
+
+        responseHelper.handleError(UNAUTHORIZED, 'Already logged out. Sign in and try again..');
+        return responseHelper.response(res);
       }
 
-      responseHelper.handleError(UNAUTHORIZED, 'Already logged out. Sign in and try again..');
+      responseHelper.handleError(NOT_FOUND, 'Account not found,  Please create account and try again.');
       return responseHelper.response(res);
     }
 
-    responseHelper.handleError(NOT_FOUND, 'Account not found,  Please create account and try again.');
+    responseHelper.handleError(NOT_FOUND, 'Doctor account not found,  Please create account and try again.');
     return responseHelper.response(res);
   } catch (error) {
     responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
@@ -118,19 +137,29 @@ const verifyDoctorSession = async (req, res, next) => {
 const verifyAdminSession = async (req, res, next) => {
   try {
     const verify = jwt.verify(req.header('session'), process.env.SECRET_KEY);
-    const adminExist = await adminHelper.adminExist('id', verify.adminId);
-    const sessionExist = await sessionHelper.adminSessionExist('session', req.header('session'));
+    if (verify.adminId) {
+      const adminExist = await adminHelper.adminExist('id', verify.adminId);
+      const sessionExist = await sessionHelper.adminSessionExist('session', req.header('session'));
 
-    if (adminExist) {
-      if (sessionExist) {
-        req.admin = adminExist;
-        return next();
+      if (adminExist) {
+        if (sessionExist) {
+          if (!req.header(process.env.DEV_SECRET_ADMIN_KEY)) {
+            responseHelper.handleError(NOT_FOUND, process.env.DEV_SECRET_MSG);
+            return responseHelper.response(res);
+          }
+
+          req.admin = adminExist;
+          return next();
+        }
+        responseHelper.handleError(UNAUTHORIZED, 'Already logged out. Sign in and try again..');
+        return responseHelper.response(res);
       }
-      responseHelper.handleError(UNAUTHORIZED, 'Already logged out. Sign in and try again..');
+
+      responseHelper.handleError(NOT_FOUND, 'Account not found,  Please create account and try again.');
       return responseHelper.response(res);
     }
 
-    responseHelper.handleError(NOT_FOUND, 'Account not found,  Please create account and try again.');
+    responseHelper.handleError(NOT_FOUND, 'Admin account not found,  Please create account and try again.');
     return responseHelper.response(res);
   } catch (error) {
     responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
@@ -168,6 +197,7 @@ const verifyCode = async (req, res, next) => {
 const verifySignupOTP = async (req, res, next) => {
   try {
     const codeExist = await resetCodeHelper.codeExist('code', req.body.verificationCode);
+
     if (codeExist) {
       if (codeExist.phone === req.body.phone) {
         req.code = codeExist;

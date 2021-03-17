@@ -37,12 +37,53 @@ class DoctorHelpers {
     return viewedData;
   }
 
+  static async searchFarmer(phone, regionName) {
+    let viewedData;
+    if (regionName === 'HYDERABAD') {
+      viewedData = await Farmer.findOne({ where: { [Op.and]: [{ phone }] } });
+    }
+
+    if (regionName !== 'HYDERABAD') {
+      viewedData = await Farmer.findOne({ where: { [Op.and]: [{ phone }, { regionName }] } });
+    }
+
+    return viewedData;
+  }
+
+  static async searchAppointment(attribute, value, status) {
+    const viewedData = await Appointment.findAll({
+      where: { [Op.and]: [{ [attribute]: value }, { status }] },
+      include: [
+        {
+          model: Farmer,
+          as: 'Farmer',
+        },
+        {
+          model: Cattle,
+          as: 'Cattle',
+
+          include: [
+            {
+              model: Milking,
+              as: 'Milking',
+            },
+          ],
+        },
+        {
+          model: Medical,
+          as: 'Medical',
+        },
+      ],
+    });
+    return viewedData;
+  }
+
   static async viewAppointment(skip, start, doctorId) {
     const viewedData = await Appointment.findAndCountAll({
       where: { [Op.and]: [{ doctorId }] },
       limit: skip,
       offset: start,
-      order: [['id', 'DESC']],
+      order: [['updatedAt', 'DESC']],
       include: [
         {
           model: Farmer,
@@ -61,53 +102,105 @@ class DoctorHelpers {
     return viewedData;
   }
 
-  static async viewAppointmentByStatus(skip, start, doctorId, value) {
-    if (value === 'waiting') {
-      const viewedData = await Appointment.findAndCountAll({
-        where: { doctorId, [Op.or]: [{ status: 'waiting' }, { status: 'confirmed' }] },
-        limit: skip,
-        offset: start,
-        order: [['id', 'DESC']],
-        include: [
-          {
-            model: Farmer,
-            as: 'Farmer',
-          },
-          {
-            model: Cattle,
-            as: 'Cattle',
-          },
-          {
-            model: Medical,
-            as: 'Medical',
-          },
-        ],
-      });
-      return viewedData;
+  static async viewAppointmentByStatus(skip, start, doctorId, regionName, value) {
+    if (regionName === 'HYDERABAD') {
+      if (value === 'waiting') {
+        const viewedData = await Appointment.findAndCountAll({
+          where: { [Op.or]: [{ status: 'waiting' }, { status: 'confirmed' }] },
+          limit: skip,
+          offset: start,
+          order: [['updatedAt', 'DESC']],
+          include: [
+            {
+              model: Farmer,
+              as: 'Farmer',
+            },
+            {
+              model: Cattle,
+              as: 'Cattle',
+            },
+            {
+              model: Medical,
+              as: 'Medical',
+            },
+          ],
+        });
+        return viewedData;
+      }
+
+      if (value === 'finished') {
+        const viewedData = await Appointment.findAndCountAll({
+          where: { [Op.or]: [{ status: 'finished' }, { status: 'rejected' }] },
+          limit: skip,
+          offset: start,
+          order: [['id', 'DESC']],
+          include: [
+            {
+              model: Farmer,
+              as: 'Farmer',
+            },
+            {
+              model: Cattle,
+              as: 'Cattle',
+            },
+            {
+              model: Medical,
+              as: 'Medical',
+            },
+          ],
+        });
+        return viewedData;
+      }
     }
 
-    if (value === 'finished') {
-      const viewedData = await Appointment.findAndCountAll({
-        where: { doctorId, [Op.or]: [{ status: 'finished' }, { status: 'rejected' }] },
-        limit: skip,
-        offset: start,
-        order: [['id', 'DESC']],
-        include: [
-          {
-            model: Farmer,
-            as: 'Farmer',
-          },
-          {
-            model: Cattle,
-            as: 'Cattle',
-          },
-          {
-            model: Medical,
-            as: 'Medical',
-          },
-        ],
-      });
-      return viewedData;
+    if (regionName !== 'HYDERABAD') {
+      if (value === 'waiting') {
+        const viewedData = await Appointment.findAndCountAll({
+          where: { doctorId, [Op.or]: [{ status: 'waiting' }, { status: 'confirmed' }] },
+          limit: skip,
+          offset: start,
+          order: [['updatedAt', 'DESC']],
+          include: [
+            {
+              model: Farmer,
+              as: 'Farmer',
+            },
+            {
+              model: Cattle,
+              as: 'Cattle',
+            },
+            {
+              model: Medical,
+              as: 'Medical',
+            },
+          ],
+        });
+        return viewedData;
+      }
+
+      if (value === 'finished') {
+        const viewedData = await Appointment.findAndCountAll({
+          where: { doctorId, [Op.or]: [{ status: 'finished' }, { status: 'rejected' }] },
+          limit: skip,
+          offset: start,
+          order: [['id', 'DESC']],
+          include: [
+            {
+              model: Farmer,
+              as: 'Farmer',
+            },
+            {
+              model: Cattle,
+              as: 'Cattle',
+            },
+            {
+              model: Medical,
+              as: 'Medical',
+            },
+          ],
+        });
+        return viewedData;
+      }
     }
 
     return undefined;

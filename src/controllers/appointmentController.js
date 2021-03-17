@@ -45,7 +45,7 @@ class Appointment {
 
           Promise.all(resPromises)
             .then(async (result) => {
-              const data = await appointmentHelper.saveAppointment(req.params.cattleId, req.farmer.id, PrescriptionId, result, req.body);
+              const data = await appointmentHelper.saveAppointment(req.params.cattleId, req.farmer.id, req.farmer.regionName, PrescriptionId, result, req.body);
               responseHelper.handleSuccess(OK, 'Appointment saved successfully', data);
               return responseHelper.response(res);
             })
@@ -63,7 +63,7 @@ class Appointment {
             return responseHelper.response(res);
           }
 
-          const data = await appointmentHelper.saveAppointment(req.params.cattleId, req.farmer.id, PrescriptionId, [document], req.body);
+          const data = await appointmentHelper.saveAppointment(req.params.cattleId, req.farmer.id, req.farmer.regionName, PrescriptionId, [document], req.body);
           if (data) {
             responseHelper.handleSuccess(OK, 'Appointment saved successfully', data);
             return responseHelper.response(res);

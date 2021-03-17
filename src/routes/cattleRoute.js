@@ -1,14 +1,17 @@
 import Router from 'express';
 import multiparty from 'connect-multiparty';
 import cattle from '../controllers/cattleController';
+import paginate from '../middlewares/paginateMiddleware';
 import { verifySesion } from '../middlewares/verifyMiddlewares';
 import {
   validateSlip,
+  validateViewData,
   validateFilterSlip,
   validateUpdateSlip,
   validateUpdateCattle,
   validateRegisterCattle,
   validatePeriodicallySlip,
+  validateViewUnitNameMccName,
 } from '../middlewares/schemaMiddleware';
 
 const multipart = multiparty();
@@ -19,6 +22,9 @@ cattleRouter
   .delete('/delete-slip/:slipId', verifySesion, cattle.deleteCattleSlip)
   .post('/save-slip', verifySesion, validateSlip, cattle.saveFarmerSlip)
   .post('/save-slip/:cattleId', verifySesion, validateSlip, cattle.saveCattleSlip)
+
+  .post('/view-data', validateViewData, cattle.viewData)
+  .post('/select-data', validateViewUnitNameMccName, cattle.selectData, paginate.paginateData)
 
   .get('/view-all-cattle', verifySesion, cattle.viewAllCattles)
   .get('/view-cattle/:cattleId', verifySesion, cattle.viewCattle)

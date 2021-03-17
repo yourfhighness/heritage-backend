@@ -85,7 +85,7 @@ class AuthController {
 
       if (phoneExist) {
         const code = await resetCodeHelper.generateCode(phoneExist.id, phoneExist.phone);
-        const sentSMS = await sendSMSJsonAPI(req.body.phone.replace(/\D/g, '').slice(-10), `Hi ${phoneExist.farmerName || 'User'}, `, code);
+        const sentSMS = await sendSMSJsonAPI(req.body.phone.replace(/\D/g, ''), `Dear User, Welcome to Heritage VET+. Your OTP is : ${code}`);
 
         if (sentSMS) {
           responseHelper.handleSuccess(OK, 'OTP SMS sent successfully');
@@ -101,7 +101,7 @@ class AuthController {
     }
   }
 
-  static async verificationOTP(req, res) {
+  static async generateOTP(req, res) {
     try {
       const phoneExist = await farmerHelper.farmerExist('phone', req.body.phone);
 
@@ -112,7 +112,7 @@ class AuthController {
 
       if (!phoneExist) {
         const code = await resetCodeHelper.generateCode(0, req.body.phone);
-        const sentSMS = await sendSMSJsonAPI(req.body.phone.replace(/\D/g, '').slice(-10), 'Hi User', code);
+        const sentSMS = await sendSMSJsonAPI(req.body.phone.replace(/\D/g, ''), `Dear User, Welcome to Heritage VET+. Your OTP is : ${code}`);
 
         if (sentSMS.data.Status === 'OK') {
           responseHelper.handleSuccess(OK, 'OTP SMS sent successfully');
@@ -135,7 +135,8 @@ class AuthController {
 
   static async verifyOTP(req, res) {
     try {
-      responseHelper.handleSuccess(OK, 'Farmer phone numnber verified successfully');
+      const data = await farmerHelper.semiVerifiedFarmerExist('phone', req.body.phone);
+      responseHelper.handleSuccess(OK, 'Farmer phone numnber verified successfully', data);
       return responseHelper.response(res);
     } catch (error) {
       responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
@@ -167,9 +168,29 @@ class AuthController {
   static async resetPassword(req, res) {
     try {
       const updateFarmer = await farmerHelper.updateFarmer('password', passwordHelper.hashPassword(req.body.password), 'id', req.farmer.id);
-
       if (updateFarmer) {
         await resetCodeHelper.expireCode('code', req.body.verificationCode);
+        responseHelper.handleSuccess(OK, 'Farmer password updated successfully');
+        return responseHelper.response(res);
+      }
+
+      responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
+      return responseHelper.response(res);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
+  static async changePassword(req, res) {
+    try {
+      const passwordExist = await passwordHelper.checkPassword(req.body.oldPassword, req.farmer.password);
+      if (!passwordExist) {
+        responseHelper.handleError(UNAUTHORIZED, 'Exist password incorrect');
+        return responseHelper.response(res);
+      }
+      const updateFarmer = await farmerHelper.updateFarmer('password', passwordHelper.hashPassword(req.body.password), 'id', req.farmer.id);
+      if (updateFarmer) {
         responseHelper.handleSuccess(OK, 'Farmer password updated successfully');
         return responseHelper.response(res);
       }
@@ -210,6 +231,45 @@ class AuthController {
     } catch (error) {
       responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
       return responseHelper.response(res);
+    }
+  }
+
+  static async logoutFarmer(req, res) {
+    try {
+      await sessionHelper.logoutFarmer(req.header('session'));
+      responseHelper.handleSuccess(OK, 'Farmer logged out successfully');
+      return responseHelper.response(res);
+    } catch (error) {
+      return res.status(500).json({
+        status: 500,
+        data: error.toString(),
+      });
+    }
+  }
+
+  static async logoutDoctor(req, res) {
+    try {
+      await sessionHelper.logoutDoctor(req.header('session'));
+      responseHelper.handleSuccess(OK, 'Doctor logged out successfully');
+      return responseHelper.response(res);
+    } catch (error) {
+      return res.status(500).json({
+        status: 500,
+        data: error.toString(),
+      });
+    }
+  }
+
+  static async logoutAdmin(req, res) {
+    try {
+      await sessionHelper.logoutAdmin(req.header('session'));
+      responseHelper.handleSuccess(OK, 'Admin logged out successfully');
+      return responseHelper.response(res);
+    } catch (error) {
+      return res.status(500).json({
+        status: 500,
+        data: error.toString(),
+      });
     }
   }
 }

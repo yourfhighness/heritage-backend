@@ -12,6 +12,17 @@ const validateRegisterFarmer = (req, res, next) => {
           'any.required': 'profilePicture is required',
           'string.empty': 'profilePicture is not allowed to be empty',
         }),
+      steps: Joi.string().trim().allow(null, '')
+        .messages({
+          'any.required': 'steps is required',
+          'string.empty': 'steps is not allowed to be empty',
+        }),
+      status: Joi.string().trim().min(2).allow(null, '')
+        .messages({
+          'any.required': 'status is required',
+          'string.empty': 'status is not allowed to be empty',
+          'string.min': 'status length must be at least 2 characters long',
+        }),
       farmerName: Joi.string().trim().min(2).allow(null, '')
         .messages({
           'any.required': 'farmerName is required',
@@ -27,7 +38,7 @@ const validateRegisterFarmer = (req, res, next) => {
           'string.max': 'gender length must be at least 6 characters long',
         }),
       age: Joi.date()
-        .min(new Date('1990-01-01').toISOString().split('T')[0])
+        .min(new Date('1900-01-01').toISOString().split('T')[0])
         .max(new Date().toISOString().split('T')[0])
         .allow(null, '')
         .messages({
@@ -39,13 +50,25 @@ const validateRegisterFarmer = (req, res, next) => {
         'string.empty': 'phone is not allowed to be empty',
         'phoneNumber.invalid': 'phone did not seem to be a phone number',
       }),
-      unitName: Joi.string().trim().min(2).required()
+      regionName: Joi.string().trim().min(2)
+        .messages({
+          'any.required': 'regionName  is required',
+          'string.empty': 'regionName  is not allowed to be empty',
+          'string.min': 'regionName  length must be at least 2 characters long',
+        }),
+      pinCode: Joi.string().trim().min(2)
+        .messages({
+          'any.required': 'pinCode is required',
+          'string.empty': 'pinCode is not allowed to be empty',
+          'string.min': 'pinCode length must be at least 2 characters long',
+        }),
+      unitName: Joi.string().trim().min(2)
         .messages({
           'any.required': 'unitName is required',
           'string.empty': 'unitName is not allowed to be empty',
           'string.min': 'unitName length must be at least 2 characters long',
         }),
-      mccName: Joi.string().trim().min(2).required()
+      mccName: Joi.string().trim().min(2)
         .messages({
           'any.required': 'mccName is required',
           'string.empty': 'mccName is not allowed to be empty',
@@ -99,11 +122,12 @@ const validateRegisterCattle = (req, res, next) => {
           'string.empty': 'cattle is not allowed to be empty',
           'string.min': 'cattle length must be at least 2 characters long',
         }),
-      cattleUID: Joi.string().min(12).allow(null, '')
+      cattleUID: Joi.string().min(5).max(18).allow(null, '')
         .messages({
           'any.required': 'cattleUID is required',
           'string.empty': 'cattleUID is not allowed to be empty',
-          'string.min': 'cattle length must be at least 12 characters long',
+          'string.min': 'cattle length must be at least 5 characters long',
+          'string.max': 'cattle length must be at least 18 characters long',
         }),
       cattleName: Joi.string().trim().min(2)
         .required()
@@ -120,7 +144,7 @@ const validateRegisterCattle = (req, res, next) => {
           'string.min': 'category length must be at least 2 characters long',
         }),
       age: Joi.date()
-        .min(new Date('1990-01-01').toISOString().split('T')[0])
+        .min(new Date('1900-01-01').toISOString().split('T')[0])
         .max(new Date().toISOString().split('T')[0])
         .required()
         .messages({
@@ -232,7 +256,31 @@ const validatePassword = (req, res, next) => {
           'string.empty': 'verificationCode is not allowed to be empty',
           'string.min': 'verificationCode length must be at least 3 characters long',
         }),
-      password: Joi.string().min(8).max(12).required()
+      password: Joi.string().min(6).max(12).required()
+        .messages({
+          'any.required': '"password" is a required',
+          'string.empty': 'password is not allowed to be empty',
+          'string.min': 'password length must be at least 6 characters long',
+          'string.max': 'password length must be at least 12 characters long',
+        }),
+      confirmPassword: Joi.string().required().valid(Joi.ref('password')),
+    })
+    .options({ abortEarly: false });
+
+  return validateSchema(passwordSchema, req.body, res, next);
+};
+
+const validateChangePassword = (req, res, next) => {
+  const passwordSchema = Joi.object()
+    .keys({
+      oldPassword: Joi.string().min(6).max(12).required()
+        .messages({
+          'any.required': '"oldPassword" is a required',
+          'string.empty': 'oldPassword is not allowed to be empty',
+          'string.min': 'oldPassword length must be at least 6 characters long',
+          'string.max': 'oldPassword length must be at least 12 characters long',
+        }),
+      password: Joi.string().min(6).max(12).required()
         .messages({
           'any.required': '"password" is a required',
           'string.empty': 'password is not allowed to be empty',
@@ -250,16 +298,20 @@ const validateUpdateFarmer = (req, res, next) => {
   const updateSchema = Joi.object()
     .keys({
       profilePicture: Joi.string().min(5),
+      status: Joi.string().min(2),
+      steps: Joi.string(),
       farmerName: Joi.string().min(2),
       gender: Joi.string().min(4).max(6),
       age: Joi.date()
-        .min(new Date('1990-01-01').toISOString().split('T')[0])
+        .min(new Date('1900-01-01').toISOString().split('T')[0])
         .max(new Date().toISOString().split('T')[0]),
       phone: customJoi.string().phoneNumber({ format: 'international', strict: true }),
       unitName: Joi.string().min(2),
       mccName: Joi.string().min(2),
       mccCode: Joi.string().min(2),
       userCode: Joi.string().min(2),
+      regionName: Joi.string().min(2),
+      pinCode: Joi.string().min(2),
       password: Joi.string().min(6).max(12)
         .messages({
           'any.required': '"password" is a required',
@@ -284,7 +336,7 @@ const validateUpdateCattle = (req, res, next) => {
       cattleName: Joi.string().min(2),
       category: Joi.string().valid('calf', 'heifer', 'milking', 'dry'),
       age: Joi.date()
-        .min(new Date('1990-01-01').toISOString().split('T')[0])
+        .min(new Date('1900-01-01').toISOString().split('T')[0])
         .max(new Date().toISOString().split('T')[0])
         .messages({
           'any.required': 'age is required',
@@ -338,22 +390,22 @@ const validateSlip = (req, res, next) => {
           'any.required': 'shift is required',
           'string.empty': 'shift is not allowed to be empty',
         }),
-      quantity: Joi.number().required()
+      quantity: Joi.string().required()
         .messages({
           'any.required': 'quantity is required',
           'string.empty': 'quantity is not allowed to be empty',
         }),
-      fat: Joi.string().trim().required()
+      fat: Joi.string().trim()
         .messages({
           'any.required': 'fat is required',
           'string.empty': 'fat is not allowed to be empty',
         }),
-      snf: Joi.string().trim().required()
+      snf: Joi.string().trim()
         .messages({
           'any.required': 'snf is required',
           'string.empty': 'snf is not allowed to be empty',
         }),
-      amount: Joi.number().required()
+      amount: Joi.string().required()
         .messages({
           'any.required': 'amount is required',
           'string.empty': 'amount is not allowed to be empty',
@@ -378,10 +430,10 @@ const validateUpdateSlip = (req, res, next) => {
           'any.required': 'shift is required',
           'string.empty': 'shift is not allowed to be empty',
         }),
-      quantity: Joi.number(),
+      quantity: Joi.string(),
       fat: Joi.string().trim(),
       snf: Joi.string().trim(),
-      amount: Joi.number(),
+      amount: Joi.string(),
     })
     .options({ abortEarly: false });
 
@@ -531,11 +583,152 @@ const validateMedical = (req, res, next) => {
   return validateSchema(medicalSchema, req.body, res, next);
 };
 
+const validateFeed = (req, res, next) => {
+  const feedSchema = Joi.object()
+    .keys({
+      greenRoughage: Joi.string().required()
+        .messages({
+          'any.required': 'greenRoughage is required',
+          'string.empty': 'greenRoughage is not allowed to be empty',
+        }),
+      dryRoughage: Joi.array().required()
+        .messages({
+          'any.required': 'dryRoughage is required',
+          'string.empty': 'dryRoughage is not allowed to be empty',
+        }),
+      concentrate: Joi.array().required()
+        .messages({
+          'any.required': 'concentrate is required',
+          'string.empty': 'concentrate is not allowed to be empty',
+        }),
+    })
+    .options({ abortEarly: false });
+
+  return validateSchema(feedSchema, req.body, res, next);
+};
+
+const validateSaveData = (req, res, next) => {
+  const dataSchema = Joi.object()
+    .keys({
+      regionName: Joi.string().required()
+        .messages({
+          'any.required': 'regionName is required',
+          'string.empty': 'regionName is not allowed to be empty',
+        }),
+      unitName: Joi.array().min(1).items(Joi.string()).required()
+        .messages({
+          'any.required': 'unitName is required',
+          'string.empty': 'unitName is not allowed to be empty',
+        }),
+      mccName: Joi.array().min(1).items(Joi.string()).required()
+        .messages({
+          'any.required': 'mccName is required',
+          'string.empty': 'mccName is not allowed to be empty',
+        }),
+    })
+    .options({ abortEarly: false });
+
+  return validateSchema(dataSchema, req.body, res, next);
+};
+
+const validateViewData = (req, res, next) => {
+  const dataSchema = Joi.object()
+    .keys({
+      type: Joi.string()
+        .messages({
+          'any.required': 'type is required',
+          'array.empty': 'type is not allowed to be empty',
+        }),
+    })
+    .options({ abortEarly: false });
+
+  return validateSchema(dataSchema, req.body, res, next);
+};
+
+const validateViewUnitNameMccName = (req, res, next) => {
+  const dataSchema = Joi.object()
+    .keys({
+      pinCode: Joi.string().min(3).required()
+        .messages({
+          'any.required': 'pinCode is required',
+          'string.empty': 'pinCode is not allowed to be empty',
+          'string.min': 'pinCode length must be at least 3 characters long',
+        }),
+    })
+    .options({ abortEarly: false });
+
+  return validateSchema(dataSchema, req.body, res, next);
+};
+
+const validatefeedBack = (req, res, next) => {
+  const feedbackSchema = Joi.object()
+    .keys({
+      feedback: Joi.string().min(3).required()
+        .messages({
+          'any.required': 'feedback is required',
+          'string.empty': 'feedback is not allowed to be empty',
+          'string.min': 'feedback length must be at least 3 characters long',
+        }),
+    })
+    .options({ abortEarly: false });
+
+  return validateSchema(feedbackSchema, req.body, res, next);
+};
+
+const validateProcced = (req, res, next) => {
+  const dataSchema = Joi.object()
+    .keys({
+      attribute: Joi.string().required()
+        .messages({
+          'any.required': 'attribute is required',
+          'string.empty': 'attribute is not allowed to be empty',
+        }),
+      newValue: Joi.string().allow(null, '')
+        .messages({
+          'any.required': 'newValue is required',
+          'string.empty': 'newValue is not allowed to be empty',
+        }),
+      oldValue: Joi.string().allow(null, '')
+        .messages({
+          'any.required': 'oldValue is required',
+          'string.empty': 'oldValue is not allowed to be empty',
+        }),
+    })
+    .options({ abortEarly: false });
+
+  return validateSchema(dataSchema, req.body, res, next);
+};
+
+const validateSearchAppointment = (req, res, next) => {
+  const dataSchema = Joi.object()
+    .keys({
+      phone: customJoi.string().phoneNumber({ format: 'international', strict: true }).required().messages({
+        'any.required': 'phone is required',
+        'string.empty': 'phone is not allowed to be empty',
+        'phoneNumber.invalid': 'phone did not seem to be a phone number',
+      }),
+      status: Joi.string().min(4).required().valid('waiting', 'confirmed', 'finished', 'rejected')
+        .messages({
+          'any.required': 'status is required',
+          'string.empty': 'status is not allowed to be empty',
+          'string.min': 'status should be 4 words minimum',
+        }),
+    })
+    .options({ abortEarly: false });
+
+  return validateSchema(dataSchema, req.body, res, next);
+};
+
 export {
   validateSlip,
+  validateFeed,
   validateLogin,
+  validateProcced,
   validateMedical,
+  validateViewData,
+  validateSaveData,
   validatePassword,
+  validatefeedBack,
   validateResetLink,
   validateResetCode,
   validateSignupOTP,
@@ -545,9 +738,12 @@ export {
   validateUpdateFarmer,
   validateUpdateCattle,
   validateViewByStatus,
+  validateChangePassword,
   validateRegisterFarmer,
   validateRegisterCattle,
   validatePeriodicallySlip,
   validateUpdateAppointment,
+  validateSearchAppointment,
   validateAdminAndDoctorLogin,
+  validateViewUnitNameMccName,
 };
