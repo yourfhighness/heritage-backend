@@ -9,7 +9,7 @@ class AdminHelpers {
     return viewedData;
   }
 
-  static async FarmerExist(attribute, value) {
+  static async farmerExist(attribute, value) {
     const viewedData = await Farmer.findOne({
       where: { [attribute]: value },
       include: [
@@ -61,7 +61,7 @@ class AdminHelpers {
   static async viewFarmersByStatus(skip, start, regionName, value) {
     if (regionName === 'HYDERABAD') {
       if (value === 'waiting') {
-        const viewedData = await Farmer.findAndCountAll({
+        const data = await Farmer.findAndCountAll({
           where: { [Op.or]: [{ status: 'waiting' }, { status: 'confirmed' }] },
           limit: skip,
           offset: start,
@@ -73,15 +73,16 @@ class AdminHelpers {
             },
           ],
         });
-        return viewedData;
+
+        return data;
       }
 
       if (value === 'finished') {
-        const viewedData = await Farmer.findAndCountAll({
+        const data = await Farmer.findAndCountAll({
           where: { [Op.or]: [{ status: 'finished' }, { status: 'rejected' }] },
           limit: skip,
           offset: start,
-          order: [['id', 'DESC']],
+          order: [['updatedAt', 'DESC']],
           include: [
             {
               model: Cattle,
@@ -89,13 +90,13 @@ class AdminHelpers {
             },
           ],
         });
-        return viewedData;
+        return data;
       }
     }
 
     if (regionName !== 'HYDERABAD') {
       if (value === 'waiting') {
-        const viewedData = await Farmer.findAndCountAll({
+        const data = await Farmer.findAndCountAll({
           where: { regionName, [Op.or]: [{ status: 'waiting' }, { status: 'confirmed' }] },
           limit: skip,
           offset: start,
@@ -107,15 +108,15 @@ class AdminHelpers {
             },
           ],
         });
-        return viewedData;
+        return data;
       }
 
       if (value === 'finished') {
-        const viewedData = await Farmer.findAndCountAll({
+        const data = await Farmer.findAndCountAll({
           where: { regionName, [Op.or]: [{ status: 'finished' }, { status: 'rejected' }] },
           limit: skip,
           offset: start,
-          order: [['id', 'DESC']],
+          order: [['updatedAt', 'DESC']],
           include: [
             {
               model: Cattle,
@@ -123,7 +124,7 @@ class AdminHelpers {
             },
           ],
         });
-        return viewedData;
+        return data;
       }
     }
 
@@ -134,6 +135,41 @@ class AdminHelpers {
     const updateData = await Farmer.update({ status }, { where: { [Op.and]: [{ id }] } });
 
     return updateData;
+  }
+
+  static async updateFarmerDetails(newbody, profilePicture, existbody) {
+    const updateFarmer = await Farmer.update({
+      status: newbody.status || existbody.status,
+      profilePicture: profilePicture || existbody.profilePicture,
+      steps: newbody.steps || existbody.steps,
+      farmerName: newbody.farmerName || existbody.farmerName,
+      gender: newbody.gender || existbody.gender,
+      age: newbody.age || existbody.age,
+      phone: newbody.phone || existbody.phone,
+      userCode: newbody.userCode || existbody.userCode,
+      pinCode: newbody.pinCode || existbody.pinCode,
+      unitCode: newbody.unitCode || existbody.unitCode,
+      mccCode: newbody.mccCode || existbody.mccCode,
+      mccMobile: newbody.mccMobile || existbody.mccMobile,
+      plateCode: newbody.plateCode || existbody.plateCode,
+      regionName: newbody.regionName ? newbody.regionName.toUpperCase() : existbody.regionName,
+      unitName: newbody.unitName ? newbody.unitName.toUpperCase() : existbody.unitName,
+      mccName: newbody.mccName ? newbody.mccName.toUpperCase() : existbody.mccName,
+      plateName: newbody.plateName ? newbody.plateName.toUpperCase() : existbody.plateName,
+      stateName: newbody.stateName ? newbody.stateName.toUpperCase() : existbody.stateName,
+      districtName: newbody.districtName ? newbody.districtName.toUpperCase() : existbody.districtName,
+      mendalName: newbody.mendalName ? newbody.mendalName.toUpperCase() : existbody.mendalName,
+      panchayatName: newbody.panchayatName ? newbody.panchayatName.toUpperCase() : existbody.panchayatName,
+      villageName: newbody.villageName ? newbody.villageName.toUpperCase() : existbody.villageName,
+      isVerified: existbody.isVerified,
+      password: existbody.password,
+    }, { where: { id: existbody.id } });
+
+    if (updateFarmer) {
+      const farmer = await this.farmerExist('id', existbody.id);
+      return farmer;
+    }
+    return null;
   }
 }
 

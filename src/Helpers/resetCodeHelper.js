@@ -10,6 +10,11 @@ class ResetCodeHelpers {
     return resetCode;
   }
 
+  static async codeAndPhoneExist(code, phone) {
+    const resetCode = await ResetCode.findOne({ where: { code, phone } });
+    return resetCode;
+  }
+
   static async expireCode(attribute, value) {
     const ExpiredCode = await ResetCode.destroy({ where: { [attribute]: value } });
     return ExpiredCode;
@@ -21,19 +26,14 @@ class ResetCodeHelpers {
   }
 
   static async saveCode(farmerId, phone, code) {
-    await ResetCode.create({
-      farmerId,
-      phone,
-      code,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+    const data = await ResetCode.create({ farmerId, phone, code, createdAt: new Date(), updatedAt: new Date() });
+    return data;
   }
 
   static async generateCode(farmerId, phone) {
     const codeExist = await this.codeExist('phone', phone);
-    let generatedCode = OPTCode(4, { type: 'number' });
 
+    let generatedCode = OPTCode(4, { type: 'number' });
     generatedCode = await handleFourOTP(generatedCode);
 
     if (codeExist) {

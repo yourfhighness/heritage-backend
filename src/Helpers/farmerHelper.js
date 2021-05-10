@@ -2,7 +2,7 @@ import { Op } from 'sequelize';
 import models from '../database/models';
 import passwordHelper from './passwordHelper';
 
-const { Farmer, FarmerFeedback, SemiVerifiedFarmer, RegionUnitMccname } = models;
+const { Farmer, ResetCode, FarmerSession, Cattle, Milking, Slip, Appointment, Medical, FarmerFeedback, SemiVerifiedFarmer, RegionUnitMccname } = models;
 
 class FarmerHelpers {
   static async farmerExist(attribute, value) {
@@ -42,12 +42,21 @@ class FarmerHelpers {
       gender: body.gender,
       age: body.age,
       phone: body.phone,
+      userCode: body.userCode,
+      pinCode: body.pinCode,
+      unitCode: body.unitCode,
+      mccCode: body.mccCode,
+      mccMobile: body.mccMobile,
+      plateCode: body.plateCode,
+      regionName: body.regionName ? body.regionName.toUpperCase() : body.regionName,
       unitName: body.unitName ? body.unitName.toUpperCase() : body.unitName,
       mccName: body.mccName ? body.mccName.toUpperCase() : body.mccName,
-      mccCode: body.mccCode,
-      userCode: body.userCode,
-      regionName: body.regionName ? body.regionName.toUpperCase() : body.regionName,
-      pinCode: body.pinCode,
+      plateName: body.plateName ? body.plateName.toUpperCase() : body.plateName,
+      stateName: body.stateName ? body.stateName.toUpperCase() : body.stateName,
+      districtName: body.districtName ? body.districtName.toUpperCase() : body.districtName,
+      mendalName: body.mendalName ? body.mendalName.toUpperCase() : body.mendalName,
+      panchayatName: body.panchayatName ? body.panchayatName.toUpperCase() : body.panchayatName,
+      villageName: body.villageName ? body.villageName.toUpperCase() : body.villageName,
       isVerified: true,
       password: passwordHelper.hashPassword(body.password),
       createdAt: new Date(),
@@ -118,12 +127,21 @@ class FarmerHelpers {
         gender: body.gender,
         age: body.age,
         phone: body.phone,
+        userCode: body.userCode,
+        pinCode: body.pinCode,
+        unitCode: body.unitCode,
+        mccCode: body.mccCode,
+        mccMobile: body.mccMobile,
+        plateCode: body.plateCode,
+        regionName: data.regionName ? data.regionName.toUpperCase() : data.regionName,
         unitName: body.unitName ? body.unitName.toUpperCase() : body.unitName,
         mccName: body.mccName ? body.mccName.toUpperCase() : body.mccName,
-        mccCode: body.mccCode,
-        userCode: body.petWeight,
-        regionName: data.regionName ? data.regionName.toUpperCase() : data.regionName,
-        pinCode: body.pinCode,
+        plateName: body.plateName ? body.plateName.toUpperCase() : body.plateName,
+        stateName: body.stateName ? body.stateName.toUpperCase() : body.stateName,
+        districtName: body.districtName ? body.districtName.toUpperCase() : body.districtName,
+        mendalName: body.mendalName ? body.mendalName.toUpperCase() : body.mendalName,
+        panchayatName: body.panchayatName ? body.panchayatName.toUpperCase() : body.panchayatName,
+        villageName: body.villageName ? body.villageName.toUpperCase() : body.villageName,
         isVerified: body.isVerified,
         password: body.password ? passwordHelper.hashPassword(body.password) : existingPassword,
       }, { where: { id } });
@@ -142,12 +160,21 @@ class FarmerHelpers {
       gender: body.gender,
       age: body.age,
       phone: body.phone,
+      userCode: body.userCode,
+      pinCode: body.pinCode,
+      unitCode: body.unitCode,
+      mccCode: body.mccCode,
+      mccMobile: body.mccMobile,
+      plateCode: body.plateCode,
+      regionName: body.regionName ? body.regionName.toUpperCase() : body.regionName,
       unitName: body.unitName ? body.unitName.toUpperCase() : body.unitName,
       mccName: body.mccName ? body.mccName.toUpperCase() : body.mccName,
-      mccCode: body.mccCode,
-      userCode: body.petWeight,
-      regionName: body.regionName ? body.regionName.toUpperCase() : body.regionName,
-      pinCode: body.pinCode,
+      plateName: body.plateName ? body.plateName.toUpperCase() : body.plateName,
+      stateName: body.stateName ? body.stateName.toUpperCase() : body.stateName,
+      districtName: body.districtName ? body.districtName.toUpperCase() : body.districtName,
+      mendalName: body.mendalName ? body.mendalName.toUpperCase() : body.mendalName,
+      panchayatName: body.panchayatName ? body.panchayatName.toUpperCase() : body.panchayatName,
+      villageName: body.villageName ? body.villageName.toUpperCase() : body.villageName,
       isVerified: body.isVerified,
       password: body.password ? passwordHelper.hashPassword(body.password) : existingPassword,
     }, { where: { id } });
@@ -157,6 +184,27 @@ class FarmerHelpers {
       return farmer;
     }
     return null;
+  }
+
+  static async resetFrmer(value) {
+    await Farmer.destroy({ where: { id: value } });
+    await Medical.destroy({ where: { farmerId: value } });
+    await ResetCode.destroy({ where: { farmerId: value } });
+    await Appointment.destroy({ where: { farmerId: value } });
+    await FarmerSession.destroy({ where: { farmerId: value } });
+
+    const cattles = await Cattle.findAll({ where: { farmerId: value } });
+    if (cattles.length > 0) {
+      await Cattle.destroy({ where: { farmerId: value } });
+      cattles.map(async (cattle) => {
+        await Milking.destroy({ where: { cattleId: cattle.id } });
+        await Slip.destroy({ where: { cattleId: cattle.id } });
+      });
+    }
+  }
+
+  static async removeAllFrmers(field, value) {
+    await Farmer.destroy({ where: { [field]: value } });
   }
 }
 

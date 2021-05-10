@@ -8,11 +8,11 @@
     "kill": "Taskkill /IM node.exe /F",
     "server": "nodemon --exec babel-node ./src/index.js",
     "createtables": "cross-env NODE_ENV=development npx sequelize db:migrate",
-    "createOnetables": "cross-env NODE_ENV=development npx sequelize db:migrate regionUnitMccname.js",
+    "createOnetables": "cross-env NODE_ENV=development npx sequelize db:migrate RegionUnitMccnames.js",
     "inserttables": "cross-env NODE_ENV=development npx sequelize db:seed:all",
-    "insertOnetables": "cross-env NODE_ENV=development npx sequelize db:seed --seed 20200301173903-demo-regionUnitMccname.js",
+    "insertOnetables": "cross-env NODE_ENV=development npx sequelize db:seed --seed 20200301173903-demo-RegionUnitMccnames.js",
     "deletetables": "cross-env NODE_ENV=development npx sequelize db:migrate:undo:all",
-    "deleteOnetables": "cross-env NODE_ENV=development npx sequelize db:migrate:undo --name 20200301172800-create-regionUnitMccname.js",
+    "deleteOnetables": "cross-env NODE_ENV=development npx sequelize db:migrate:undo --name 20200301172800-create-RegionUnitMccnames.js",
     "start": "cross-env NODE_ENV=production babel-node ./src/index.js",
     "start:with-migrations": "cross-env NODE_ENV=production npx sequelize-cli db:migrate:undo:all && cross-env NODE_ENV=production npx sequelize-cli db:migrate && cross-env NODE_ENV=production npx sequelize-cli db:seed:all && cross-env NODE_ENV=production babel-node ./src/index.js"
   },
@@ -45,6 +45,7 @@
     "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "fast-csv": "^4.3.6",
     "generate-sms-verification-code": "^1.0.5",
     "http-status": "^1.5.0",
     "joi": "^17.3.0",
@@ -60,10 +61,10 @@
     "uninstall": "0.0.0"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "eslint": "^7.18.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
-    "nodemon": "^2.0.2",
-    "cross-env": "^7.0.3"
+    "nodemon": "^2.0.2"
   }
 }

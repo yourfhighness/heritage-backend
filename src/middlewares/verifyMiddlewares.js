@@ -169,7 +169,8 @@ const verifyAdminSession = async (req, res, next) => {
 
 const verifyCode = async (req, res, next) => {
   try {
-    const codeExist = await resetCodeHelper.codeExist('code', req.body.verificationCode);
+    const codeExist = await resetCodeHelper.codeAndPhoneExist(req.body.verificationCode, req.body.phone);
+
     if (codeExist) {
       const farmerExist = await farmerHelper.farmerExist('id', codeExist.farmerId);
       if (farmerExist) {
@@ -196,13 +197,11 @@ const verifyCode = async (req, res, next) => {
 
 const verifySignupOTP = async (req, res, next) => {
   try {
-    const codeExist = await resetCodeHelper.codeExist('code', req.body.verificationCode);
+    const codeExist = await resetCodeHelper.codeAndPhoneExist(req.body.verificationCode, req.body.phone);
 
     if (codeExist) {
-      if (codeExist.phone === req.body.phone) {
-        req.code = codeExist;
-        return next();
-      }
+      req.code = codeExist;
+      return next();
     }
 
     responseHelper.handleError(NOT_FOUND, 'Invalid or Expired verification code');

@@ -13,10 +13,12 @@ class AuthController {
     try {
       const phoneExist = await farmerHelper.farmerExist('phone', req.body.phone);
 
-      if (phoneExist) {
+      if (phoneExist && phoneExist.status !== 'rejected') {
         responseHelper.handleError(CONFLICT, `Farmer with ${req.body.phone} exist`);
         return responseHelper.response(res);
       }
+
+      if (phoneExist && phoneExist.status === 'rejected') await farmerHelper.resetFrmer(phoneExist.id);
 
       let document = null;
       if (req.files && req.files.profilePicture) {
@@ -83,14 +85,12 @@ class AuthController {
         return responseHelper.response(res);
       }
 
-      if (phoneExist) {
-        const code = await resetCodeHelper.generateCode(phoneExist.id, phoneExist.phone);
-        const sentSMS = await sendSMSJsonAPI(req.body.phone.replace(/\D/g, ''), `Dear User, Welcome to Heritage VET+. Your OTP is : ${code}`);
+      const code = await resetCodeHelper.generateCode(phoneExist.id, phoneExist.phone);
+      const sentSMS = await sendSMSJsonAPI(req.body.phone.replace(/\D/g, ''), `Dear User, Welcome to Heritage VET+. Your OTP is : ${code}`);
 
-        if (sentSMS) {
-          responseHelper.handleSuccess(OK, 'OTP SMS sent successfully');
-          return responseHelper.response(res);
-        }
+      if (sentSMS) {
+        responseHelper.handleSuccess(OK, 'OTP SMS sent successfully');
+        return responseHelper.response(res);
       }
 
       responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
@@ -105,24 +105,24 @@ class AuthController {
     try {
       const phoneExist = await farmerHelper.farmerExist('phone', req.body.phone);
 
-      if (phoneExist) {
-        responseHelper.handleError(CONFLICT, `Farmer with ${req.body.phone} exist`);
+      if (phoneExist && phoneExist.status !== 'rejected') {
+        responseHelper.handleError(CONFLICT, `Farmer with this ${req.body.phone} exist`);
         return responseHelper.response(res);
       }
 
-      if (!phoneExist) {
-        const code = await resetCodeHelper.generateCode(0, req.body.phone);
-        const sentSMS = await sendSMSJsonAPI(req.body.phone.replace(/\D/g, ''), `Dear User, Welcome to Heritage VET+. Your OTP is : ${code}`);
+      if (phoneExist && phoneExist.status === 'rejected') await farmerHelper.resetFrmer(phoneExist.id);
 
-        if (sentSMS.data.Status === 'OK') {
-          responseHelper.handleSuccess(OK, 'OTP SMS sent successfully');
-          return responseHelper.response(res);
-        }
+      const code = await resetCodeHelper.generateCode(0, req.body.phone);
+      const sentSMS = await sendSMSJsonAPI(req.body.phone.replace(/\D/g, ''), `Dear User, Welcome to Heritage VET+. Your OTP is : ${code}`);
 
-        if (sentSMS.data.Status !== 'OK') {
-          responseHelper.handleSuccess(BAD_REQUEST, sentSMS.data.Response.Message);
-          return responseHelper.response(res);
-        }
+      if (sentSMS.data.Status === 'OK') {
+        responseHelper.handleSuccess(OK, 'OTP SMS sent successfully');
+        return responseHelper.response(res);
+      }
+
+      if (sentSMS.data.Status !== 'OK') {
+        responseHelper.handleSuccess(BAD_REQUEST, sentSMS.data.Response.Message);
+        return responseHelper.response(res);
       }
 
       responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
@@ -270,6 +270,23 @@ class AuthController {
         status: 500,
         data: error.toString(),
       });
+    }
+  }
+
+  static async phoneExsitInResetCodesTable(req, res) {
+    try {
+      const phoneExist = await resetCodeHelper.codeExist('phone', req.body.phone);
+
+      if (!phoneExist) {
+        responseHelper.handleError(NOT_FOUND, `Phone ${req.body.phone} not exist`);
+        return responseHelper.response(res);
+      }
+
+      responseHelper.handleSuccess(OK, 'Phone found successfully', phoneExist);
+      return responseHelper.response(res);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
     }
   }
 }

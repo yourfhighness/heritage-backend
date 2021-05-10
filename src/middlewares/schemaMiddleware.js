@@ -50,17 +50,47 @@ const validateRegisterFarmer = (req, res, next) => {
         'string.empty': 'phone is not allowed to be empty',
         'phoneNumber.invalid': 'phone did not seem to be a phone number',
       }),
-      regionName: Joi.string().trim().min(2)
+      userCode: Joi.string().trim().min(2).allow(null, '')
         .messages({
-          'any.required': 'regionName  is required',
-          'string.empty': 'regionName  is not allowed to be empty',
-          'string.min': 'regionName  length must be at least 2 characters long',
+          'any.required': 'userCode is required',
+          'string.empty': 'userCode is not allowed to be empty',
+          'string.min': 'userCode length must be at least 2 characters long',
         }),
       pinCode: Joi.string().trim().min(2)
         .messages({
           'any.required': 'pinCode is required',
           'string.empty': 'pinCode is not allowed to be empty',
           'string.min': 'pinCode length must be at least 2 characters long',
+        }),
+      unitCode: Joi.string().trim().min(2).allow(null, '')
+        .messages({
+          'any.required': 'mccCode is required',
+          'string.empty': 'mccCode is not allowed to be empty',
+          'string.min': 'mccCode length must be at least 2 characters long',
+        }),
+      mccCode: Joi.string().trim().min(2).allow(null, '')
+        .messages({
+          'any.required': 'mccCode is required',
+          'string.empty': 'mccCode is not allowed to be empty',
+          'string.min': 'mccCode length must be at least 2 characters long',
+        }),
+      mccMobile: Joi.string().trim().min(2).allow(null, '')
+        .messages({
+          'any.required': 'mccMobile is required',
+          'string.empty': 'mccMobile is not allowed to be empty',
+          'string.min': 'mccMobile length must be at least 2 characters long',
+        }),
+      plateCode: Joi.string().trim().min(2).allow(null, '')
+        .messages({
+          'any.required': 'plateCode is required',
+          'string.empty': 'plateCode is not allowed to be empty',
+          'string.min': 'plateCode length must be at least 2 characters long',
+        }),
+      regionName: Joi.string().trim().min(2)
+        .messages({
+          'any.required': 'regionName  is required',
+          'string.empty': 'regionName  is not allowed to be empty',
+          'string.min': 'regionName  length must be at least 2 characters long',
         }),
       unitName: Joi.string().trim().min(2)
         .messages({
@@ -74,17 +104,41 @@ const validateRegisterFarmer = (req, res, next) => {
           'string.empty': 'mccName is not allowed to be empty',
           'string.min': 'mccName length must be at least 2 characters long',
         }),
-      mccCode: Joi.string().trim().min(2).allow(null, '')
+      plateName: Joi.string().trim().min(2)
         .messages({
-          'any.required': 'mccCode is required',
-          'string.empty': 'mccCode is not allowed to be empty',
-          'string.min': 'mccCode length must be at least 2 characters long',
+          'any.required': 'plateName is required',
+          'string.empty': 'plateName is not allowed to be empty',
+          'string.min': 'plateName length must be at least 2 characters long',
         }),
-      userCode: Joi.string().trim().min(2).allow(null, '')
+      stateName: Joi.string().trim().min(2)
         .messages({
-          'any.required': 'userCode is required',
-          'string.empty': 'userCode is not allowed to be empty',
-          'string.min': 'userCode length must be at least 2 characters long',
+          'any.required': 'stateName is required',
+          'string.empty': 'stateName is not allowed to be empty',
+          'string.min': 'stateName length must be at least 2 characters long',
+        }),
+      districtName: Joi.string().trim().min(2)
+        .messages({
+          'any.required': 'districtName is required',
+          'string.empty': 'districtName is not allowed to be empty',
+          'string.min': 'districtName length must be at least 2 characters long',
+        }),
+      mendalName: Joi.string().trim().min(2)
+        .messages({
+          'any.required': 'mendalName is required',
+          'string.empty': 'mendalName is not allowed to be empty',
+          'string.min': 'mendalName length must be at least 2 characters long',
+        }),
+      panchayatName: Joi.string().trim().min(2)
+        .messages({
+          'any.required': 'panchayatName is required',
+          'string.empty': 'panchayatName is not allowed to be empty',
+          'string.min': 'panchayatName length must be at least 2 characters long',
+        }),
+      villageName: Joi.string().trim().min(2)
+        .messages({
+          'any.required': 'villageName is required',
+          'string.empty': 'villageName is not allowed to be empty',
+          'string.min': 'villageName length must be at least 2 characters long',
         }),
       password: Joi.string().min(6).max(12).required()
         .messages({
@@ -226,6 +280,11 @@ const validateResetLink = (req, res, next) => {
 const validateResetCode = (req, res, next) => {
   const resetCodeSchema = Joi.object()
     .keys({
+      phone: customJoi.string().phoneNumber({ format: 'international', strict: true }).required().messages({
+        'any.required': 'phone is required',
+        'string.empty': 'phone is not allowed to be empty',
+        'phoneNumber.invalid': 'phone did not seem to be a phone number',
+      }),
       verificationCode: Joi.string().trim().min(3).max(15)
         .required()
         .messages({
@@ -249,6 +308,11 @@ const validateResetCode = (req, res, next) => {
 const validatePassword = (req, res, next) => {
   const passwordSchema = Joi.object()
     .keys({
+      phone: customJoi.string().phoneNumber({ format: 'international', strict: true }).required().messages({
+        'any.required': 'phone is required',
+        'string.empty': 'phone is not allowed to be empty',
+        'phoneNumber.invalid': 'phone did not seem to be a phone number',
+      }),
       verificationCode: Joi.string().trim().min(3).max(15)
         .required()
         .messages({
@@ -306,12 +370,21 @@ const validateUpdateFarmer = (req, res, next) => {
         .min(new Date('1900-01-01').toISOString().split('T')[0])
         .max(new Date().toISOString().split('T')[0]),
       phone: customJoi.string().phoneNumber({ format: 'international', strict: true }),
+      userCode: Joi.string().min(2),
+      pinCode: Joi.string().min(2),
+      unitCode: Joi.string().min(2),
+      mccCode: Joi.string().min(2),
+      mccMobile: Joi.string().min(2),
+      plateCode: Joi.string().min(2),
+      regionName: Joi.string().min(2),
       unitName: Joi.string().min(2),
       mccName: Joi.string().min(2),
-      mccCode: Joi.string().min(2),
-      userCode: Joi.string().min(2),
-      regionName: Joi.string().min(2),
-      pinCode: Joi.string().min(2),
+      plateName: Joi.string().min(2),
+      stateName: Joi.string().min(2),
+      districtName: Joi.string().min(2),
+      mendalName: Joi.string().min(2),
+      panchayatName: Joi.string().min(2),
+      villageName: Joi.string().min(2),
       password: Joi.string().min(6).max(12)
         .messages({
           'any.required': '"password" is a required',
@@ -648,11 +721,17 @@ const validateViewData = (req, res, next) => {
 const validateViewUnitNameMccName = (req, res, next) => {
   const dataSchema = Joi.object()
     .keys({
-      pinCode: Joi.string().min(3).required()
+      attribute: Joi.string().min(3).required()
         .messages({
-          'any.required': 'pinCode is required',
-          'string.empty': 'pinCode is not allowed to be empty',
-          'string.min': 'pinCode length must be at least 3 characters long',
+          'any.required': 'attribute is required',
+          'string.empty': 'attribute is not allowed to be empty',
+          'string.min': 'attribute length must be at least 3 characters long',
+        }),
+      value: Joi.string().min(3).required()
+        .messages({
+          'any.required': 'value is required',
+          'string.empty': 'value is not allowed to be empty',
+          'string.min': 'value length must be at least 3 characters long',
         }),
     })
     .options({ abortEarly: false });
@@ -719,10 +798,74 @@ const validateSearchAppointment = (req, res, next) => {
   return validateSchema(dataSchema, req.body, res, next);
 };
 
+const validatePhone = (req, res, next) => {
+  const dataSchema = Joi.object()
+    .keys({
+      phone: customJoi.string().phoneNumber({ format: 'international', strict: true }).required().messages({
+        'any.required': 'phone is required',
+        'string.empty': 'phone is not allowed to be empty',
+        'phoneNumber.invalid': 'phone did not seem to be a phone number',
+      }),
+    })
+    .options({ abortEarly: false });
+
+  return validateSchema(dataSchema, req.body, res, next);
+};
+
+const validateRemoveAllFarmers = (req, res, next) => {
+  const dataSchema = Joi.object()
+    .keys({
+      field: Joi.string().min(4).required()
+        .messages({
+          'any.required': 'field is required',
+          'string.empty': 'field is not allowed to be empty',
+          'string.min': 'field should be 4 words minimum',
+        }),
+
+      value: Joi.string().min(4).required()
+        .messages({
+          'any.required': 'value is required',
+          'string.empty': 'value is not allowed to be empty',
+          'string.min': 'value should be 4 words minimum',
+        }),
+    })
+    .options({ abortEarly: false });
+
+  return validateSchema(dataSchema, req.body, res, next);
+};
+
+const validateUpdateDoctor = (req, res, next) => {
+  const dataSchema = Joi.object()
+    .keys({
+      doctorName: Joi.string().min(2).required()
+        .messages({
+          'any.required': 'doctorName is required',
+          'string.empty': 'doctorName is not allowed to be empty',
+          'string.min': 'doctorName should be 2 words minimum',
+        }),
+      specialization: Joi.string().min(2).required()
+        .messages({
+          'any.required': 'specialization is required',
+          'string.empty': 'specialization is not allowed to be empty',
+          'string.min': 'specialization should be 2 words minimum',
+        }),
+      regionName: Joi.string().min(2)
+        .messages({
+          'any.required': 'regionName is required',
+          'string.empty': 'regionName is not allowed to be empty',
+          'string.min': 'regionName should be 2 words minimum',
+        }),
+    })
+    .options({ abortEarly: false });
+
+  return validateSchema(dataSchema, req.body, res, next);
+};
+
 export {
   validateSlip,
   validateFeed,
   validateLogin,
+  validatePhone,
   validateProcced,
   validateMedical,
   validateViewData,
@@ -738,9 +881,11 @@ export {
   validateUpdateFarmer,
   validateUpdateCattle,
   validateViewByStatus,
+  validateUpdateDoctor,
   validateChangePassword,
   validateRegisterFarmer,
   validateRegisterCattle,
+  validateRemoveAllFarmers,
   validatePeriodicallySlip,
   validateUpdateAppointment,
   validateSearchAppointment,

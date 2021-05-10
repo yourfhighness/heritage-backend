@@ -231,6 +231,52 @@ class DoctorHelpers {
     await this.updateAppointment('PrescriptionId', savedData.id, 'id', appointmentId);
     return savedData;
   }
+
+  static async updateDoctor(newBody, existBody, email) {
+    const updatedDoctor = await Doctor.update({
+      status: existBody.status,
+      doctorName: newBody.doctorName || existBody.doctorName,
+      gender: existBody.gender,
+      phone: existBody.phone,
+      email: existBody.email,
+      password: existBody.password,
+      specialization: newBody.specialization || existBody.specialization,
+      treatment: existBody.treatment,
+      city: existBody.city,
+      regnumber: existBody.regnumber,
+      regcouncil: existBody.regcouncil,
+      regyear: existBody.regyear,
+      degree: existBody.degree,
+      college: existBody.college,
+      completionyear: existBody.completionyear,
+      experience: existBody.experience,
+      establishment: existBody.establishment,
+      establishmentname: existBody.establishmentname,
+      establishmentcity: existBody.establishmentcity,
+      establishmentlocality: existBody.establishmentlocality,
+      medicalregproofdocument: existBody.medicalregproofdocument,
+      identityproofdocument: existBody.identityproofdocument,
+      addressname: existBody.addressname,
+      latitude: 20.5937,
+      longitude: 78.9629,
+      weekday: existBody.weekday,
+      starttime: existBody.starttime,
+      endtime: existBody.endtime,
+      sessiontime: existBody.sessiontime,
+      consultationfees: existBody.consultationfees,
+      establishmenthours: existBody.establishmenthours,
+      establishmentlocation: existBody.establishmentlocation,
+      regionName: newBody.regionName || existBody.regionName,
+
+    }, { where: { email } });
+
+    if (updatedDoctor) {
+      const data = await this.doctorExist('email', email);
+      return data;
+    }
+
+    return null;
+  }
 }
 
 export default DoctorHelpers;

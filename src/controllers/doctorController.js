@@ -70,6 +70,28 @@ class DoctorController {
     }
   }
 
+  static async updateDoctor(req, res) {
+    try {
+      let data = await doctorHelper.doctorExist('email', req.doctor.email);
+      if (!data) {
+        responseHelper.handleError(NOT_FOUND, `Doctor with ${req.doctor.email} not found`);
+        return responseHelper.response(res);
+      }
+
+      data = await doctorHelper.updateDoctor(req.body, data, req.doctor.email);
+      if (data) {
+        responseHelper.handleSuccess(OK, 'Doctor updated successfully', data);
+        return responseHelper.response(res);
+      }
+
+      responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
+      return responseHelper.response(res);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
   static async viewAppointmentDetails(req, res) {
     try {
       const data = await doctorHelper.appointmentExist('id', req.params.id);
@@ -149,7 +171,7 @@ class DoctorController {
       const countAllData = viewedAppointments.count;
 
       if (viewedAppointments.rows.length === 0) {
-        responseHelper.handleError(NOT_FOUND, `${req.body.status} appointments not found at the momment`);
+        responseHelper.handleError(NOT_FOUND, `${req.body.status} appointments not found at the moment`);
         return responseHelper.response(res);
       }
 

@@ -148,7 +148,17 @@ class CattleHelpers {
   }
 
   static async viewAllCattle(attribute, value) {
-    const allSlips = await Cattle.findAll({ where: { [attribute]: value } });
+    const allSlips = await Cattle.findAll({
+      where: { [attribute]: value },
+      include:
+        [
+          {
+            model: Milking,
+            as: 'Milking',
+          },
+        ],
+    });
+
     return allSlips;
   }
 
@@ -162,9 +172,9 @@ class CattleHelpers {
     return viewData;
   }
 
-  static async selectData(value, skip, start) {
+  static async selectData(attribute, value, skip, start) {
     const viewData = await RegionUnitMccname.findAndCountAll({
-      where: { pinCode: value },
+      where: { [attribute]: value },
       limit: skip,
       offset: start,
     });

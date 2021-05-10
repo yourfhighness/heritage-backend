@@ -3,10 +3,10 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const Msg = process.env.MESSAGE;
 const UserID = process.env.USERID;
 const Password = process.env.PASSWORD;
 const SenderID = process.env.SENDERID;
-const Msg = process.env.MESSAGE;
 const EntityID = process.env.ENTITYID;
 const TemplateID = process.env.TEMPLATEID;
 

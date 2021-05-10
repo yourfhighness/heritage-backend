@@ -1,3 +1,3 @@
 # Heritage-backend
 
-Heritage: is Cattle Backend Project.
+Heritage: is Cattles Backend Project.

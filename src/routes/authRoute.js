@@ -47,6 +47,7 @@ authRouter
   .post('/login-farmer', validateLogin, farmerIsVerified, auth.loginFamer)
   .post('/login-admin', validateAdminAndDoctorLogin, adminIsVerified, admin.adminLogin)
   .post('/login-doctor', validateAdminAndDoctorLogin, doctorIsVerified, doctor.doctorLogin)
+  .post('/check-phone-from-reset-code-table', validateResetLink, auth.phoneExsitInResetCodesTable)
   .post('/verify-verification-otp', validateSignupOTP, verifySignupOTP, auth.verifyVerificationOTP);
 
 export default authRouter;

@@ -77,7 +77,7 @@ class CattleController {
         const data = await cattleHelper.viewData('type', req.body.type);
 
         if (data.length < 1) {
-          responseHelper.handleError(NOT_FOUND, `Data not found at the momment`);
+          responseHelper.handleError(NOT_FOUND, `Data not found at the moment`);
           return responseHelper.response(res);
         }
 
@@ -112,13 +112,13 @@ class CattleController {
   static async selectData(req, res, next) {
     try {
       const { start, end, pages, skip, paginate } = await paginateHelper.paginateData(req.query);
-      const data = await cattleHelper.selectData(req.body.pinCode, skip, start);
+      const data = await cattleHelper.selectData(req.body.attribute, req.body.value, skip, start);
 
       const allDatata = data.rows;
       const countAllData = data.count;
 
       if (data.rows.length === 0) {
-        responseHelper.handleError(NOT_FOUND, `This pincode ${req.body.pinCode} not found at the momment`);
+        responseHelper.handleError(NOT_FOUND, `This ${req.body.attribute} ${req.body.value} not found at the moment`);
         return responseHelper.response(res);
       }
 
