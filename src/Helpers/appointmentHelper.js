@@ -15,18 +15,52 @@ class AppointmentHelpers {
     return viewedData;
   }
 
+  static async leastFrequent(array, arrayLength) {
+    array.sort();
+
+    let minCount = arrayLength + 1; let
+      result = -1;
+    let currentCount = 1;
+
+    for (let i = 1; i < arrayLength; i += 1) {
+      if (array[i] === array[i - 1]) currentCount += 1;
+      else {
+        if (currentCount < minCount) {
+          minCount = currentCount;
+          result = array[i - 1];
+        }
+
+        currentCount = 1;
+      }
+    }
+
+    if (currentCount < minCount) {
+      minCount = currentCount;
+      result = array[arrayLength - 1];
+    }
+
+    return result;
+  }
+
   static async saveAppointment(cattleId, farmerId, regionName, PrescriptionId, photos, body) {
-    let viewData;
+    let allDoctors;
+    const doctorIdContainer = [];
 
     if (regionName === null) {
-      viewData = await Doctor.findOne({ where: { regionName: 'HYDERABAD-1' } });
+      allDoctors = await Doctor.findAll({ where: { regionName: 'HYDERABAD-1' } });
     }
     if (regionName !== null) {
-      viewData = await Doctor.findOne({ where: { regionName: regionName.toUpperCase() } });
+      allDoctors = await Doctor.findAll({ where: { regionName: regionName.toUpperCase() } });
+    }
+    for (let i = 0; i < allDoctors.length; i += 1) {
+      const assignedDoctors = await Appointment.findAll({ where: { doctorId: allDoctors[i].id } });
+      for (let j = 0; j < assignedDoctors.length; j += 1) {
+        doctorIdContainer.push(assignedDoctors[j].doctorId);
+      }
     }
 
     const savedAppointment = await Appointment.create({
-      doctorId: viewData.id,
+      doctorId: await this.leastFrequent(doctorIdContainer, doctorIdContainer.length),
       cattleId,
       farmerId,
       PrescriptionId,
