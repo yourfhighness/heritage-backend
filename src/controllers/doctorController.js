@@ -191,11 +191,6 @@ class DoctorController {
         return responseHelper.response(res);
       }
 
-      if (data.doctorId !== req.doctor.id) {
-        responseHelper.handleError(NOT_FOUND, `Appointment with ${req.params.id} does not belong to you`);
-        return responseHelper.response(res);
-      }
-
       data = await doctorHelper.updateAppointmentStatus(req.params.id, req.doctor.id, req.body.status);
       if (data) {
         data = await doctorHelper.appointmentExist('id', req.params.id);
