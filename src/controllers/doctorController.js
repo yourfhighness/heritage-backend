@@ -196,7 +196,7 @@ class DoctorController {
         return responseHelper.response(res);
       }
 
-      data = await doctorHelper.updateAppointmentStatus(req.params.id, req.doctor.id, req.body.status);
+      data = await doctorHelper.updateAppointmentStatus(req.params.id, req.body.status);
       if (data) {
         data = await doctorHelper.appointmentExist('id', req.params.id);
         responseHelper.handleSuccess(OK, 'Appointment update successfully', data);

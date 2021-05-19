@@ -206,8 +206,8 @@ class DoctorHelpers {
     return undefined;
   }
 
-  static async updateAppointmentStatus(id, doctorId, status) {
-    const updateData = await Appointment.update({ status }, { where: { [Op.and]: [{ id }, { doctorId }] } });
+  static async updateAppointmentStatus(id, status) {
+    const updateData = await Appointment.update({ status }, { where: { id } });
 
     return updateData;
   }
