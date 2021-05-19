@@ -217,13 +217,17 @@ class DoctorHelpers {
     return updateData;
   }
 
-  static async saveMedical(body, appointmentId, document) {
+  static async saveMedical(appointmentExist, body, appointmentId, document) {
     const savedData = await Medical.create({
-      doctorId: body.doctorId,
-      farmerId: body.farmerId,
-      cattleId: body.cattleId,
+      doctorId: appointmentExist.doctorId,
+      farmerId: appointmentExist.farmerId,
+      cattleId: appointmentExist.cattleId,
       appointmentId,
       document,
+      currentDiagnosis: body.currentDiagnosis,
+      historyFindings: body.historyFindings,
+      specialInstruction: body.specialInstruction,
+      treatment: body.treatment,
       createdAt: new Date(),
       updatedAt: new Date(),
     });

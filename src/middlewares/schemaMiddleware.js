@@ -650,6 +650,26 @@ const validateMedical = (req, res, next) => {
           'string.empty': 'document is not allowed to be empty',
           'string.min': 'document length must be at least 6 characters long',
         }),
+      currentDiagnosis: Joi.string().trim().required()
+        .messages({
+          'any.required': 'currentDiagnosis is required',
+          'string.empty': 'currentDiagnosis is not allowed to be empty',
+        }),
+      historyFindings: Joi.string().trim().required()
+        .messages({
+          'any.required': 'historyFindings is required',
+          'string.empty': 'historyFindings is not allowed to be empty',
+        }),
+      specialInstruction: Joi.string().trim().required()
+        .messages({
+          'any.required': 'specialInstruction is required',
+          'string.empty': 'specialInstruction is not allowed to be empty',
+        }),
+      treatment: Joi.string().trim().required()
+        .messages({
+          'any.required': 'treatment is required',
+          'string.empty': 'treatment is not allowed to be empty',
+        }),
     })
     .options({ abortEarly: false });
 

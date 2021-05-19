@@ -16,7 +16,7 @@ const s3bucket = new AWS.S3({
   secretAccessKey: 'uEfHF9+LpyiNKsvwgpwooaBk+RSQq4JZP+CW48e5',
 });
 
-const uploadToS3 = (file, appointmentExist, appointmentId, res) => {
+const uploadToS3 = (file, appointmentExist, body, appointmentId, res) => {
   try {
     s3bucket.createBucket(() => {
       const params = {
@@ -31,7 +31,7 @@ const uploadToS3 = (file, appointmentExist, appointmentId, res) => {
           return responseHelper.response(res);
         }
 
-        const data = await doctorHelper.saveMedical(appointmentExist, appointmentId, result.Location);
+        const data = await doctorHelper.saveMedical(appointmentExist, body, appointmentId, result.Location);
         responseHelper.handleSuccess(OK, 'Medical saved successfully', data);
         return responseHelper.response(res);
       });
@@ -207,20 +207,25 @@ class DoctorController {
   }
 
   static async saveMedical(req, res) {
-    if (!req.files.document) {
-      responseHelper.handleError(BAD_REQUEST, 'Please document is required.');
-      return responseHelper.response(res);
-    }
-
     const appointmentExist = await doctorHelper.appointmentExist('id', req.params.appointmentId);
     if (!appointmentExist) {
       responseHelper.handleError(NOT_FOUND, `Appointment with id ${req.params.appointmentId} not found at the moment`);
       return responseHelper.response(res);
     }
 
-    const busboy = new Busboy({ headers: req.headers });
-    busboy.on('finish', () => { req.files.document.map((element) => uploadToS3(element, appointmentExist, req.params.appointmentId, res)); });
-    req.pipe(busboy);
+    if (req.files && Object.keys(req.files).length === 0 && req.files.constructor === Object) {
+      const data = await doctorHelper.saveMedical(appointmentExist, req.body, req.params.appointmentId, null);
+      responseHelper.handleSuccess(OK, 'Medical saved successfully', data);
+      return responseHelper.response(res);
+    }
+
+    if (req.files) {
+      if (req.files.document) {
+        const busboy = new Busboy({ headers: req.headers });
+        busboy.on('finish', () => { req.files.document.map((element) => uploadToS3(element, appointmentExist, req.body, req.params.appointmentId, res)); });
+        req.pipe(busboy);
+      }
+    }
   }
 }
 
