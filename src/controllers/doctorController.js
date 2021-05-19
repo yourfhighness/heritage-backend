@@ -191,7 +191,7 @@ class DoctorController {
         return responseHelper.response(res);
       }
 
-      if (data.doctorId !== req.doctor.id) {
+      if (data.doctorId !== req.doctor.id && req.doctor.regionName !== 'HYDERABAD') {
         responseHelper.handleError(NOT_FOUND, `Appointment with ${req.params.id} does not belong to you`);
         return responseHelper.response(res);
       }
