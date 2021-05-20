@@ -121,6 +121,7 @@ class FarmerHelpers {
       const data = await RegionUnitMccname.findOne({ where: { [Op.and]: [{ pinCode: body.pinCode }, { unitName: body.unitName }, { mccName: body.mccName }] } });
 
       const updateFarmer = await Farmer.update({
+        status: body.status,
         profilePicture,
         steps: body.steps,
         farmerName: body.farmerName,
@@ -154,6 +155,7 @@ class FarmerHelpers {
     }
 
     const updateFarmer = await Farmer.update({
+      status: body.status,
       profilePicture,
       steps: body.steps,
       farmerName: body.farmerName,

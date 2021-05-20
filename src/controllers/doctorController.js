@@ -218,6 +218,11 @@ class DoctorController {
       return responseHelper.response(res);
     }
 
+    if (appointmentExist.doctorId !== req.doctor.id && req.doctor.regionName !== 'HYDERABAD') {
+      responseHelper.handleError(NOT_FOUND, `Appointment with ${req.params.appointmentId} does not belong to you`);
+      return responseHelper.response(res);
+    }
+
     if (req.files && Object.keys(req.files).length === 0 && req.files.constructor === Object) {
       const data = await doctorHelper.saveMedical(appointmentExist, req.body, req.params.appointmentId, null);
       responseHelper.handleSuccess(OK, 'Medical saved successfully', data);

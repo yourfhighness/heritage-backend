@@ -37,5 +37,13 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: { type: DataTypes.DATE },
   }, {});
 
+  Doctor.associate = (models) => {
+    Doctor.hasMany(models.Appointment, {
+      foreignKey: 'doctorId',
+      as: 'Appointment',
+      onDelete: 'CASCADE',
+    });
+  };
+
   return Doctor;
 };

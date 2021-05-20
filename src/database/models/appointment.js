@@ -20,6 +20,12 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
     });
 
+    appointment.belongsTo(models.Doctor, {
+      foreignKey: 'doctorId',
+      as: 'Doctor',
+      onDelete: 'CASCADE',
+    });
+
     appointment.belongsTo(models.Cattle, {
       foreignKey: 'cattleId',
       as: 'Cattle',

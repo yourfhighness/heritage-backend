@@ -78,6 +78,25 @@ class AppointmentHelpers {
   static async viewAppointment(id, farmerId) {
     const appointment = await Appointment.findOne({
       where: { [Op.and]: [{ id }, { farmerId }] },
+      include:
+        [
+          {
+            model: Medical,
+            as: 'Medical',
+          },
+          {
+            model: Cattle,
+            as: 'Cattle',
+          },
+          {
+            model: Farmer,
+            as: 'Farmer',
+          },
+          {
+            model: Doctor,
+            as: 'Doctor',
+          },
+        ],
     });
     return appointment;
   }
