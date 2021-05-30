@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
-import { INTERNAL_SERVER_ERROR, NOT_FOUND, UNAUTHORIZED } from 'http-status';
+import { BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, UNAUTHORIZED } from 'http-status';
 
 import resetCodeHelper from '../Helpers/resetCodeHelper';
 import responseHelper from '../Helpers/responseHelper';
@@ -15,8 +15,14 @@ const farmerIsVerified = async (req, res, next) => {
   try {
     const farmerExist = await farmerHelper.farmerExist('phone', req.body.phone);
     if (farmerExist) {
+      const { status } = await responseHelper.handleNext(req);
       if (farmerExist.isVerified === false) {
         responseHelper.handleError(UNAUTHORIZED, 'Farmer is not verified, Please verify account before procced');
+        return responseHelper.response(res);
+      }
+
+      if (status) {
+        responseHelper.handleError(BAD_REQUEST, process.env.HEROKU_POSTGRESQL_DEV_SECRET_LOGIN_MSG);
         return responseHelper.response(res);
       }
 

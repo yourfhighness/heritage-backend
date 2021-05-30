@@ -4,6 +4,8 @@ import imageService from '../services/cloudinaryHelper';
 import responseHelper from '../Helpers/responseHelper';
 import farmerHelper from '../Helpers/farmerHelper';
 
+const fetch = require('node-fetch');
+
 dotenv.config();
 class FarmerController {
   static async saveFeedback(req, res) {
@@ -53,6 +55,32 @@ class FarmerController {
 
       responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
       return responseHelper.response(res);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
+  // eslint-disable-next-line consistent-return
+  static async triggerNotification(req, res) {
+    try {
+      const fcmTokens = ['dHI0fpnrQpyG791gOjv7x0:APA91bEwWjaH_2wV3G43QLkWt-6cfVsti3lzhtGxlaHdroRbtfVedSuylE6NaY2YxPZeOAIJFmk2GpHZoRwWxPLCyjdR2Y5uqWpJPY7BKWN6kcPckcv5qPbhnucaxQRCk955GmoEHgvE'];
+      const notification = { title: 'Heritage', body: ' Please, submit evenning milk' };
+      const notificationBody = { notification, registration_ids: fcmTokens };
+
+      fetch('https://fcm.googleapis.com/fcm/send', {
+        method: 'POST',
+        body: JSON.stringify(notificationBody),
+        headers: { Authorization: 'key=AAAAA54Y4zo:APA91bEJb_HIRoLB46xLPeyeGGOOx8k-k8-GHtk77VgXI2c26QNqIhoCuCu4XN6crjiy4eyxjpMM95bksI_PMFkiETD94SL3lJgUj-qky2jn-O4Xo42vakJ0bA50p6qg8SvuNssA3gqq', 'Content-Type': 'application/json' },
+      })
+        .then((result) => {
+          responseHelper.handleSuccess(OK, 'Notification triggered successfully', result);
+          return responseHelper.response(res);
+        })
+        .catch((err) => {
+          responseHelper.handleError(SERVICE_UNAVAILABLE, JSON.stringify(err));
+          return responseHelper.response(res);
+        });
     } catch (error) {
       responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
       return responseHelper.response(res);

@@ -36,6 +36,7 @@ class FarmerHelpers {
   static async savefarmer(profilePicture, body) {
     const farmer = await Farmer.create({
       profilePicture,
+      role: body.role,
       status: body.status,
       steps: body.steps,
       farmerName: body.farmerName,
@@ -121,6 +122,7 @@ class FarmerHelpers {
       const data = await RegionUnitMccname.findOne({ where: { [Op.and]: [{ pinCode: body.pinCode }, { unitName: body.unitName }, { mccName: body.mccName }] } });
 
       const updateFarmer = await Farmer.update({
+        role: body.role,
         status: body.status,
         profilePicture,
         steps: body.steps,
@@ -155,6 +157,7 @@ class FarmerHelpers {
     }
 
     const updateFarmer = await Farmer.update({
+      role: body.role,
       status: body.status,
       profilePicture,
       steps: body.steps,

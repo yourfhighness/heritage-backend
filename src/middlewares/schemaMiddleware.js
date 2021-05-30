@@ -12,6 +12,11 @@ const validateRegisterFarmer = (req, res, next) => {
           'any.required': 'profilePicture is required',
           'string.empty': 'profilePicture is not allowed to be empty',
         }),
+      role: Joi.string().trim().allow(null, '')
+        .messages({
+          'any.required': 'role is required',
+          'string.empty': 'role is not allowed to be empty',
+        }),
       steps: Joi.string().trim().allow(null, '')
         .messages({
           'any.required': 'steps is required',
@@ -362,6 +367,7 @@ const validateUpdateFarmer = (req, res, next) => {
   const updateSchema = Joi.object()
     .keys({
       profilePicture: Joi.string().min(5),
+      role: Joi.string().min(2),
       status: Joi.string().min(2),
       steps: Joi.string(),
       farmerName: Joi.string().min(2),

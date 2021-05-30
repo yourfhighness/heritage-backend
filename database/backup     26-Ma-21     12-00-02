@@ -1,0 +1,1010 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 13.2 (Ubuntu 13.2-1.pgdg20.04+1)
+-- Dumped by pg_dump version 13.2
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: AdminSessions; Type: TABLE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE TABLE public."AdminSessions" (
+    id integer NOT NULL,
+    "adminId" integer,
+    "adminName" character varying(255),
+    session character varying(1000),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."AdminSessions" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: AdminSessions_id_seq; Type: SEQUENCE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE SEQUENCE public."AdminSessions_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."AdminSessions_id_seq" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: AdminSessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER SEQUENCE public."AdminSessions_id_seq" OWNED BY public."AdminSessions".id;
+
+
+--
+-- Name: Admins; Type: TABLE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE TABLE public."Admins" (
+    id integer NOT NULL,
+    "profilePicture" character varying(1000),
+    "adminName" character varying(255),
+    gender character varying(255),
+    age character varying(255),
+    email character varying(255),
+    phone character varying(255),
+    password character varying(255),
+    "regionName" character varying(255),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."Admins" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: Admins_id_seq; Type: SEQUENCE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE SEQUENCE public."Admins_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Admins_id_seq" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: Admins_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER SEQUENCE public."Admins_id_seq" OWNED BY public."Admins".id;
+
+
+--
+-- Name: Appointments; Type: TABLE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE TABLE public."Appointments" (
+    id integer NOT NULL,
+    "doctorId" integer,
+    "farmerId" integer,
+    "cattleId" integer,
+    "PrescriptionId" integer,
+    status character varying(255),
+    description character varying(1000),
+    "appointmentDate" timestamp with time zone,
+    "appointmentStartTime" character varying(255),
+    photos character varying(1000)[],
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."Appointments" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: Appointments_id_seq; Type: SEQUENCE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE SEQUENCE public."Appointments_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Appointments_id_seq" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: Appointments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER SEQUENCE public."Appointments_id_seq" OWNED BY public."Appointments".id;
+
+
+--
+-- Name: Cattles; Type: TABLE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE TABLE public."Cattles" (
+    id integer NOT NULL,
+    "profilePicture" character varying(1000),
+    "farmerId" integer,
+    status character varying(255),
+    cattle character varying(255),
+    "cattleUID" character varying(255),
+    "cattleName" character varying(255),
+    category character varying(255),
+    age timestamp with time zone,
+    breed character varying(255),
+    weight integer,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."Cattles" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: Cattles_id_seq; Type: SEQUENCE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE SEQUENCE public."Cattles_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Cattles_id_seq" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: Cattles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER SEQUENCE public."Cattles_id_seq" OWNED BY public."Cattles".id;
+
+
+--
+-- Name: DoctorSessions; Type: TABLE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE TABLE public."DoctorSessions" (
+    id integer NOT NULL,
+    "doctorId" integer,
+    "doctorName" character varying(255),
+    session character varying(1000),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."DoctorSessions" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: DoctorSessions_id_seq; Type: SEQUENCE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE SEQUENCE public."DoctorSessions_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."DoctorSessions_id_seq" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: DoctorSessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER SEQUENCE public."DoctorSessions_id_seq" OWNED BY public."DoctorSessions".id;
+
+
+--
+-- Name: Doctors; Type: TABLE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE TABLE public."Doctors" (
+    id integer NOT NULL,
+    status character varying(255),
+    "doctorName" character varying(255),
+    gender character varying(255),
+    phone character varying(255),
+    email character varying(255),
+    password character varying(255),
+    specialization character varying(255),
+    treatment character varying(255),
+    city character varying(255),
+    regnumber character varying(255),
+    regcouncil character varying(255),
+    regyear character varying(255),
+    degree character varying(255),
+    college character varying(255),
+    completionyear character varying(255),
+    experience character varying(255),
+    establishment character varying(255),
+    establishmentname character varying(255),
+    establishmentcity character varying(255),
+    establishmentlocality character varying(255),
+    medicalregproofdocument character varying(255),
+    identityproofdocument character varying(255),
+    addressname character varying(255),
+    latitude numeric,
+    longitude numeric,
+    weekday character varying(255),
+    starttime character varying(255),
+    endtime character varying(255),
+    sessiontime character varying(255),
+    consultationfees character varying(255),
+    establishmenthours character varying(255),
+    establishmentlocation character varying(255),
+    "regionName" character varying(255),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."Doctors" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: Doctors_id_seq; Type: SEQUENCE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE SEQUENCE public."Doctors_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Doctors_id_seq" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: Doctors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER SEQUENCE public."Doctors_id_seq" OWNED BY public."Doctors".id;
+
+
+--
+-- Name: DynamicRecords; Type: TABLE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE TABLE public."DynamicRecords" (
+    id integer NOT NULL,
+    name character varying(255),
+    type character varying(255),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."DynamicRecords" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: DynamicRecords_id_seq; Type: SEQUENCE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE SEQUENCE public."DynamicRecords_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."DynamicRecords_id_seq" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: DynamicRecords_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER SEQUENCE public."DynamicRecords_id_seq" OWNED BY public."DynamicRecords".id;
+
+
+--
+-- Name: FarmerFeedbacks; Type: TABLE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE TABLE public."FarmerFeedbacks" (
+    id integer NOT NULL,
+    "farmerId" integer,
+    feedback character varying(1000),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."FarmerFeedbacks" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: FarmerFeedbacks_id_seq; Type: SEQUENCE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE SEQUENCE public."FarmerFeedbacks_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."FarmerFeedbacks_id_seq" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: FarmerFeedbacks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER SEQUENCE public."FarmerFeedbacks_id_seq" OWNED BY public."FarmerFeedbacks".id;
+
+
+--
+-- Name: FarmerSessions; Type: TABLE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE TABLE public."FarmerSessions" (
+    id integer NOT NULL,
+    "farmerId" integer,
+    "farmerName" character varying(255),
+    session character varying(1000),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."FarmerSessions" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: FarmerSessions_id_seq; Type: SEQUENCE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE SEQUENCE public."FarmerSessions_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."FarmerSessions_id_seq" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: FarmerSessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER SEQUENCE public."FarmerSessions_id_seq" OWNED BY public."FarmerSessions".id;
+
+
+--
+-- Name: Farmers; Type: TABLE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE TABLE public."Farmers" (
+    id integer NOT NULL,
+    "profilePicture" character varying(1000),
+    role character varying(255) DEFAULT 'farmer'::character varying,
+    status character varying(255) DEFAULT 'waiting'::character varying,
+    steps character varying(255),
+    "farmerName" character varying(255),
+    gender character varying(255),
+    age timestamp with time zone,
+    phone character varying(255),
+    "userCode" character varying(255),
+    "pinCode" character varying(255),
+    "unitCode" character varying(255),
+    "mccCode" character varying(255),
+    "mccMobile" character varying(255),
+    "plateCode" character varying(255),
+    "regionName" character varying(255),
+    "unitName" character varying(255),
+    "mccName" character varying(255),
+    "plateName" character varying(255),
+    "stateName" character varying(255),
+    "districtName" character varying(255),
+    "mendalName" character varying(255),
+    "panchayatName" character varying(255),
+    "villageName" character varying(255),
+    "isVerified" boolean,
+    password character varying(255),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."Farmers" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: Farmers_id_seq; Type: SEQUENCE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE SEQUENCE public."Farmers_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Farmers_id_seq" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: Farmers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER SEQUENCE public."Farmers_id_seq" OWNED BY public."Farmers".id;
+
+
+--
+-- Name: Medicals; Type: TABLE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE TABLE public."Medicals" (
+    id integer NOT NULL,
+    "doctorId" integer,
+    "farmerId" integer,
+    "cattleId" integer,
+    "appointmentId" integer,
+    document character varying(1000),
+    "currentDiagnosis" character varying(1000),
+    "historyFindings" character varying(1000),
+    "specialInstruction" character varying(1000),
+    treatment character varying(1000),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."Medicals" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: Medicals_id_seq; Type: SEQUENCE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE SEQUENCE public."Medicals_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Medicals_id_seq" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: Medicals_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER SEQUENCE public."Medicals_id_seq" OWNED BY public."Medicals".id;
+
+
+--
+-- Name: Milkings; Type: TABLE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE TABLE public."Milkings" (
+    id integer NOT NULL,
+    "cattleId" integer,
+    "milkProduction" integer,
+    "fatInMilk" integer,
+    "pregnantMonth" integer,
+    "LactationNumber" integer,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."Milkings" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: Milkings_id_seq; Type: SEQUENCE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE SEQUENCE public."Milkings_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Milkings_id_seq" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: Milkings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER SEQUENCE public."Milkings_id_seq" OWNED BY public."Milkings".id;
+
+
+--
+-- Name: RegionUnitMccnames; Type: TABLE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE TABLE public."RegionUnitMccnames" (
+    id integer NOT NULL,
+    "pinCode" character varying(255),
+    "unitCode" character varying(255),
+    "mccCode" character varying(255),
+    "mccMobile" character varying(255),
+    "plateCode" character varying(255),
+    "regionName" character varying(255),
+    "unitName" character varying(255),
+    "mccName" character varying(255),
+    "plateName" character varying(255),
+    "stateName" character varying(255),
+    "districtName" character varying(255),
+    "mendalName" character varying(255),
+    "panchayatName" character varying(255),
+    "villageName" character varying(255),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."RegionUnitMccnames" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: RegionUnitMccnames_id_seq; Type: SEQUENCE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE SEQUENCE public."RegionUnitMccnames_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."RegionUnitMccnames_id_seq" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: RegionUnitMccnames_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER SEQUENCE public."RegionUnitMccnames_id_seq" OWNED BY public."RegionUnitMccnames".id;
+
+
+--
+-- Name: ResetCodes; Type: TABLE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE TABLE public."ResetCodes" (
+    id integer NOT NULL,
+    "farmerId" integer,
+    phone character varying(255),
+    code character varying(255),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."ResetCodes" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: ResetCodes_id_seq; Type: SEQUENCE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE SEQUENCE public."ResetCodes_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."ResetCodes_id_seq" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: ResetCodes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER SEQUENCE public."ResetCodes_id_seq" OWNED BY public."ResetCodes".id;
+
+
+--
+-- Name: SemiVerifiedFarmers; Type: TABLE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE TABLE public."SemiVerifiedFarmers" (
+    id integer NOT NULL,
+    "profilePicture" character varying(1000),
+    status character varying(255),
+    "farmerName" character varying(255),
+    "nomineeName" character varying(255),
+    gender character varying(255),
+    age timestamp with time zone,
+    occupation character varying(255),
+    "monthlyIncome" character varying(255),
+    "cardNo" character varying(255),
+    "enrollmentID" character varying(255),
+    "paymentDone" timestamp with time zone,
+    phone character varying(255),
+    "regionName" character varying(255),
+    "unitName" character varying(255),
+    "mccName" character varying(255),
+    "mccCode" character varying(255),
+    "pinCode" character varying(255),
+    "userCode" character varying(255),
+    "isVerified" boolean,
+    password character varying(255),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."SemiVerifiedFarmers" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: SemiVerifiedFarmers_id_seq; Type: SEQUENCE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE SEQUENCE public."SemiVerifiedFarmers_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."SemiVerifiedFarmers_id_seq" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: SemiVerifiedFarmers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER SEQUENCE public."SemiVerifiedFarmers_id_seq" OWNED BY public."SemiVerifiedFarmers".id;
+
+
+--
+-- Name: SequelizeMeta; Type: TABLE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE TABLE public."SequelizeMeta" (
+    name character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public."SequelizeMeta" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: Slips; Type: TABLE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE TABLE public."Slips" (
+    id integer NOT NULL,
+    "farmerId" integer,
+    "cattleId" integer,
+    "issueDate" timestamp with time zone,
+    shift character varying(255),
+    quantity integer,
+    fat character varying(255),
+    snf character varying(255),
+    amount integer,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."Slips" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: Slips_id_seq; Type: SEQUENCE; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+CREATE SEQUENCE public."Slips_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Slips_id_seq" OWNER TO ubxzvpyzcnmatm;
+
+--
+-- Name: Slips_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER SEQUENCE public."Slips_id_seq" OWNED BY public."Slips".id;
+
+
+--
+-- Name: AdminSessions id; Type: DEFAULT; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER TABLE ONLY public."AdminSessions" ALTER COLUMN id SET DEFAULT nextval('public."AdminSessions_id_seq"'::regclass);
+
+
+--
+-- Name: Admins id; Type: DEFAULT; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER TABLE ONLY public."Admins" ALTER COLUMN id SET DEFAULT nextval('public."Admins_id_seq"'::regclass);
+
+
+--
+-- Name: Appointments id; Type: DEFAULT; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER TABLE ONLY public."Appointments" ALTER COLUMN id SET DEFAULT nextval('public."Appointments_id_seq"'::regclass);
+
+
+--
+-- Name: Cattles id; Type: DEFAULT; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER TABLE ONLY public."Cattles" ALTER COLUMN id SET DEFAULT nextval('public."Cattles_id_seq"'::regclass);
+
+
+--
+-- Name: DoctorSessions id; Type: DEFAULT; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER TABLE ONLY public."DoctorSessions" ALTER COLUMN id SET DEFAULT nextval('public."DoctorSessions_id_seq"'::regclass);
+
+
+--
+-- Name: Doctors id; Type: DEFAULT; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER TABLE ONLY public."Doctors" ALTER COLUMN id SET DEFAULT nextval('public."Doctors_id_seq"'::regclass);
+
+
+--
+-- Name: DynamicRecords id; Type: DEFAULT; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER TABLE ONLY public."DynamicRecords" ALTER COLUMN id SET DEFAULT nextval('public."DynamicRecords_id_seq"'::regclass);
+
+
+--
+-- Name: FarmerFeedbacks id; Type: DEFAULT; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER TABLE ONLY public."FarmerFeedbacks" ALTER COLUMN id SET DEFAULT nextval('public."FarmerFeedbacks_id_seq"'::regclass);
+
+
+--
+-- Name: FarmerSessions id; Type: DEFAULT; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER TABLE ONLY public."FarmerSessions" ALTER COLUMN id SET DEFAULT nextval('public."FarmerSessions_id_seq"'::regclass);
+
+
+--
+-- Name: Farmers id; Type: DEFAULT; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER TABLE ONLY public."Farmers" ALTER COLUMN id SET DEFAULT nextval('public."Farmers_id_seq"'::regclass);
+
+
+--
+-- Name: Medicals id; Type: DEFAULT; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER TABLE ONLY public."Medicals" ALTER COLUMN id SET DEFAULT nextval('public."Medicals_id_seq"'::regclass);
+
+
+--
+-- Name: Milkings id; Type: DEFAULT; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER TABLE ONLY public."Milkings" ALTER COLUMN id SET DEFAULT nextval('public."Milkings_id_seq"'::regclass);
+
+
+--
+-- Name: RegionUnitMccnames id; Type: DEFAULT; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER TABLE ONLY public."RegionUnitMccnames" ALTER COLUMN id SET DEFAULT nextval('public."RegionUnitMccnames_id_seq"'::regclass);
+
+
+--
+-- Name: ResetCodes id; Type: DEFAULT; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER TABLE ONLY public."ResetCodes" ALTER COLUMN id SET DEFAULT nextval('public."ResetCodes_id_seq"'::regclass);
+
+
+--
+-- Name: SemiVerifiedFarmers id; Type: DEFAULT; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER TABLE ONLY public."SemiVerifiedFarmers" ALTER COLUMN id SET DEFAULT nextval('public."SemiVerifiedFarmers_id_seq"'::regclass);
+
+
+--
+-- Name: Slips id; Type: DEFAULT; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+ALTER TABLE ONLY public."Slips" ALTER COLUMN id SET DEFAULT nextval('public."Slips_id_seq"'::regclass);
+
+
+--
+-- Data for Name: AdminSessions; Type: TABLE DATA; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+COPY public."AdminSessions" (id, "adminId", "adminName", session, "createdAt", "updatedAt") FROM stdin;
+1	2	Arjun Murali	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoyLCJhZG1pbk5hbWUiOiJBcmp1biBNdXJhbGkiLCJlbWFpbCI6ImFyanVubTEyQGdtYWlsLmNvbSIsInBob25lIjoiKzkxNzAyMTAwNzQ5OSIsImlhdCI6MTYyMTMyNTc0NH0.55d3iwb-sqigkJqK3HTvXtu7hV2C7qTvmrKjQ9BnssY	2021-05-18 08:15:44.495+00	2021-05-18 08:15:44.496+00
+2	1	Key Joshua	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoxLCJhZG1pbk5hbWUiOiJLZXkgSm9zaHVhIiwiZW1haWwiOiJrLmpvc2h1YTg1NUBnbWFpbC5jb20iLCJwaG9uZSI6IisyNTA3ODk2MTk0NDIiLCJpYXQiOjE2MjEzNDA1NTl9.WglOwd7cYqC4ShAy4zslN81vMNTFZ3_9DlLp-2Lz9Cc	2021-05-18 12:22:39.801+00	2021-05-18 12:22:39.804+00
+\.
+
+
+--
+-- Data for Name: Admins; Type: TABLE DATA; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+COPY public."Admins" (id, "profilePicture", "adminName", gender, age, email, phone, password, "regionName", "createdAt", "updatedAt") FROM stdin;
+1	https://media-exp1.licdn.com/dms/image/C5603AQGOa0HFf1180Q/profile-displayphoto-shrink_200_200/0/1580515635328?e=1617235200&v=beta&t=etBBU13eKaMCFHjwzPrY4xd3_uLayn6wTgeJp4E_whU	Key Joshua	male	1994-09-15	k.joshua855@gmail.com	+250789619442	$2a$10$HrBTD.v41Z9RiBQY09YjkuOAMqKtXi7eKDQyaFH6CSvAkhfk.2ErK	HYDERABAD	2021-05-18 08:03:51.052+00	2021-05-18 08:03:51.052+00
+2	https://media-exp1.licdn.com/dms/image/C5603AQGOa0HFf1180Q/profile-displayphoto-shrink_200_200/0/1580515635328?e=1617235200&v=beta&t=etBBU13eKaMCFHjwzPrY4xd3_uLayn6wTgeJp4E_whU	Arjun Murali	male	1994-01-01	arjunm12@gmail.com	+917021007499	$2a$10$mxW6odIQSqj5uu64n0cwu.LGkXf/zT.tJbT3LHd1aKtUeuU6nzQtG	HYDERABAD	2021-05-18 08:03:51.17+00	2021-05-18 08:03:51.17+00
+3	https://media-exp1.licdn.com/dms/image/C5603AQGOa0HFf1180Q/profile-displayphoto-shrink_200_200/0/1580515635328?e=1617235200&v=beta&t=etBBU13eKaMCFHjwzPrY4xd3_uLayn6wTgeJp4E_whU	HYDERABAD-1	male	1994-09-15	admin@hyd1.com	+917123456789	$2a$10$eQbEKDwLO8nzWP3Q/sdA9e/fpS2ATXwf29TZVCa5L6g483ItqhY7i	HYDERABAD-1	2021-05-18 08:03:51.285+00	2021-05-18 08:03:51.285+00
+4	https://media-exp1.licdn.com/dms/image/C5603AQGOa0HFf1180Q/profile-displayphoto-shrink_200_200/0/1580515635328?e=1617235200&v=beta&t=etBBU13eKaMCFHjwzPrY4xd3_uLayn6wTgeJp4E_whU	HYDERABAD-2	male	1994-09-15	admin@hyd2.com	+917123456789	$2a$10$GR0vYK3Zq.KMPEs2lRFpKuGd2agWqvtHfAtyPlFxfaqNF9ixpM0HW	HYDERABAD-2	2021-05-18 08:03:51.403+00	2021-05-18 08:03:51.403+00
+5	https://media-exp1.licdn.com/dms/image/C5603AQGOa0HFf1180Q/profile-displayphoto-shrink_200_200/0/1580515635328?e=1617235200&v=beta&t=etBBU13eKaMCFHjwzPrY4xd3_uLayn6wTgeJp4E_whU	KRISHNAGIRI	male	1994-09-15	admin@krishnagiri.com	+917123456789	$2a$10$pi86BR5QaEQeyUlBq1Hx.etIEM12uhiNbPzaIe5gQzLwBeqPUf.PO	KRISHNAGIRI	2021-05-18 08:03:51.521+00	2021-05-18 08:03:51.521+00
+6	https://media-exp1.licdn.com/dms/image/C5603AQGOa0HFf1180Q/profile-displayphoto-shrink_200_200/0/1580515635328?e=1617235200&v=beta&t=etBBU13eKaMCFHjwzPrY4xd3_uLayn6wTgeJp4E_whU	ONGOLE	male	1994-09-15	admin@ongole.com	+917123456789	$2a$10$GmO/Ow347Bef5zOQIJDMUuCVuTCS1X9bMyKrJpO2ClQVTxkdg/CRe	ONGOLE	2021-05-18 08:03:51.633+00	2021-05-18 08:03:51.633+00
+7	https://media-exp1.licdn.com/dms/image/C5603AQGOa0HFf1180Q/profile-displayphoto-shrink_200_200/0/1580515635328?e=1617235200&v=beta&t=etBBU13eKaMCFHjwzPrY4xd3_uLayn6wTgeJp4E_whU	RAI	male	1994-09-15	admin@rai.com	+917123456789	$2a$10$y2tJSK2/gkcI/1sWzEx6XOHkT6jx5ZrVdy1K3sMn4Q2pXDEG0Ru3q	RAI	2021-05-18 08:03:51.748+00	2021-05-18 08:03:51.748+00
+8	https://media-exp1.licdn.com/dms/image/C5603AQGOa0HFf1180Q/profile-displayphoto-shrink_200_200/0/1580515635328?e=1617235200&v=beta&t=etBBU13eKaMCFHjwzPrY4xd3_uLayn6wTgeJp4E_whU	SANGVI	male	1994-09-15	admin@sangvi.com	+917123456789	$2a$10$.r3/nKhLA8FSZI9HZsKGJ.PIU8gR2akphGx8LlEwkUGksK36sH7xO	SANGVI	2021-05-18 08:03:51.869+00	2021-05-18 08:03:51.869+00
+9	https://media-exp1.licdn.com/dms/image/C5603AQGOa0HFf1180Q/profile-displayphoto-shrink_200_200/0/1580515635328?e=1617235200&v=beta&t=etBBU13eKaMCFHjwzPrY4xd3_uLayn6wTgeJp4E_whU	TIRUPATI	male	1994-09-15	admin@tirupati.com	+917123456789	$2a$10$BaDt9VEMW8cV.1mGZyoPbe94xXbhBR88eFflzFEIVRMCDP9bMpATG	TIRUPATI	2021-05-18 08:03:51.984+00	2021-05-18 08:03:51.984+00
+10	https://media-exp1.licdn.com/dms/image/C5603AQGOa0HFf1180Q/profile-displayphoto-shrink_200_200/0/1580515635328?e=1617235200&v=beta&t=etBBU13eKaMCFHjwzPrY4xd3_uLayn6wTgeJp4E_whU	VIJAYAWADA	male	1994-09-15	admin@vijayawada.com	+917123456789	$2a$10$cH9Zc9bhEMDIOw8gGLkOw.5qgijgDL0a3d5kA9sosS94fyZSbXFju	VIJAYAWADA	2021-05-18 08:03:52.106+00	2021-05-18 08:03:52.106+00
+11	https://media-exp1.licdn.com/dms/image/C5603AQGOa0HFf1180Q/profile-displayphoto-shrink_200_200/0/1580515635328?e=1617235200&v=beta&t=etBBU13eKaMCFHjwzPrY4xd3_uLayn6wTgeJp4E_whU	VIZAG	male	1994-09-15	admin@vizag.com	+917123456789	$2a$10$ohK6m7BvNT2GmaGzYa55AOYr3VB2/ZNyFm.fRcp5hUPZzhNOQGWq.	VIZAG	2021-05-18 08:03:52.223+00	2021-05-18 08:03:52.223+00
+\.
+
+
+--
+-- Data for Name: Appointments; Type: TABLE DATA; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+COPY public."Appointments" (id, "doctorId", "farmerId", "cattleId", "PrescriptionId", status, description, "appointmentDate", "appointmentStartTime", photos, "createdAt", "updatedAt") FROM stdin;
+2	1	1	1	2	finished	My bafallo has broken leg	2021-02-05 00:00:00+00	12:30	{http://res.cloudinary.com/your-highness/image/upload/v1612864409/YJMyhqZ7K83VGxfkogRcoq0Z.png,http://res.cloudinary.com/your-highness/image/upload/v1612864404/jQY2f-twrCnX5BgjYD7UqKxp.png}	2021-05-18 08:03:52.595+00	2021-05-19 12:30:31.555+00
+5	4	7	6	11	finished	Mh fee look ullu kDkFW keep	2021-05-18 00:00:00+00	09:01 pm	{https://res.cloudinary.com/your-highness/image/upload/v1621352134/m4yvibyyrmuqx4qkmsrr.jpg}	2021-05-18 15:35:35.577+00	2021-05-20 08:09:23.987+00
+8	4	7	6	\N	waiting	Google go of Sunday	2021-05-20 00:00:00+00	09:37 pm	{https://res.cloudinary.com/your-highness/image/upload/v1621526888/tmbtfygrivj3litxpjgi.jpg}	2021-05-20 16:08:09.773+00	2021-05-20 16:08:09.774+00
+3	1	2	1	\N	finished	My bafallo has broken leg	2021-02-08 00:00:00+00	11:30	{http://res.cloudinary.com/your-highness/image/upload/v1612864409/YJMyhqZ7K83VGxfkogRcoq0Z.png,http://res.cloudinary.com/your-highness/image/upload/v1612864404/jQY2f-twrCnX5BgjYD7UqKxp.png}	2021-05-18 08:03:52.595+00	2021-05-19 13:54:54.735+00
+4	1	2	2	\N	finished	My cattle has broken leg	2021-02-05 00:00:00+00	15:00	{http://res.cloudinary.com/your-highness/image/upload/v1612864409/YJMyhqZ7K83VGxfkogRcoq0Z.png,http://res.cloudinary.com/your-highness/image/upload/v1612864404/jQY2f-twrCnX5BgjYD7UqKxp.png}	2021-05-18 08:03:52.595+00	2021-05-19 14:00:53.147+00
+1	1	2	2	\N	finished	My cattle has broken leg	2021-02-05 00:00:00+00	08:00	{http://res.cloudinary.com/your-highness/image/upload/v1612864409/YJMyhqZ7K83VGxfkogRcoq0Z.png,http://res.cloudinary.com/your-highness/image/upload/v1612864404/jQY2f-twrCnX5BgjYD7UqKxp.png}	2021-05-18 08:03:52.594+00	2021-05-19 14:01:01.23+00
+6	4	7	5	6	finished	Broken leg	2021-05-19 00:00:00+00	04:49 pm	{https://res.cloudinary.com/your-highness/image/upload/v1621435753/tdysam4z6gg04u9lklju.jpg}	2021-05-19 14:49:13.917+00	2021-05-19 14:51:40.116+00
+7	4	7	5	7	finished	Broken leg	2021-05-19 00:00:00+00	06:29 pm	{https://res.cloudinary.com/your-highness/image/upload/v1621441764/uqp4xelenzodb0bwcntm.jpg}	2021-05-19 16:29:25.31+00	2021-05-19 16:32:37.978+00
+\.
+
+
+--
+-- Data for Name: Cattles; Type: TABLE DATA; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+COPY public."Cattles" (id, "profilePicture", "farmerId", status, cattle, "cattleUID", "cattleName", category, age, breed, weight, "createdAt", "updatedAt") FROM stdin;
+1	https://kj1bcdn.b-cdn.net/media/28069/gir.png	1	healthy	cow	990033723102	Sahiwal	milking	2016-01-09 00:00:00+00	jersey	415	2021-05-18 08:03:53.031+00	2021-05-18 08:03:53.031+00
+2	https://www.rockefellerfoundation.org/wp-content/uploads/Indian-Woman-Milking-a-Cow.jpg	2	healthy	Buffalo	720033823139	duhlia	calf	2017-02-13 00:00:00+00	godavari	270	2021-05-18 08:03:53.031+00	2021-05-18 08:03:53.031+00
+3	https://shramajeewiki.com/images/English/00148056.jpg	1	healthy	cow	193440372555	desan	milking	2014-08-21 00:00:00+00	jersey	388	2021-05-18 08:03:53.031+00	2021-05-18 08:03:53.031+00
+4	https://res.cloudinary.com/your-highness/image/upload/v1621332695/hncz1vyvlly40uqfg2qr.jpg	6	healthy	cow		Sine	calf	2019-05-15 10:10:58+00	godavari	450	2021-05-18 10:11:35.945+00	2021-05-18 10:11:35.946+00
+5	https://res.cloudinary.com/your-highness/image/upload/v1621333384/hu6ajwoj7oyj96pybkgq.jpg	7	healthy	cow		Gajuuui	calf	2020-01-08 10:22:29+00	godavari	420	2021-05-18 10:23:04.505+00	2021-05-20 16:06:24.717+00
+6	https://res.cloudinary.com/your-highness/image/upload/v1621351159/r8rn0ys6uvii7nbyw7sh.jpg	7	heat	buffalo		Bsmam	milking	2021-05-01 15:17:46+00	sahiwal	936	2021-05-18 15:19:20.431+00	2021-05-18 15:33:43.907+00
+\.
+
+
+--
+-- Data for Name: DoctorSessions; Type: TABLE DATA; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+COPY public."DoctorSessions" (id, "doctorId", "doctorName", session, "createdAt", "updatedAt") FROM stdin;
+1	2	Arjun Murali	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkb2N0b3JJZCI6MiwiZG9jdG9yTmFtZSI6IkFyanVuIE11cmFsaSIsImVtYWlsIjoiYXJqdW5tMTJAZ21haWwuY29tIiwicGhvbmUiOiIrOTE3MDIxMDA3NDk5Iiwic3RhdHVzIjoiY29uZmlybWVkIiwiaWF0IjoxNjIxMzQwNzY3fQ.9f9pLCAde2K0n7a92qoA88eOVVpuE9S_sqqHiLXNGsc	2021-05-18 12:26:07.353+00	2021-05-18 12:26:07.354+00
+2	1	Key Joshua	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkb2N0b3JJZCI6MSwiZG9jdG9yTmFtZSI6IktleSBKb3NodWEiLCJlbWFpbCI6Imsuam9zaHVhODU1QGdtYWlsLmNvbSIsInBob25lIjoiKzI1MDc4OTYxOTQ0MiIsInN0YXR1cyI6ImNvbmZpcm1lZCIsImlhdCI6MTYyMTM0MDc5M30.QEJAbTaW53-NhRgddTL7m6V_Fx40J4dsCfJDXGT9tp0	2021-05-18 12:26:33.558+00	2021-05-18 12:26:33.558+00
+\.
+
+
+--
+-- Data for Name: Doctors; Type: TABLE DATA; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+COPY public."Doctors" (id, status, "doctorName", gender, phone, email, password, specialization, treatment, city, regnumber, regcouncil, regyear, degree, college, completionyear, experience, establishment, establishmentname, establishmentcity, establishmentlocality, medicalregproofdocument, identityproofdocument, addressname, latitude, longitude, weekday, starttime, endtime, sessiontime, consultationfees, establishmenthours, establishmentlocation, "regionName", "createdAt", "updatedAt") FROM stdin;
+1	confirmed	Key Joshua	male	+250789619442	k.joshua855@gmail.com	$2a$10$b5eGOHomPsbmvNk0WF9OvOxFvykkc/u.ZvnT8c7uBZHD3YeaAsVim	B.V.Sc & A.H	cow	Kabuga	675132	Barbie	2009	Advanced Diploma	University of Mudende	2017	1 years of experience	owner stablishment	Legend	Kigali	Rwanda	link	link	KK 3 Rd	20.5937	78.9629	Monday, Wednesday	08:00	12:00	45 mins	Rs. 1220	Same as establishment hours	KK 3 Rd	HYDERABAD	2021-05-18 08:03:53.596+00	2021-05-18 08:03:53.596+00
+3	confirmed	HYDERABAD-1	male	+917123456789	vet@hyd1.com	$2a$10$nP9JVRze6xf6.RS42YJYO.eedpGFC1.ubsyqU6N5CSx0nLVBWm69O	B.V.Sc & A.H	cow	Kabuga	675132	Barbie	2009	Advanced Diploma	University of Mudende	2017	1 years of experience	owner stablishment	Legend	Kigali	Rwanda	link	link	KK 3 Rd	20.5937	78.9629	Monday, Wednesday	08:00	12:00	45 mins	Rs. 1220	Same as establishment hours	KK 3 Rd	HYDERABAD-1	2021-05-18 08:03:53.86+00	2021-05-18 08:03:53.86+00
+4	confirmed	HYDERABAD-2	male	+917123456789	vet@hyd2.com	$2a$10$0M.eh0MLg9P1aOd.ADYG6utApCOgNyALOdb5nZBhe76oxIrPcieJ.	B.V.Sc & A.H	cow buffalo	Mumbai	675132	Barbie	2009	BDS in Medecine	University of Mumbai	2017	8 years of experience	owner stablishment	Legend	Delhi	India	link	link	KK 3 Rd	20.5937	78.9629	Monday, Wednesday	12:00	18:00	45 mins	Rs. 730	Same as establishment hours	KK 3 Rd	HYDERABAD-2	2021-05-18 08:03:53.982+00	2021-05-18 08:03:53.982+00
+5	confirmed	KRISHNAGIRI	male	+917123456789	vet@krishnagiri.com	$2a$10$Fm4LrtyBN2ZkjSu2kWKz2uBpWPG29vhjzwGdx3JHP3ASm.9HvIBk.	B.V.Sc & A.H	cow buffalo	Mumbai	675132	Barbie	2009	BDS in Medecine	University of Mumbai	2017	8 years of experience	owner stablishment	Legend	Delhi	India	link	link	KK 3 Rd	20.5937	78.9629	Monday, Wednesday	12:00	18:00	45 mins	Rs. 730	Same as establishment hours	KK 3 Rd	KRISHNAGIRI	2021-05-18 08:03:54.107+00	2021-05-18 08:03:54.107+00
+6	confirmed	ONGOLE	male	+917123456789	vet@ongole.com	$2a$10$wuH4MZPzzR2FknGq8eTGbOludT6erRzk0/izKADLAMD6Ld1tiNhVi	B.V.Sc & A.H	cow buffalo	Mumbai	675132	Barbie	2009	BDS in Medecine	University of Mumbai	2017	8 years of experience	owner stablishment	Legend	Delhi	India	link	link	KK 3 Rd	20.5937	78.9629	Monday, Wednesday	12:00	18:00	45 mins	Rs. 730	Same as establishment hours	KK 3 Rd	ONGOLE	2021-05-18 08:03:54.226+00	2021-05-18 08:03:54.226+00
+7	confirmed	RAI	male	+917123456789	vet@rai.com	$2a$10$ozYSLaO0UPhm1G0RUGqjqOLNZdds.FVe5Qttbh6XVYTQLly95cWZu	B.V.Sc & A.H	cow buffalo	Mumbai	675132	Barbie	2009	BDS in Medecine	University of Mumbai	2017	8 years of experience	owner stablishment	Legend	Delhi	India	link	link	KK 3 Rd	20.5937	78.9629	Monday, Wednesday	12:00	18:00	45 mins	Rs. 730	Same as establishment hours	KK 3 Rd	RAI	2021-05-18 08:03:54.341+00	2021-05-18 08:03:54.341+00
+8	confirmed	SANGVI	male	+917123456789	vet@sangvi.com	$2a$10$QMz2vy3LnCMAciVQZIlQKets0MgrBDBBe2YYfAYOgGEY4t3uwigt6	B.V.Sc & A.H	cow buffalo	Mumbai	675132	Barbie	2009	BDS in Medecine	University of Mumbai	2017	8 years of experience	owner stablishment	Legend	Delhi	India	link	link	KK 3 Rd	20.5937	78.9629	Monday, Wednesday	12:00	18:00	45 mins	Rs. 730	Same as establishment hours	KK 3 Rd	SANGVI	2021-05-18 08:03:54.455+00	2021-05-18 08:03:54.455+00
+9	confirmed	TIRUPATI	male	+917123456789	vet@tirupati.com	$2a$10$q66.5826M90Krbz2zRUk5uYloA6doEV1wZi3mX.F74oOX8LxGeoz2	B.V.Sc & A.H	cow buffalo	Mumbai	675132	Barbie	2009	BDS in Medecine	University of Mumbai	2017	8 years of experience	owner stablishment	Legend	Delhi	India	link	link	KK 3 Rd	20.5937	78.9629	Monday, Wednesday	12:00	18:00	45 mins	Rs. 730	Same as establishment hours	KK 3 Rd	TIRUPATI	2021-05-18 08:03:54.569+00	2021-05-18 08:03:54.569+00
+10	confirmed	VIJAYAWADA	male	+917123456789	vet@vijayawada.com	$2a$10$mTsFIiYn7psGbd5uF934qOdlD7ejG5NHyZQUej11L3xdQnT2jG9E.	B.V.Sc & A.H	cow buffalo	Mumbai	675132	Barbie	2009	BDS in Medecine	University of Mumbai	2017	8 years of experience	owner stablishment	Legend	Delhi	India	link	link	KK 3 Rd	20.5937	78.9629	Monday, Wednesday	12:00	18:00	45 mins	Rs. 730	Same as establishment hours	KK 3 Rd	VIJAYAWADA	2021-05-18 08:03:54.687+00	2021-05-18 08:03:54.687+00
+11	confirmed	VIZAG	male	+917123456789	vet@vizag.com	$2a$10$Qx4XufxXuavP3MotJ86CW.H1Lk.hPoFWXkG1DkhlMyZ3MccAfYyYi	B.V.Sc & A.H	cow buffalo	Mumbai	675132	Barbie	2009	BDS in Medecine	University of Mumbai	2017	8 years of experience	owner stablishment	Legend	Delhi	India	link	link	KK 3 Rd	20.5937	78.9629	Monday, Wednesday	12:00	18:00	45 mins	Rs. 730	Same as establishment hours	KK 3 Rd	VIZAG	2021-05-18 08:03:54.803+00	2021-05-18 08:03:54.803+00
+2	confirmed	Murali Arjun	male	+917021007499	arjunm12@gmail.com	$2a$10$3YpfFfMdtx9lChnlUxx5QumN4L5SCdw9vT/NLuXX50YZri.4.PVXO	B.V.Sc & A.H	cow	Kabuga	675132	Barbie	2009	Advanced Diploma	University of Mudende	2017	1 years of experience	owner stablishment	Legend	Kigali	Rwanda	link	link	KK 3 Rd	20.5937	78.9629	Monday, Wednesday	08:00	12:00	45 mins	Rs. 1220	Same as establishment hours	KK 3 Rd	HYDERABAD	2021-05-18 08:03:53.715+00	2021-05-18 13:21:52.973+00
+\.
+
+
+--
+-- Data for Name: DynamicRecords; Type: TABLE DATA; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+COPY public."DynamicRecords" (id, name, type, "createdAt", "updatedAt") FROM stdin;
+1	Anatharam	unitName	2021-05-18 08:03:55.775+00	2021-05-18 08:03:55.775+00
+2	Paduru	unitName	2021-05-18 08:03:55.775+00	2021-05-18 08:03:55.775+00
+3	Narsampally	unitName	2021-05-18 08:03:55.775+00	2021-05-18 08:03:55.775+00
+4	Nareshi Buddi	MCCName	2021-05-18 08:03:55.775+00	2021-05-18 08:03:55.775+00
+5	Ramareddy Kunta	MCCName	2021-05-18 08:03:55.775+00	2021-05-18 08:03:55.775+00
+6	Parpula Ravi	MCCName	2021-05-18 08:03:55.775+00	2021-05-18 08:03:55.775+00
+\.
+
+
+--
+-- Data for Name: FarmerFeedbacks; Type: TABLE DATA; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+COPY public."FarmerFeedbacks" (id, "farmerId", feedback, "createdAt", "updatedAt") FROM stdin;
+1	1	I liked the service	2021-05-18 08:04:02.204+00	2021-05-18 08:04:02.204+00
+\.
+
+
+--
+-- Data for Name: FarmerSessions; Type: TABLE DATA; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+COPY public."FarmerSessions" (id, "farmerId", "farmerName", session, "createdAt", "updatedAt") FROM stdin;
+1	2	Joshua	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYXJtZXJJZCI6MiwiZmFybWVyTmFtZSI6Ikpvc2h1YSIsInVzZXJDb2RlIjoiNzYwMCIsInBob25lIjoiKzI1MDc4OTYxOTQ0MiIsImlzVmVyaWZpZWQiOnRydWUsImlhdCI6MTYyMTMyNjU3M30.663cT9S82UYC1z1ya3Es1ItApg5pMFLAPV1uiD_pEDw	2021-05-18 08:29:33.243+00	2021-05-18 08:29:33.244+00
+7	6	Elvis Rugamba	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYXJtZXJJZCI6NiwiZmFybWVyTmFtZSI6IkVsdmlzIFJ1Z2FtYmEiLCJ1c2VyQ29kZSI6IjEyMyIsInBob25lIjoiKzkxOTEwMDQ5NzAwNSIsImlzVmVyaWZpZWQiOnRydWUsImlhdCI6MTYyMTUyOTU0N30.yTyriRHfHxU5mS_K_sF1MHMaoLgxbm_pC9iAb9553bo	2021-05-20 16:52:27.301+00	2021-05-20 16:52:27.301+00
+5	7	Elvis	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYXJtZXJJZCI6NywiZmFybWVyTmFtZSI6IkVsdmlzIiwidXNlckNvZGUiOiIxMjMiLCJwaG9uZSI6Iis5MTkxMDA0OTY3MDUiLCJpc1ZlcmlmaWVkIjp0cnVlLCJpYXQiOjE2MjEzMzU0NzN9.n9iezAl7sL6E6xKyn5tyFKr8yXJ5zY-GRHclel2iWus	2021-05-18 10:57:53.95+00	2021-05-18 10:57:53.95+00
+6	1	Arjun	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYXJtZXJJZCI6MSwiZmFybWVyTmFtZSI6IkFyanVuIiwidXNlckNvZGUiOiI3NTAwIiwicGhvbmUiOiIrOTE3MDIxMDA3NDk5IiwiaXNWZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNjIxMzQ0NDMxfQ.5fO84DzkfHpDtSgUrIJwtkxLzWbN6eeUMFw-WJBC0wI	2021-05-18 13:27:11.682+00	2021-05-18 13:27:11.683+00
+\.
+
+
+--
+-- Data for Name: Farmers; Type: TABLE DATA; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+COPY public."Farmers" (id, "profilePicture", role, status, steps, "farmerName", gender, age, phone, "userCode", "pinCode", "unitCode", "mccCode", "mccMobile", "plateCode", "regionName", "unitName", "mccName", "plateName", "stateName", "districtName", "mendalName", "panchayatName", "villageName", "isVerified", password, "createdAt", "updatedAt") FROM stdin;
+3	https://media-exp1.licdn.com/dms/image/C4D03AQHU8lKhq5pTqw/profile-displayphoto-shrink_200_200/0/1600778354473?e=1617235200&v=beta&t=aPgNEhfMlA5MXQSQ_5iXL4fD1gY3w89EsGunzwwrVm8	employee	confirmed	steps one	Ervis	male	1996-10-11 00:00:00+00	+250789279774	7700	111111	0120	0040040668	9849955829	1503	HYDERABAD-1	CHEVELLA	M.KAMAL REDDY	Shankarpally	TELANGANA	RANGAREDDY	GANDEED	VENKATREDDY PALLY	VENKATREDDY PALLY	t	$2a$10$uoQnqFtgiA1pH982hDNVLORwzQEwAjj1qnvSb1N8FTCXhqh5plyNe	2021-05-18 08:03:58.132+00	2021-05-18 08:03:58.132+00
+4	https://media-exp1.licdn.com/dms/image/C4D03AQHU8lKhq5pTqw/profile-displayphoto-shrink_200_200/0/1600778354473?e=1617235200&v=beta&t=aPgNEhfMlA5MXQSQ_5iXL4fD1gY3w89EsGunzwwrVm8	employee	confirmed	steps one	Admin 111	male	1996-10-11 00:00:00+00	+250789279774	7700	111111	0120	0040040668	9849955829	1503	HYDERABAD-1	CHEVELLA	M.KAMAL REDDY	Shankarpally	TELANGANA	RANGAREDDY	GANDEED	VENKATREDDY PALLY	VENKATREDDY PALLY	t	$2a$10$o.DDGz3Eem9ew7JDIkAa7OvLocNA4N7BygKQLMKFHi65RQUIVMN8y	2021-05-18 08:03:58.247+00	2021-05-18 08:03:58.247+00
+6	https://res.cloudinary.com/your-highness/image/upload/v1621332641/erywrfzedhgr2sccnkbb.jpg	farmer	finished	complete	Elvis Rugamba	male	1993-05-13 10:09:45+00	+919100497005	123	123456	0078	0040006308	9626066377	1105	KRISHNAGIRI	KAL KULAM	MUTHU RAJ	VADA MADURAI	TAMIL NADU	DINDIGUL	TN VMI MANDAL	TN VMI PANCHAYAT	KAL KULAM	t	$2a$10$YhCno4Bpn9Gzd2YQN.upLOAYN4rXbK7LI.U2m11CWLOX35l/cltdS	2021-05-18 09:58:58.741+00	2021-05-18 10:17:27.688+00
+7	https://res.cloudinary.com/your-highness/image/upload/v1621333568/vfog0ahxonfbdznicafo.jpg	employee	finished	complete	Elvissss	female	1989-05-02 10:25:33+00	+919100496705	123	506201	0128	0040056054	9491999577	1762	HYDERABAD-2	ELLAMLA	S RAM REDDY	JANGOAN	TELANGANA	WARANGAL	JANGAON	PEMBARTHY	PEMBARTHY	t	$2a$10$5oEQe3KnM6TsGC5ok/h04ePjme79d.nGsu32S8AOLXx0ZwNt6xkGS	2021-05-18 10:21:21.28+00	2021-05-20 16:06:14.711+00
+2	https://media-exp1.licdn.com/dms/image/C4D03AQHU8lKhq5pTqw/profile-displayphoto-shrink_200_200/0/1600778354473?e=1626912000&v=beta&t=cJ7INzDHOyuPV5nivQ0eB8YibFgXvdbMlB8z_AGYjAo	employee	confirmed	steps one	Joshua	male	1996-10-11 00:00:00+00	+250789619442	7600	111111	0120	0040040668	9849955829	1503	HYDERABAD-1	CHEVELLA	M.KAMAL REDDY	Shankarpally	TELANGANA	RANGAREDDY	GANDEED	VENKATREDDY PALLY	VENKATREDDY PALLY	t	$2a$10$zVI7Fh/5PhQtJM.K5vLQhOhjcbEOblB5zEbOt0WoQWU4DZ5O5vqx2	2021-05-18 08:03:58.013+00	2021-05-18 08:03:58.013+00
+5	https://media-exp1.licdn.com/dms/image/C4D03AQHU8lKhq5pTqw/profile-displayphoto-shrink_200_200/0/1600778354473?e=1617235200&v=beta&t=aPgNEhfMlA5MXQSQ_5iXL4fD1gY3w89EsGunzwwrVm8	employee	confirmed	steps one	Admin 222	female	1996-10-11 00:00:00+00	+250789279774	7700	123456	321	0040000486	9705344947	1404	ONGOLE	HUSSAIN PURAM	SIVARAMAIAH.T	KANIGIRI	ANDHRA PRADESH	PRAKASAM	VELIGANDLA	HUSSAINPURAM	HUSSAINPURAM	t	$2a$10$W4KPboPOZjmiqpQeI75AqeDyPFl9x/bqJm5IpsBIQxiDDrjOdvEky	2021-05-18 08:03:58.366+00	2021-05-18 13:22:41.536+00
+1	https://media-exp1.licdn.com/dms/image/C5603AQGOa0HFf1180Q/profile-displayphoto-shrink_200_200/0/1580515635328?e=1617235200&v=beta&t=etBBU13eKaMCFHjwzPrY4xd3_uLayn6wTgeJp4E_whU	employee	finished	steps one	Arjun	male	1994-09-15 00:00:00+00	+917021007499	7500	123456	120	0040018395	9441959100	1610	ONGOLE	BRAHMESWARAM NORTH	BHASKAR REDDY. S	DUTTALURU	ANDHRA PRADESH	NELLORE	DUTTALUR	BRAHMESWARAM	BRAHMESWARAM	t	$2a$10$M/Unjy.lJCPnwBBmZlK2QO7HuXAqDQQlwKlx2k9F4QlBjUlFqUNqC	2021-05-18 08:03:57.895+00	2021-05-18 15:58:02.583+00
+\.
+
+
+--
+-- Data for Name: Medicals; Type: TABLE DATA; Schema: public; Owner: ubxzvpyzcnmatm
+--
+
+COPY public."Medicals" (id, "doctorId", "farmerId", "cattleId", "appointmentId", document, "currentDiagnosis", "historyFindings", "specialInstruction", treatment, "createdAt", "updatedAt") FROM stdin;
+1	1	2	2	1	http://res.cloudinary.com/your-highness/image/upload/v1612864409/YJMyhqZ7K83VGxfkogRcoq0Z.png	{ type: DataTypes.STRING(1000) }	{ type: DataTypes.STRING(1000) }	{ type: DataTypes.STRING(1000) }	{ type: DataTypes.STRING(1000) }	2021-05-19 12:26:24.157+00	2021-05-19 12:26:24.157+00
+2	1	1	1	2	https://rivopets.s3.amazonaws.com/Wed%2C%2019%20May%202021%2012%3A30%3A15%20GMT-icon.png	aaaaaaaa	bbbbbbb	cccccccc	eeeeeee	2021-05-19 12:30:26.802+00	2021-05-19 12:30:26.804+00
+3	4	7	6	5	\N	Current Diagnosis	History and Findings	Special Instruction	Treatment	2021-05-19 12:42:09.255+00	2021-05-19 12:42:09.256+00
+4	4	7	6	5	\N	Current Diagnosis	History and Findings	Special Instruction	Treatment	2021-05-19 12:47:09.089+00	2021-05-19 12:47:09.089+00
+5	4	7	6	5	\N	Cur

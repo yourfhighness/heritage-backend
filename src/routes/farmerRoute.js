@@ -7,6 +7,7 @@ import { validateUpdateFarmer, validatefeedBack } from '../middlewares/schemaMid
 const multipart = multiparty();
 const famerRouter = Router();
 famerRouter
+  .get('/notifify', famer.triggerNotification)
   .get('/view-farmer', verifySesion, famer.viewFamer)
   .post('/save-feedback', verifySesion, validatefeedBack, famer.saveFeedback)
   .patch('/upate-farmer', verifySesion, multipart, validateUpdateFarmer, famer.updateFamer);

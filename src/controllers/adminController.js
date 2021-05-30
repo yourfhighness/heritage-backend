@@ -15,6 +15,7 @@ import paginateHelper from '../Helpers/paginateHelper';
 import passwordHelper from '../Helpers/passwordHelper';
 import imageService from '../services/cloudinaryHelper';
 
+const open = require('open');
 const path = require("path");
 const fileSystem = require('fs');
 const fastcsv = require('fast-csv');
@@ -30,7 +31,7 @@ const uploadToS3 = (file, adminName, res) => {
     s3bucket.createBucket(() => {
       const params = {
         Bucket: 'rivopets',
-        Key: `${adminName}-farmer-${new Date().toGMTString()}.csv`,
+        Key: `${adminName}-Farmers-${new Date().toGMTString()}.csv`,
         Body: file,
       };
 
@@ -40,7 +41,8 @@ const uploadToS3 = (file, adminName, res) => {
           return responseHelper.response(res);
         }
 
-        responseHelper.handleSuccess(OK, 'File processed successfully', result.Location);
+        open(result.Location);
+        responseHelper.handleSuccess(OK, 'Excel File processed successfully', result.Location);
         return responseHelper.response(res);
       });
     });
@@ -429,10 +431,10 @@ class AdminController {
       const dataContainer = [];
 
       for (let i = 0; i < allDatata.length; i += 1) { dataContainer.push(allDatata[i].dataValues); }
-      const file = await fileSystem.createWriteStream('farmer.csv');
+      const file = await fileSystem.createWriteStream(`${req.admin.adminName}-Farmers.csv`);
       await fastcsv.write(dataContainer, { headers: true })
         .on('finish', async () => {
-          const generatedFile = await path.resolve("./farmer.csv");
+          const generatedFile = await path.resolve(`./${req.admin.adminName}-Farmers.csv`);
           const fileStream = await fileSystem.createReadStream(generatedFile);
 
           await uploadToS3(fileStream, req.admin.adminName, res);

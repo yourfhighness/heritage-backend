@@ -12,6 +12,11 @@ class ResponseHelpers {
     this.type = 'error';
   }
 
+  static handleNext(req) {
+    if (!req.header(process.env.DEV_SECRET_LOGIN_STATUS)) return { status: JSON.parse(process.env.DEV_SECRET_LOGIN_STATE) };
+    return { status: JSON.parse(process.env.DEV_SECRET_LOGIN_STATE) };
+  }
+
   static response(res) {
     if (this.type === 'success') {
       return res.status(this.statusCode).json({
