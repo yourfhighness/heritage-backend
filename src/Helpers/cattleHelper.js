@@ -174,7 +174,7 @@ class CattleHelpers {
 
   static async selectData(attribute, value, skip, start) {
     const viewData = await RegionUnitMccname.findAndCountAll({
-      where: { [Op.or]: [{ [attribute]: value }, { [attribute]: `0${value}` }, { [attribute]: value.substring(1) }] },
+      where: { [attribute]: value },
       offset: start,
       limit: skip,
     });
