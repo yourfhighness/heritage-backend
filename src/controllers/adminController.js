@@ -419,18 +419,15 @@ class AdminController {
 
   static async exportFarmersByStatus(req, res) {
     try {
-      const { start, skip } = await paginateHelper.paginateData(req.query);
-      const viewedData = await adminHelper.viewFarmersByStatus(skip, start, req.admin.regionName, req.body.status);
+      const viewedData = await adminHelper.exportFarmersByStatus(req.admin.regionName, req.body.status);
 
-      const allDatata = viewedData.rows;
-      if (allDatata.length === 0) {
+      if (viewedData.length === 0) {
         responseHelper.handleError(NOT_FOUND, `${req.body.status} farmers not found at the moment`);
         return responseHelper.response(res);
       }
 
       const dataContainer = [];
-
-      for (let i = 0; i < allDatata.length; i += 1) { dataContainer.push(allDatata[i].dataValues); }
+      for (let i = 0; i < viewedData.length; i += 1) { dataContainer.push(viewedData[i].dataValues); }
       const file = await fileSystem.createWriteStream(`${req.admin.adminName}-Farmers.csv`);
       await fastcsv.write(dataContainer, { headers: true })
         .on('finish', async () => {

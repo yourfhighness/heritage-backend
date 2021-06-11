@@ -26,7 +26,6 @@ adminRouter
   .post('/remove-all-farmers-by-fields', verifyAdminSession, validateRemoveAllFarmers, admin.removeAllFrmers)
 
   .post('/export-farmer', verifyAdminSession, validateViewByStatus, admin.exportFarmersByStatus)
-
   .patch('/upate-farmer/:farmerId', verifyAdminSession, multipart, validateUpdateFarmer, admin.updateFarmerDetails)
   .patch('/upate-cattle/:farmerId/:cattleId', verifyAdminSession, multipart, validateUpdateCattle, admin.updateCattle);
 

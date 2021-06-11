@@ -131,6 +131,46 @@ class AdminHelpers {
     return undefined;
   }
 
+  static async exportFarmersByStatus(regionName, value) {
+    if (regionName === 'HYDERABAD') {
+      if (value === 'waiting') {
+        const data = await Farmer.findAll({
+          where: { [Op.or]: [{ status: 'waiting' }, { status: 'confirmed' }] },
+        });
+
+        return data;
+      }
+
+      if (value === 'finished') {
+        const data = await Farmer.findAll({
+          where: { [Op.or]: [{ status: 'finished' }, { status: 'rejected' }] },
+        });
+
+        return data;
+      }
+    }
+
+    if (regionName !== 'HYDERABAD') {
+      if (value === 'waiting') {
+        const data = await Farmer.findAll({
+          where: { regionName, [Op.or]: [{ status: 'waiting' }, { status: 'confirmed' }] },
+        });
+
+        return data;
+      }
+
+      if (value === 'finished') {
+        const data = await Farmer.findAll({
+          where: { regionName, [Op.or]: [{ status: 'finished' }, { status: 'rejected' }] },
+        });
+
+        return data;
+      }
+    }
+
+    return undefined;
+  }
+
   static async updateFarmerStatus(id, status) {
     const updateData = await Farmer.update({ status }, { where: { [Op.and]: [{ id }] } });
 
