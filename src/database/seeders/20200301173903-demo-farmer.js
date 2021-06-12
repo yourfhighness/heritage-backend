@@ -26,6 +26,7 @@ const userOne = {
   villageName: 'VENKATREDDY PALLY',
   isVerified: true,
   password: passwordHelper.hashPassword('Qwerty@123'),
+  firebaseToken: 'dHI0fpnrQpyG791gOjv7x0:APA91bEwWjaH_2wV3G43QLkWt-6cfVsti3lzhtGxlaHdroRbtfVedSuylE6NaY2YxPZeOAIJFmk2GpHZoRwWxPLCyjdR2Y5uqWpJPY7BKWN6kcPckcv5qPbhnucaxQRCk955GmoEHgvE',
   createdAt: new Date(),
   updatedAt: new Date(),
 };
@@ -56,6 +57,7 @@ const userTwo = {
   villageName: 'VENKATREDDY PALLY',
   isVerified: true,
   password: passwordHelper.hashPassword('Qwerty@123'),
+  firebaseToken: 'dHI0fpnrQpyG791gOjv7x0:APA91bEwWjaH_2wV3G43QLkWt-6cfVsti3lzhtGxlaHdroRbtfVedSuylE6NaY2YxPZeOAIJFmk2GpHZoRwWxPLCyjdR2Y5uqWpJPY7BKWN6kcPckcv5qPbhnucaxQRCk955GmoEHgvE',
   createdAt: new Date(),
   updatedAt: new Date(),
 };
@@ -86,6 +88,7 @@ const userThree = {
   villageName: 'VENKATREDDY PALLY',
   isVerified: true,
   password: passwordHelper.hashPassword('Qwerty@123'),
+  firebaseToken: 'dHI0fpnrQpyG791gOjv7x0:APA91bEwWjaH_2wV3G43QLkWt-6cfVsti3lzhtGxlaHdroRbtfVedSuylE6NaY2YxPZeOAIJFmk2GpHZoRwWxPLCyjdR2Y5uqWpJPY7BKWN6kcPckcv5qPbhnucaxQRCk955GmoEHgvE',
   createdAt: new Date(),
   updatedAt: new Date(),
 };
@@ -116,6 +119,7 @@ const userFour = {
   villageName: 'VENKATREDDY PALLY',
   isVerified: true,
   password: passwordHelper.hashPassword('admin@111'),
+  firebaseToken: 'dHI0fpnrQpyG791gOjv7x0:APA91bEwWjaH_2wV3G43QLkWt-6cfVsti3lzhtGxlaHdroRbtfVedSuylE6NaY2YxPZeOAIJFmk2GpHZoRwWxPLCyjdR2Y5uqWpJPY7BKWN6kcPckcv5qPbhnucaxQRCk955GmoEHgvE',
   createdAt: new Date(),
   updatedAt: new Date(),
 };
@@ -146,6 +150,7 @@ const userFive = {
   villageName: 'VENKATREDDY PALLY',
   isVerified: true,
   password: passwordHelper.hashPassword('admin@222'),
+  firebaseToken: 'dHI0fpnrQpyG791gOjv7x0:APA91bEwWjaH_2wV3G43QLkWt-6cfVsti3lzhtGxlaHdroRbtfVedSuylE6NaY2YxPZeOAIJFmk2GpHZoRwWxPLCyjdR2Y5uqWpJPY7BKWN6kcPckcv5qPbhnucaxQRCk955GmoEHgvE',
   createdAt: new Date(),
   updatedAt: new Date(),
 };

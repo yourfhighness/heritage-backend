@@ -30,6 +30,7 @@ const up = (queryInterface, Sequelize) => queryInterface.createTable('Farmers', 
   villageName: { type: Sequelize.STRING },
   isVerified: { type: Sequelize.BOOLEAN },
   password: { type: Sequelize.STRING },
+  firebaseToken: { type: Sequelize.STRING },
   createdAt: { allowNull: false, type: Sequelize.DATE },
   updatedAt: { allowNull: false, type: Sequelize.DATE },
 });

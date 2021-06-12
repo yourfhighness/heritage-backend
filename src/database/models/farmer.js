@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     villageName: { type: DataTypes.STRING },
     isVerified: { type: DataTypes.BOOLEAN },
     password: { type: DataTypes.STRING },
+    firebaseToken: { type: DataTypes.STRING },
     createdAt: { type: DataTypes.DATE },
     updatedAt: { type: DataTypes.DATE },
   }, {});

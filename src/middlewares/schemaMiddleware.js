@@ -153,6 +153,12 @@ const validateRegisterFarmer = (req, res, next) => {
           'string.max': 'password length must be at least 12 characters long',
         }),
       confirmPassword: Joi.string().required().valid(Joi.ref('password')),
+      firebaseToken: Joi.string().trim().min(2)
+        .messages({
+          'any.required': 'firebaseToken is required',
+          'string.empty': 'firebaseToken is not allowed to be empty',
+          'string.min': 'firebaseToken length must be at least 2 characters long',
+        }),
     })
     .options({ abortEarly: false });
 
@@ -399,6 +405,7 @@ const validateUpdateFarmer = (req, res, next) => {
           'string.max': 'password length must be at least 12 characters long',
         }),
       confirmPassword: Joi.string().valid(Joi.ref('password')),
+      firebaseToken: Joi.string().min(2),
     })
     .options({ abortEarly: false });
 

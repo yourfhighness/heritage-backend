@@ -60,6 +60,7 @@ class FarmerHelpers {
       villageName: body.villageName ? body.villageName.toUpperCase() : body.villageName,
       isVerified: true,
       password: passwordHelper.hashPassword(body.password),
+      firebaseToken: body.firebaseToken,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -147,6 +148,7 @@ class FarmerHelpers {
         villageName: body.villageName ? body.villageName.toUpperCase() : body.villageName,
         isVerified: body.isVerified,
         password: body.password ? passwordHelper.hashPassword(body.password) : existingPassword,
+        firebaseToken: body.firebaseToken,
       }, { where: { id } });
 
       if (updateFarmer) {
@@ -182,6 +184,7 @@ class FarmerHelpers {
       villageName: body.villageName ? body.villageName.toUpperCase() : body.villageName,
       isVerified: body.isVerified,
       password: body.password ? passwordHelper.hashPassword(body.password) : existingPassword,
+      firebaseToken: body.firebaseToken,
     }, { where: { id } });
 
     if (updateFarmer) {
