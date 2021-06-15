@@ -22,6 +22,11 @@ const validateRegisterFarmer = (req, res, next) => {
           'any.required': 'steps is required',
           'string.empty': 'steps is not allowed to be empty',
         }),
+      appVersion: Joi.string().trim().allow(null, '')
+        .messages({
+          'any.required': 'appVersion is required',
+          'string.empty': 'appVersion is not allowed to be empty',
+        }),
       status: Joi.string().trim().min(2).allow(null, '')
         .messages({
           'any.required': 'status is required',
@@ -261,6 +266,11 @@ const validateLogin = (req, res, next) => {
         'string.empty': 'phone is not allowed to be empty',
         'phoneNumber.invalid': 'phone did not seem to be a phone number',
       }),
+      appVersion: Joi.string().trim().allow(null, '')
+        .messages({
+          'any.required': 'appVersion is required',
+          'string.empty': 'appVersion is not allowed to be empty',
+        }),
       password: Joi.string().min(6).max(12).required()
         .messages({
           'any.required': '"password" is a required',
@@ -376,6 +386,7 @@ const validateUpdateFarmer = (req, res, next) => {
       role: Joi.string().min(2),
       status: Joi.string().min(2),
       steps: Joi.string(),
+      appVersion: Joi.string(),
       farmerName: Joi.string().min(2),
       gender: Joi.string().min(4).max(6),
       age: Joi.date()

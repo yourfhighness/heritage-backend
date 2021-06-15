@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     role: { type: DataTypes.STRING },
     status: { type: DataTypes.STRING },
     steps: { type: DataTypes.STRING },
+    appVersion: { type: DataTypes.STRING },
     farmerName: { type: DataTypes.STRING },
     gender: { type: DataTypes.STRING },
     age: { type: DataTypes.DATE },

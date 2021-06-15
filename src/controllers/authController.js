@@ -59,6 +59,8 @@ class AuthController {
       }
 
       if (passwordExist) {
+        await farmerHelper.updateFarmer('appVersion', req.body.appVersion, 'id', req.farmer.id);
+
         const data = {
           session: await sessionHelper.generateFarmerSession(req.farmer.id, req.farmer.farmerName, req.farmer.userCode, req.farmer.phone, req.farmer.isVerified),
           farmer: req.farmer,
