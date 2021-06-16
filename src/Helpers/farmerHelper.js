@@ -120,46 +120,6 @@ class FarmerHelpers {
   }
 
   static async updateFarmerProfile(id, profilePicture, body, existingPassword) {
-    if (body.pinCode && body.unitName && body.mccName && !body.regionName) {
-      const data = await RegionUnitMccname.findOne({ where: { [Op.and]: [{ pinCode: body.pinCode }, { unitName: body.unitName }, { mccName: body.mccName }] } });
-
-      const updateFarmer = await Farmer.update({
-        role: body.role,
-        status: body.status,
-        profilePicture,
-        steps: body.steps,
-        appVersion: body.appVersion,
-        farmerName: body.farmerName,
-        gender: body.gender,
-        age: body.age,
-        phone: body.phone,
-        userCode: body.userCode,
-        pinCode: body.pinCode,
-        unitCode: body.unitCode,
-        mccCode: body.mccCode,
-        mccMobile: body.mccMobile,
-        plateCode: body.plateCode,
-        regionName: data.regionName ? data.regionName.toUpperCase() : data.regionName,
-        unitName: body.unitName ? body.unitName.toUpperCase() : body.unitName,
-        mccName: body.mccName ? body.mccName.toUpperCase() : body.mccName,
-        plateName: body.plateName ? body.plateName.toUpperCase() : body.plateName,
-        stateName: body.stateName ? body.stateName.toUpperCase() : body.stateName,
-        districtName: body.districtName ? body.districtName.toUpperCase() : body.districtName,
-        mendalName: body.mendalName ? body.mendalName.toUpperCase() : body.mendalName,
-        panchayatName: body.panchayatName ? body.panchayatName.toUpperCase() : body.panchayatName,
-        villageName: body.villageName ? body.villageName.toUpperCase() : body.villageName,
-        isVerified: body.isVerified,
-        password: body.password ? passwordHelper.hashPassword(body.password) : existingPassword,
-        firebaseToken: body.firebaseToken,
-      }, { where: { id } });
-
-      if (updateFarmer) {
-        const farmer = await this.farmerExist('id', id);
-        return farmer;
-      }
-      return null;
-    }
-
     const updateFarmer = await Farmer.update({
       role: body.role,
       status: body.status,
@@ -194,6 +154,7 @@ class FarmerHelpers {
       const farmer = await this.farmerExist('id', id);
       return farmer;
     }
+
     return null;
   }
 

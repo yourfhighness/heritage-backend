@@ -765,6 +765,11 @@ const validateViewData = (req, res, next) => {
 const validateViewUnitNameMccName = (req, res, next) => {
   const dataSchema = Joi.object()
     .keys({
+      regionName: Joi.string().trim()
+        .messages({
+          'any.required': 'regionName  is required',
+          'string.empty': 'regionName  is not allowed to be empty',
+        }),
       attribute: Joi.string().min(3).required()
         .messages({
           'any.required': 'attribute is required',
@@ -905,6 +910,20 @@ const validateUpdateDoctor = (req, res, next) => {
   return validateSchema(dataSchema, req.body, res, next);
 };
 
+const validateViewNotification = (req, res, next) => {
+  const isReadSchema = Joi.object()
+    .keys({
+      isRead: Joi.string().required().valid(true, false)
+        .messages({
+          'any.required': 'isRead is required',
+          'string.empty': 'isRead is not allowed to be empty',
+        }),
+    })
+    .options({ abortEarly: false });
+
+  return validateSchema(isReadSchema, req.body, res, next);
+};
+
 export {
   validateSlip,
   validateFeed,
@@ -929,6 +948,7 @@ export {
   validateChangePassword,
   validateRegisterFarmer,
   validateRegisterCattle,
+  validateViewNotification,
   validateRemoveAllFarmers,
   validatePeriodicallySlip,
   validateUpdateAppointment,

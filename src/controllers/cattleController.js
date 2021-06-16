@@ -112,7 +112,7 @@ class CattleController {
   static async selectData(req, res, next) {
     try {
       const { start, end, pages, skip, paginate } = await paginateHelper.paginateData(req.query);
-      const data = await cattleHelper.selectData(req.body.attribute, req.body.value, skip, start);
+      const data = await cattleHelper.selectData(req.body.regionName, req.body.attribute, req.body.value, skip, start);
 
       const allDatata = data.rows;
       const countAllData = data.count;

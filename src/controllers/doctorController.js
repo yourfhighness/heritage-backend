@@ -4,11 +4,14 @@ import AWS from 'aws-sdk';
 import Busboy from 'busboy';
 import { INTERNAL_SERVER_ERROR, UNAUTHORIZED, SERVICE_UNAVAILABLE, NOT_FOUND, BAD_REQUEST, OK } from 'http-status';
 
+import farmerHelper from '../Helpers/farmerHelper';
+import cattleHelper from '../Helpers/cattleHelper';
 import doctorHelper from '../Helpers/doctorHelper';
 import sessionHelper from '../Helpers/sessionHelper';
 import responseHelper from '../Helpers/responseHelper';
 import paginateHelper from '../Helpers/paginateHelper';
 import passwordHelper from '../Helpers/passwordHelper';
+import notificationHelper from '../Helpers/notificationHelper';
 
 const s3bucket = new AWS.S3({
   Bucket: 'rivopets',
@@ -197,8 +200,22 @@ class DoctorController {
       }
 
       data = await doctorHelper.updateAppointmentStatus(req.params.id, req.body.status);
+
       if (data) {
         data = await doctorHelper.appointmentExist('id', req.params.id);
+        const farmer = await farmerHelper.farmerExist('id', data.farmerId);
+        const cattle = await cattleHelper.cattleExist('id', data.cattleId);
+
+        if (farmer && farmer.firebaseToken) {
+          if (req.body.status === 'finished') {
+            await notificationHelper.sendNotification(farmer.firebaseToken, req.doctor.id, data.farmerId, `${cattle ? cattle.cattleName.charAt(0).toUpperCase() + cattle.cattleName.slice(1) : null} Appointment Finished`, `heritagevetplus://appointment/${data.id}`);
+          }
+
+          if (req.body.status === 'rejected') {
+            await notificationHelper.sendNotification(farmer.firebaseToken, req.doctor.id, data.farmerId, `${cattle ? cattle.cattleName.charAt(0).toUpperCase() + cattle.cattleName.slice(1) : null} Appointment Rejected`, `heritagevetplus://appointments`);
+          }
+        }
+
         responseHelper.handleSuccess(OK, 'Appointment update successfully', data);
         return responseHelper.response(res);
       }

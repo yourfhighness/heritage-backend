@@ -172,7 +172,17 @@ class CattleHelpers {
     return viewData;
   }
 
-  static async selectData(attribute, value, skip, start) {
+  static async selectData(regionName, attribute, value, skip, start) {
+    if (regionName) {
+      const viewData = await RegionUnitMccname.findAndCountAll({
+        where: { [attribute]: value, regionName },
+        offset: start,
+        limit: skip,
+      });
+
+      return viewData;
+    }
+
     const viewData = await RegionUnitMccname.findAndCountAll({
       where: { [attribute]: value },
       offset: start,

@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import Sequelize, { Op } from 'sequelize';
 import models from '../database/models';
 
 const { Admins, Doctor, Farmer, Cattle, Milking } = models;
@@ -136,6 +136,38 @@ class AdminHelpers {
       if (value === 'waiting') {
         const data = await Farmer.findAll({
           where: { [Op.or]: [{ status: 'waiting' }, { status: 'confirmed' }] },
+          attributes: [
+            [Sequelize.literal('"id"'), 'User ID'],
+            [Sequelize.literal('"profilePicture"'), 'ProfilePicture'],
+            [Sequelize.literal('"role"'), 'User Type'],
+            [Sequelize.literal('"status"'), 'Registration Status'],
+            [Sequelize.literal('"steps"'), 'Steps No'],
+            [Sequelize.literal('"appVersion"'), 'App Version'],
+            [Sequelize.literal('"farmerName"'), 'Farmer Name'],
+            [Sequelize.literal('"gender"'), 'Gender'],
+            [Sequelize.literal('"age"'), 'Age'],
+            [Sequelize.literal('"phone"'), 'Phone Number'],
+            [Sequelize.literal('"userCode"'), 'User Code'],
+            [Sequelize.literal('"pinCode"'), 'Pin Code'],
+            [Sequelize.literal('"unitCode"'), 'Unit Code'],
+            [Sequelize.literal('"mccCode"'), 'Mcc Code'],
+            [Sequelize.literal('"mccMobile"'), 'Mcc Rep Mobile'],
+            [Sequelize.literal('"plateCode"'), 'Plant Code'],
+            [Sequelize.literal('"regionName"'), 'Region Name'],
+            [Sequelize.literal('"unitName"'), 'Unit Name'],
+            [Sequelize.literal('"mccName"'), 'Mcc Name'],
+            [Sequelize.literal('"plateName"'), 'Plant Name'],
+            [Sequelize.literal('"stateName"'), 'State Name'],
+            [Sequelize.literal('"districtName"'), 'District Name'],
+            [Sequelize.literal('"mendalName"'), 'Mandal Name'],
+            [Sequelize.literal('"panchayatName"'), 'Panchayat Name'],
+            [Sequelize.literal('"villageName"'), 'Village Name'],
+            [Sequelize.literal('"isVerified"'), 'isVerified'],
+            [Sequelize.literal('"password"'), 'Password'],
+            [Sequelize.literal('"firebaseToken"'), 'Firebase Token'],
+            [Sequelize.literal('"createdAt"'), 'Created At'],
+            [Sequelize.literal('"updatedAt"'), 'Updated At'],
+          ],
         });
 
         return data;
@@ -144,6 +176,38 @@ class AdminHelpers {
       if (value === 'finished') {
         const data = await Farmer.findAll({
           where: { [Op.or]: [{ status: 'finished' }, { status: 'rejected' }] },
+          attributes: [
+            [Sequelize.literal('"id"'), 'User ID'],
+            [Sequelize.literal('"profilePicture"'), 'ProfilePicture'],
+            [Sequelize.literal('"role"'), 'User Type'],
+            [Sequelize.literal('"status"'), 'Registration Status'],
+            [Sequelize.literal('"steps"'), 'Steps No'],
+            [Sequelize.literal('"appVersion"'), 'App Version'],
+            [Sequelize.literal('"farmerName"'), 'Farmer Name'],
+            [Sequelize.literal('"gender"'), 'Gender'],
+            [Sequelize.literal('"age"'), 'Age'],
+            [Sequelize.literal('"phone"'), 'Phone Number'],
+            [Sequelize.literal('"userCode"'), 'User Code'],
+            [Sequelize.literal('"pinCode"'), 'Pin Code'],
+            [Sequelize.literal('"unitCode"'), 'Unit Code'],
+            [Sequelize.literal('"mccCode"'), 'Mcc Code'],
+            [Sequelize.literal('"mccMobile"'), 'Mcc Rep Mobile'],
+            [Sequelize.literal('"plateCode"'), 'Plant Code'],
+            [Sequelize.literal('"regionName"'), 'Region Name'],
+            [Sequelize.literal('"unitName"'), 'Unit Name'],
+            [Sequelize.literal('"mccName"'), 'Mcc Name'],
+            [Sequelize.literal('"plateName"'), 'Plant Name'],
+            [Sequelize.literal('"stateName"'), 'State Name'],
+            [Sequelize.literal('"districtName"'), 'District Name'],
+            [Sequelize.literal('"mendalName"'), 'Mandal Name'],
+            [Sequelize.literal('"panchayatName"'), 'Panchayat Name'],
+            [Sequelize.literal('"villageName"'), 'Village Name'],
+            [Sequelize.literal('"isVerified"'), 'isVerified'],
+            [Sequelize.literal('"password"'), 'Password'],
+            [Sequelize.literal('"firebaseToken"'), 'Firebase Token'],
+            [Sequelize.literal('"createdAt"'), 'Created At'],
+            [Sequelize.literal('"updatedAt"'), 'Updated At'],
+          ],
         });
 
         return data;
@@ -154,6 +218,38 @@ class AdminHelpers {
       if (value === 'waiting') {
         const data = await Farmer.findAll({
           where: { regionName, [Op.or]: [{ status: 'waiting' }, { status: 'confirmed' }] },
+          attributes: [
+            [Sequelize.literal('"id"'), 'User ID'],
+            [Sequelize.literal('"profilePicture"'), 'ProfilePicture'],
+            [Sequelize.literal('"role"'), 'User Type'],
+            [Sequelize.literal('"status"'), 'Registration Status'],
+            [Sequelize.literal('"steps"'), 'Steps No'],
+            [Sequelize.literal('"appVersion"'), 'App Version'],
+            [Sequelize.literal('"farmerName"'), 'Farmer Name'],
+            [Sequelize.literal('"gender"'), 'Gender'],
+            [Sequelize.literal('"age"'), 'Age'],
+            [Sequelize.literal('"phone"'), 'Phone Number'],
+            [Sequelize.literal('"userCode"'), 'User Code'],
+            [Sequelize.literal('"pinCode"'), 'Pin Code'],
+            [Sequelize.literal('"unitCode"'), 'Unit Code'],
+            [Sequelize.literal('"mccCode"'), 'Mcc Code'],
+            [Sequelize.literal('"mccMobile"'), 'Mcc Rep Mobile'],
+            [Sequelize.literal('"plateCode"'), 'Plant Code'],
+            [Sequelize.literal('"regionName"'), 'Region Name'],
+            [Sequelize.literal('"unitName"'), 'Unit Name'],
+            [Sequelize.literal('"mccName"'), 'Mcc Name'],
+            [Sequelize.literal('"plateName"'), 'Plant Name'],
+            [Sequelize.literal('"stateName"'), 'State Name'],
+            [Sequelize.literal('"districtName"'), 'District Name'],
+            [Sequelize.literal('"mendalName"'), 'Mandal Name'],
+            [Sequelize.literal('"panchayatName"'), 'Panchayat Name'],
+            [Sequelize.literal('"villageName"'), 'Village Name'],
+            [Sequelize.literal('"isVerified"'), 'isVerified'],
+            [Sequelize.literal('"password"'), 'Password'],
+            [Sequelize.literal('"firebaseToken"'), 'Firebase Token'],
+            [Sequelize.literal('"createdAt"'), 'Created At'],
+            [Sequelize.literal('"updatedAt"'), 'Updated At'],
+          ],
         });
 
         return data;
@@ -162,6 +258,38 @@ class AdminHelpers {
       if (value === 'finished') {
         const data = await Farmer.findAll({
           where: { regionName, [Op.or]: [{ status: 'finished' }, { status: 'rejected' }] },
+          attributes: [
+            [Sequelize.literal('"id"'), 'User ID'],
+            [Sequelize.literal('"profilePicture"'), 'ProfilePicture'],
+            [Sequelize.literal('"role"'), 'User Type'],
+            [Sequelize.literal('"status"'), 'Registration Status'],
+            [Sequelize.literal('"steps"'), 'Steps No'],
+            [Sequelize.literal('"appVersion"'), 'App Version'],
+            [Sequelize.literal('"farmerName"'), 'Farmer Name'],
+            [Sequelize.literal('"gender"'), 'Gender'],
+            [Sequelize.literal('"age"'), 'Age'],
+            [Sequelize.literal('"phone"'), 'Phone Number'],
+            [Sequelize.literal('"userCode"'), 'User Code'],
+            [Sequelize.literal('"pinCode"'), 'Pin Code'],
+            [Sequelize.literal('"unitCode"'), 'Unit Code'],
+            [Sequelize.literal('"mccCode"'), 'Mcc Code'],
+            [Sequelize.literal('"mccMobile"'), 'Mcc Rep Mobile'],
+            [Sequelize.literal('"plateCode"'), 'Plant Code'],
+            [Sequelize.literal('"regionName"'), 'Region Name'],
+            [Sequelize.literal('"unitName"'), 'Unit Name'],
+            [Sequelize.literal('"mccName"'), 'Mcc Name'],
+            [Sequelize.literal('"plateName"'), 'Plant Name'],
+            [Sequelize.literal('"stateName"'), 'State Name'],
+            [Sequelize.literal('"districtName"'), 'District Name'],
+            [Sequelize.literal('"mendalName"'), 'Mandal Name'],
+            [Sequelize.literal('"panchayatName"'), 'Panchayat Name'],
+            [Sequelize.literal('"villageName"'), 'Village Name'],
+            [Sequelize.literal('"isVerified"'), 'isVerified'],
+            [Sequelize.literal('"password"'), 'Password'],
+            [Sequelize.literal('"firebaseToken"'), 'Firebase Token'],
+            [Sequelize.literal('"createdAt"'), 'Created At'],
+            [Sequelize.literal('"updatedAt"'), 'Updated At'],
+          ],
         });
 
         return data;
@@ -179,6 +307,7 @@ class AdminHelpers {
 
   static async updateFarmerDetails(newbody, profilePicture, existbody) {
     const updateFarmer = await Farmer.update({
+      role: newbody.role || existbody.role,
       status: newbody.status || existbody.status,
       profilePicture: profilePicture || existbody.profilePicture,
       steps: newbody.steps || existbody.steps,
