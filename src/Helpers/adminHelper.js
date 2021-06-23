@@ -1,7 +1,7 @@
 import Sequelize, { Op } from 'sequelize';
 import models from '../database/models';
 
-const { Admins, Doctor, Farmer, Cattle, Milking } = models;
+const { Admins, Doctor, Farmer, Cattle, Milking, Appointment, Medical } = models;
 
 class AdminHelpers {
   static async adminExist(attribute, value) {
@@ -39,13 +39,138 @@ class AdminHelpers {
     return viewedData;
   }
 
-  static async viewAllFarmers(skip, start) {
+  static async viewAllEmployees(value, skip, start) {
     const viewedData = await Farmer.findAndCountAll({
+      where: { role: 'employee' },
       limit: skip,
       offset: start,
       order: [['updatedAt', 'DESC']],
     });
     return viewedData;
+  }
+
+  static async viewAllMccRepresentative(attribute, value, regionName, skip, start) {
+    const viewedData = await Farmer.findAndCountAll({
+      where: { role: 'MCC Representative', [attribute]: value, regionName },
+      limit: skip,
+      offset: start,
+      order: [['updatedAt', 'DESC']],
+    });
+    return viewedData;
+  }
+
+  static async viewAllFarmers(value, skip, start) {
+    const viewedData = await Farmer.findAndCountAll({
+      where: { role: 'farmer' },
+      limit: skip,
+      offset: start,
+      order: [['updatedAt', 'DESC']],
+    });
+    return viewedData;
+  }
+
+  static async viewAppointmentByStatus(skip, start, regionName, value) {
+    if (regionName === 'HYDERABAD') {
+      if (value === 'waiting') {
+        const viewedData = await Appointment.findAndCountAll({
+          where: { [Op.or]: [{ status: 'waiting' }, { status: 'confirmed' }] },
+          limit: skip,
+          offset: start,
+          order: [['updatedAt', 'DESC']],
+          include: [
+            {
+              model: Farmer,
+              as: 'Farmer',
+            },
+            {
+              model: Cattle,
+              as: 'Cattle',
+            },
+            {
+              model: Medical,
+              as: 'Medical',
+            },
+          ],
+        });
+        return viewedData;
+      }
+
+      if (value === 'finished') {
+        const viewedData = await Appointment.findAndCountAll({
+          where: { [Op.or]: [{ status: 'finished' }, { status: 'rejected' }] },
+          limit: skip,
+          offset: start,
+          order: [['id', 'DESC']],
+          include: [
+            {
+              model: Farmer,
+              as: 'Farmer',
+            },
+            {
+              model: Cattle,
+              as: 'Cattle',
+            },
+            {
+              model: Medical,
+              as: 'Medical',
+            },
+          ],
+        });
+        return viewedData;
+      }
+    }
+
+    if (regionName !== 'HYDERABAD') {
+      if (value === 'waiting') {
+        const viewedData = await Appointment.findAndCountAll({
+          where: { regionName, [Op.or]: [{ status: 'waiting' }, { status: 'confirmed' }] },
+          limit: skip,
+          offset: start,
+          order: [['updatedAt', 'DESC']],
+          include: [
+            {
+              model: Farmer,
+              as: 'Farmer',
+            },
+            {
+              model: Cattle,
+              as: 'Cattle',
+            },
+            {
+              model: Medical,
+              as: 'Medical',
+            },
+          ],
+        });
+        return viewedData;
+      }
+
+      if (value === 'finished') {
+        const viewedData = await Appointment.findAndCountAll({
+          where: { regionName, [Op.or]: [{ status: 'finished' }, { status: 'rejected' }] },
+          limit: skip,
+          offset: start,
+          order: [['id', 'DESC']],
+          include: [
+            {
+              model: Farmer,
+              as: 'Farmer',
+            },
+            {
+              model: Cattle,
+              as: 'Cattle',
+            },
+            {
+              model: Medical,
+              as: 'Medical',
+            },
+          ],
+        });
+        return viewedData;
+      }
+    }
+
+    return undefined;
   }
 
   static async viewDoctorsByStatus(skip, start, value) {

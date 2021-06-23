@@ -174,7 +174,7 @@ class DoctorController {
       const countAllData = viewedAppointments.count;
 
       if (viewedAppointments.rows.length === 0) {
-        responseHelper.handleError(NOT_FOUND, `${req.body.status} appointments not found at the moment`);
+        responseHelper.handleError(NOT_FOUND, `${req.body.status} appointments not found at the moment in ${req.admin.regionName}`);
         return responseHelper.response(res);
       }
 
@@ -208,11 +208,11 @@ class DoctorController {
 
         if (farmer && farmer.firebaseToken) {
           if (req.body.status === 'finished') {
-            await notificationHelper.sendNotification(farmer.firebaseToken, req.doctor.id, data.farmerId, `${cattle ? cattle.cattleName.charAt(0).toUpperCase() + cattle.cattleName.slice(1) : null} Appointment Finished`, `heritagevetplus://appointment/${data.id}`);
+            await notificationHelper.sendNotification(farmer.firebaseToken, data.farmerId, req.doctor.id, `${cattle ? cattle.cattleName.charAt(0).toUpperCase() + cattle.cattleName.slice(1) : null} Appointment Finished`, `heritagevetplus://appointment/${data.id}`);
           }
 
           if (req.body.status === 'rejected') {
-            await notificationHelper.sendNotification(farmer.firebaseToken, req.doctor.id, data.farmerId, `${cattle ? cattle.cattleName.charAt(0).toUpperCase() + cattle.cattleName.slice(1) : null} Appointment Rejected`, `heritagevetplus://appointments`);
+            await notificationHelper.sendNotification(farmer.firebaseToken, data.farmerId, req.doctor.id, `${cattle ? cattle.cattleName.charAt(0).toUpperCase() + cattle.cattleName.slice(1) : null} Appointment Rejected`, `heritagevetplus://appointments`);
           }
         }
 

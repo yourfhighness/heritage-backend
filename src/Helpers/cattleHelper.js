@@ -6,13 +6,7 @@ class CattleHelpers {
   static async cattleExist(attribute, value) {
     const cattle = await Cattle.findOne({
       where: { [attribute]: value },
-      include:
-        [
-          {
-            model: Milking,
-            as: 'Milking',
-          },
-        ],
+      include: [{ model: Milking, as: 'Milking' }],
     });
     return cattle;
   }

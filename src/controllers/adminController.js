@@ -116,6 +116,23 @@ class AdminController {
     }
   }
 
+  static async countData(req, res) {
+    try {
+      const datas = {
+        countedRepresentatives: await farmerHelper.countData('MCC Representative', req.admin.regionName),
+        countedEmployees: await farmerHelper.countData('employee', req.admin.regionName),
+        countedFarmers: await farmerHelper.countData('farmer', req.admin.regionName),
+        countedCattles: await farmerHelper.countCattles(req.admin.regionName),
+      };
+
+      responseHelper.handleSuccess(OK, 'Representatives, Farmers, Cattles counted successfully', datas);
+      return responseHelper.response(res);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
   static async viewAllDoctors(req, res, next) {
     try {
       const { start, end, pages, skip, paginate } = await paginateHelper.paginateData(req.query);
@@ -125,6 +142,46 @@ class AdminController {
 
       if (data.rows === undefined || data.rows.length === 0) {
         responseHelper.handleError(NOT_FOUND, 'Doctors not found at the moment');
+        return responseHelper.response(res);
+      }
+
+      req.data = { allDatata, countAllData, start, end, pages, skip, paginate };
+      return next();
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
+  static async viewAllEmployees(req, res, next) {
+    try {
+      const { start, end, pages, skip, paginate } = await paginateHelper.paginateData(req.query);
+      const data = await adminHelper.viewAllEmployees(skip, start);
+      const allDatata = data.rows;
+      const countAllData = data.count;
+
+      if (data.rows === undefined || data.rows.length === 0) {
+        responseHelper.handleError(NOT_FOUND, 'Employees not found at the moment');
+        return responseHelper.response(res);
+      }
+
+      req.data = { allDatata, countAllData, start, end, pages, skip, paginate };
+      return next();
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
+  static async viewAllMccRepresentative(req, res, next) {
+    try {
+      const { start, end, pages, skip, paginate } = await paginateHelper.paginateData(req.query);
+      const data = await adminHelper.viewAllMccRepresentative(req.body.attribute, req.body.value, req.admin.regionName, skip, start);
+      const allDatata = data.rows;
+      const countAllData = data.count;
+
+      if (data.rows === undefined || data.rows.length === 0) {
+        responseHelper.handleError(NOT_FOUND, 'Mcc representative not found at the moment');
         return responseHelper.response(res);
       }
 
@@ -161,22 +218,21 @@ class AdminController {
     }
   }
 
-  static async searchFarmerRequest(req, res) {
+  static async viewAppointmentByStatus(req, res, next) {
     try {
-      const data = await farmerHelper.searchFarmer(req.body.phone, req.admin.regionName, req.body.status);
+      const { start, end, pages, skip, paginate } = await paginateHelper.paginateData(req.query);
+      const viewedAppointments = await adminHelper.viewAppointmentByStatus(skip, start, req.admin.regionName, req.body.status);
 
-      if (!data) {
-        responseHelper.handleError(NOT_FOUND, `Farmer not found at the moment`);
+      const allDatata = viewedAppointments.rows;
+      const countAllData = viewedAppointments.count;
+
+      if (viewedAppointments.rows.length === 0) {
+        responseHelper.handleError(NOT_FOUND, `${req.body.status} appointments not found at the moment in ${req.admin.regionName}`);
         return responseHelper.response(res);
       }
 
-      if (data) {
-        responseHelper.handleSuccess(OK, 'Farmer viewed successfully', data);
-        return responseHelper.response(res);
-      }
-
-      responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
-      return responseHelper.response(res);
+      req.data = { allDatata, countAllData, start, end, pages, skip, paginate };
+      return next();
     } catch (error) {
       responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
       return responseHelper.response(res);
@@ -230,6 +286,28 @@ class AdminController {
       const data = await adminHelper.farmerExist('id', req.params.id);
       if (!data) {
         responseHelper.handleError(NOT_FOUND, `Farmer with ${req.params.id} not found`);
+        return responseHelper.response(res);
+      }
+
+      if (data) {
+        responseHelper.handleSuccess(OK, 'Farmer viewed successfully', data);
+        return responseHelper.response(res);
+      }
+
+      responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
+      return responseHelper.response(res);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
+  static async searchFarmerRequest(req, res) {
+    try {
+      const data = await farmerHelper.searchFarmer(req.body.phone, req.admin.regionName, req.body.status);
+
+      if (!data) {
+        responseHelper.handleError(NOT_FOUND, `Farmer not found at the moment`);
         return responseHelper.response(res);
       }
 
@@ -387,13 +465,13 @@ class AdminController {
 
   static async killFarmer(req, res) {
     try {
-      const farmer = await farmerHelper.farmerExist('phone', req.body.phone);
+      const farmer = await farmerHelper.farmerRegionExist(req.body.phone, req.admin.regionName);
       if (!farmer) {
         responseHelper.handleError(UNAUTHORIZED, `Farmer with this ${req.body.phone} not found at the moment`);
         return responseHelper.response(res);
       }
 
-      await farmerHelper.resetFrmer(farmer.id);
+      await farmerHelper.resetFarmer(farmer.id);
       responseHelper.handleSuccess(OK, 'Farmer dead successfully', farmer);
       return responseHelper.response(res);
     } catch (error) {

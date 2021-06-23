@@ -27,6 +27,11 @@ const validateRegisterFarmer = (req, res, next) => {
           'any.required': 'appVersion is required',
           'string.empty': 'appVersion is not allowed to be empty',
         }),
+      appLanguage: Joi.string().trim().allow(null, '')
+        .messages({
+          'any.required': 'appLanguage is required',
+          'string.empty': 'appLanguage is not allowed to be empty',
+        }),
       status: Joi.string().trim().min(2).allow(null, '')
         .messages({
           'any.required': 'status is required',
@@ -387,6 +392,7 @@ const validateUpdateFarmer = (req, res, next) => {
       status: Joi.string().min(2),
       steps: Joi.string(),
       appVersion: Joi.string(),
+      appLanguage: Joi.string(),
       farmerName: Joi.string().min(2),
       gender: Joi.string().min(4).max(6),
       age: Joi.date()
@@ -835,7 +841,7 @@ const validateSearchAppointment = (req, res, next) => {
         'string.empty': 'phone is not allowed to be empty',
         'phoneNumber.invalid': 'phone did not seem to be a phone number',
       }),
-      status: Joi.string().min(4).required().valid('waiting', 'confirmed', 'finished', 'rejected')
+      status: Joi.string().min(4).valid('waiting', 'confirmed', 'finished', 'rejected')
         .messages({
           'any.required': 'status is required',
           'string.empty': 'status is not allowed to be empty',

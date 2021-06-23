@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     status: { type: DataTypes.STRING },
     steps: { type: DataTypes.STRING },
     appVersion: { type: DataTypes.STRING },
+    appLanguage: { type: DataTypes.STRING },
     farmerName: { type: DataTypes.STRING },
     gender: { type: DataTypes.STRING },
     age: { type: DataTypes.DATE },

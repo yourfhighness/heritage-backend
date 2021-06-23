@@ -18,7 +18,7 @@ class AuthController {
         return responseHelper.response(res);
       }
 
-      if (phoneExist && phoneExist.status === 'rejected') await farmerHelper.resetFrmer(phoneExist.id);
+      if (phoneExist && phoneExist.status === 'rejected') await farmerHelper.resetFarmer(phoneExist.id);
 
       let document = null;
       if (req.files && req.files.profilePicture) {
@@ -112,7 +112,7 @@ class AuthController {
         return responseHelper.response(res);
       }
 
-      if (phoneExist && phoneExist.status === 'rejected') await farmerHelper.resetFrmer(phoneExist.id);
+      if (phoneExist && phoneExist.status === 'rejected') await farmerHelper.resetFarmer(phoneExist.id);
 
       const code = await resetCodeHelper.generateCode(0, req.body.phone);
       const sentSMS = await sendSMSJsonAPI(req.body.phone.replace(/\D/g, ''), `Dear User, Welcome to Heritage VET+. Your OTP is : ${code}`);

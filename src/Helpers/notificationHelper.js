@@ -11,9 +11,9 @@ class DoctorHelpers {
     return data;
   }
 
-  static async viewNotifications(id, isRead, skip, start) {
+  static async viewNotifications(farmerId, isRead, skip, start) {
     const data = await Notification.findAndCountAll({
-      where: { id, isRead },
+      where: { farmerId, isRead },
       offset: start,
       limit: skip,
     });

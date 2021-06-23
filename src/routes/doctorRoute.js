@@ -7,6 +7,7 @@ import { validateViewByStatus, validateUpdateDoctor, validateUpdateAppointment, 
 
 const busboyBodyParse = busboyBodyParser({ multi: true });
 const doctorRouter = Router();
+
 doctorRouter
   .patch('/upate-doctor', verifyDoctorSession, validateUpdateDoctor, doctor.updateDoctor)
   .get('/view-appointments-details/:id', verifyDoctorSession, doctor.viewAppointmentDetails)

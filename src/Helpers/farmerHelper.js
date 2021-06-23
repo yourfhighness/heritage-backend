@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import Sequelize, { Op } from 'sequelize';
 import models from '../database/models';
 import passwordHelper from './passwordHelper';
 
@@ -10,14 +10,82 @@ class FarmerHelpers {
     return viewedData;
   }
 
-  static async searchFarmer(phone, regionName, status) {
-    let viewedData;
+  static async countData(value, regionName) {
     if (regionName === 'HYDERABAD') {
-      viewedData = await Farmer.findOne({ where: { [Op.and]: [{ phone }, { status }] } });
+      const data = await Farmer.count({ where: { role: value } });
+      return data;
+    }
+
+    const data = await Farmer.count({ where: { role: value, regionName } });
+    return data;
+  }
+
+  static async countCattles(regionName) {
+    if (regionName === 'HYDERABAD') {
+      const data = await Farmer.findAll({
+        attributes: [['id', 'id'], ['farmerName', 'farmerName'], [Sequelize.fn("COUNT", Sequelize.col("Cattle.farmerId")), "cattlesCount"]],
+        include: [{ model: Cattle, as: 'Cattle', attributes: [] }],
+        group: ['Farmer.id'],
+      });
+      return data;
+    }
+
+    const data = await Farmer.findAll({
+      where: { regionName },
+      attributes: [['id', 'id'], ['farmerName', 'farmerName'], [Sequelize.fn("COUNT", Sequelize.col("Cattle.farmerId")), "cattlesCount"]],
+      include: [{ model: Cattle, as: 'Cattle', attributes: [] }],
+      group: ['Farmer.id'],
+    });
+
+    return data;
+  }
+
+  static async farmerRegionExist(phone, regionName) {
+    if (regionName === 'HYDERABAD') {
+      const data = await Farmer.findOne({ where: { phone } });
+      return data;
     }
 
     if (regionName !== 'HYDERABAD') {
-      viewedData = await Farmer.findOne({ where: { [Op.and]: [{ phone }, { regionName }, { status }] } });
+      const data = await Farmer.findOne({ where: { phone, regionName } });
+      return data;
+    }
+
+    return null;
+  }
+
+  static async searchFarmer(phone, regionName, status) {
+    let viewedData;
+    if (!status) {
+      if (regionName === 'HYDERABAD') {
+        viewedData = await Farmer.findOne({
+          where: { [Op.and]: [{ phone }] },
+          include: [{ model: Cattle, as: 'Cattle' }],
+        });
+      }
+
+      if (regionName !== 'HYDERABAD') {
+        viewedData = await Farmer.findOne({
+          where: { [Op.and]: [{ phone }, { regionName }] },
+          include: [{ model: Cattle, as: 'Cattle' }],
+        });
+      }
+
+      return viewedData;
+    }
+
+    if (regionName === 'HYDERABAD') {
+      viewedData = await Farmer.findOne({
+        where: { [Op.and]: [{ phone }, { status }] },
+        include: [{ model: Cattle, as: 'Cattle' }],
+      });
+    }
+
+    if (regionName !== 'HYDERABAD') {
+      viewedData = await Farmer.findOne({
+        where: { [Op.and]: [{ phone }, { regionName }, { status }] },
+        include: [{ model: Cattle, as: 'Cattle' }],
+      });
     }
 
     return viewedData;
@@ -40,6 +108,7 @@ class FarmerHelpers {
       status: body.status,
       steps: body.steps,
       appVersion: body.appVersion,
+      appLanguage: body.appLanguage,
       farmerName: body.farmerName,
       gender: body.gender,
       age: body.age,
@@ -126,6 +195,7 @@ class FarmerHelpers {
       profilePicture,
       steps: body.steps,
       appVersion: body.appVersion,
+      appLanguage: body.appLanguage,
       farmerName: body.farmerName,
       gender: body.gender,
       age: body.age,
@@ -158,7 +228,7 @@ class FarmerHelpers {
     return null;
   }
 
-  static async resetFrmer(value) {
+  static async resetFarmer(value) {
     await Farmer.destroy({ where: { id: value } });
     await Medical.destroy({ where: { farmerId: value } });
     await ResetCode.destroy({ where: { farmerId: value } });
