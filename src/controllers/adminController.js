@@ -26,12 +26,12 @@ const s3bucket = new AWS.S3({
   secretAccessKey: 'uEfHF9+LpyiNKsvwgpwooaBk+RSQq4JZP+CW48e5',
 });
 
-const uploadToS3 = (file, adminName, res) => {
+const uploadToS3 = (file, name, adminName, res) => {
   try {
     s3bucket.createBucket(() => {
       const params = {
         Bucket: 'rivopets',
-        Key: `${adminName}-Farmers-${new Date().toGMTString()}.csv`,
+        Key: `${adminName}-${name}-${new Date().toGMTString()}.csv`,
         Body: file,
       };
 
@@ -475,10 +475,8 @@ class AdminController {
       responseHelper.handleSuccess(OK, 'Farmer dead successfully', farmer);
       return responseHelper.response(res);
     } catch (error) {
-      return res.status(500).json({
-        status: 500,
-        data: error.toString(),
-      });
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
     }
   }
 
@@ -488,16 +486,14 @@ class AdminController {
       responseHelper.handleSuccess(OK, 'Farmers removed successfully');
       return responseHelper.response(res);
     } catch (error) {
-      return res.status(500).json({
-        status: 500,
-        data: error.toString(),
-      });
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
     }
   }
 
-  static async exportFarmersByStatus(req, res) {
+  static async exportFarmersByRegionName(req, res) {
     try {
-      const viewedData = await adminHelper.exportFarmersByStatus(req.admin.regionName, req.body.status);
+      const viewedData = await adminHelper.adminExportFarmersByStatusAndRegionName(req.admin.regionName, req.body.status);
 
       if (viewedData.length === 0) {
         responseHelper.handleError(NOT_FOUND, `${req.body.status} farmers not found at the moment`);
@@ -512,7 +508,60 @@ class AdminController {
           const generatedFile = await path.resolve(`./${req.admin.adminName}-Farmers.csv`);
           const fileStream = await fileSystem.createReadStream(generatedFile);
 
-          await uploadToS3(fileStream, req.admin.adminName, res);
+          await uploadToS3(fileStream, 'Farmers', req.admin.adminName, res);
+        })
+        .pipe(file);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
+  static async reportFarmersByRegionName(req, res) {
+    try {
+      const viewedData = await adminHelper.adminReportFarmersByStatusAndRegionName(req.admin.regionName);
+
+      if (viewedData.length === 0) {
+        responseHelper.handleError(NOT_FOUND, `${req.body.status} farmers not found at the moment`);
+        return responseHelper.response(res);
+      }
+
+      const dataContainer = [];
+      for (let i = 0; i < viewedData.length; i += 1) { dataContainer.push(viewedData[i].dataValues); }
+      const file = await fileSystem.createWriteStream(`${req.admin.adminName}-Farmers.csv`);
+      await fastcsv.write(dataContainer, { headers: true })
+        .on('finish', async () => {
+          const generatedFile = await path.resolve(`./${req.admin.adminName}-Farmers.csv`);
+          const fileStream = await fileSystem.createReadStream(generatedFile);
+
+          await uploadToS3(fileStream, 'Farmers', req.admin.adminName, res);
+        })
+        .pipe(file);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
+  static async reportCattlesByRegionName(req, res) {
+    try {
+      const data = await adminHelper.adminReportCattlesByRegionName(req.admin.regionName);
+      const viewedData = data.map((farmer) => farmer.Cattle).flat();
+
+      if (viewedData.length === 0) {
+        responseHelper.handleError(NOT_FOUND, 'Cattles not found at the moment');
+        return responseHelper.response(res);
+      }
+
+      const dataContainer = [];
+      for (let i = 0; i < viewedData.length; i += 1) { dataContainer.push(viewedData[i].dataValues); }
+      const file = await fileSystem.createWriteStream(`${req.admin.adminName}-Cattles.csv`);
+      await fastcsv.write(dataContainer, { headers: true })
+        .on('finish', async () => {
+          const generatedFile = await path.resolve(`./${req.admin.adminName}-Cattles.csv`);
+          const fileStream = await fileSystem.createReadStream(generatedFile);
+
+          await uploadToS3(fileStream, 'Cattles', req.admin.adminName, res);
         })
         .pipe(file);
     } catch (error) {

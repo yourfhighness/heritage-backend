@@ -256,7 +256,49 @@ class AdminHelpers {
     return undefined;
   }
 
-  static async exportFarmersByStatus(regionName, value) {
+  static async updateFarmerStatus(id, status) {
+    const updateData = await Farmer.update({ status }, { where: { [Op.and]: [{ id }] } });
+
+    return updateData;
+  }
+
+  static async updateFarmerDetails(newbody, profilePicture, existbody) {
+    const updateFarmer = await Farmer.update({
+      role: newbody.role || existbody.role,
+      status: newbody.status || existbody.status,
+      profilePicture: profilePicture || existbody.profilePicture,
+      steps: newbody.steps || existbody.steps,
+      farmerName: newbody.farmerName || existbody.farmerName,
+      gender: newbody.gender || existbody.gender,
+      age: newbody.age || existbody.age,
+      phone: newbody.phone || existbody.phone,
+      userCode: newbody.userCode || existbody.userCode,
+      pinCode: newbody.pinCode || existbody.pinCode,
+      unitCode: newbody.unitCode || existbody.unitCode,
+      mccCode: newbody.mccCode || existbody.mccCode,
+      mccMobile: newbody.mccMobile || existbody.mccMobile,
+      plateCode: newbody.plateCode || existbody.plateCode,
+      regionName: newbody.regionName ? newbody.regionName.toUpperCase() : existbody.regionName,
+      unitName: newbody.unitName ? newbody.unitName.toUpperCase() : existbody.unitName,
+      mccName: newbody.mccName ? newbody.mccName.toUpperCase() : existbody.mccName,
+      plateName: newbody.plateName ? newbody.plateName.toUpperCase() : existbody.plateName,
+      stateName: newbody.stateName ? newbody.stateName.toUpperCase() : existbody.stateName,
+      districtName: newbody.districtName ? newbody.districtName.toUpperCase() : existbody.districtName,
+      mendalName: newbody.mendalName ? newbody.mendalName.toUpperCase() : existbody.mendalName,
+      panchayatName: newbody.panchayatName ? newbody.panchayatName.toUpperCase() : existbody.panchayatName,
+      villageName: newbody.villageName ? newbody.villageName.toUpperCase() : existbody.villageName,
+      isVerified: existbody.isVerified,
+      password: existbody.password,
+    }, { where: { id: existbody.id } });
+
+    if (updateFarmer) {
+      const farmer = await this.farmerExist('id', existbody.id);
+      return farmer;
+    }
+    return null;
+  }
+
+  static async adminExportFarmersByStatusAndRegionName(regionName, value) {
     if (regionName === 'HYDERABAD') {
       if (value === 'waiting') {
         const data = await Farmer.findAll({
@@ -424,46 +466,104 @@ class AdminHelpers {
     return undefined;
   }
 
-  static async updateFarmerStatus(id, status) {
-    const updateData = await Farmer.update({ status }, { where: { [Op.and]: [{ id }] } });
+  static async adminReportFarmersByStatusAndRegionName(regionName) {
+    if (regionName === 'HYDERABAD') {
+      const data = await Farmer.findAll({
+        attributes: [
+          [Sequelize.literal('"id"'), 'User ID'],
+          [Sequelize.literal('"profilePicture"'), 'ProfilePicture'],
+          [Sequelize.literal('"role"'), 'User Type'],
+          [Sequelize.literal('"status"'), 'Registration Status'],
+          [Sequelize.literal('"steps"'), 'Steps No'],
+          [Sequelize.literal('"appVersion"'), 'App Version'],
+          [Sequelize.literal('"farmerName"'), 'Farmer Name'],
+          [Sequelize.literal('"gender"'), 'Gender'],
+          [Sequelize.literal('"age"'), 'Age'],
+          [Sequelize.literal('"phone"'), 'Phone Number'],
+          [Sequelize.literal('"userCode"'), 'User Code'],
+          [Sequelize.literal('"pinCode"'), 'Pin Code'],
+          [Sequelize.literal('"unitCode"'), 'Unit Code'],
+          [Sequelize.literal('"mccCode"'), 'Mcc Code'],
+          [Sequelize.literal('"mccMobile"'), 'Mcc Rep Mobile'],
+          [Sequelize.literal('"plateCode"'), 'Plant Code'],
+          [Sequelize.literal('"regionName"'), 'Region Name'],
+          [Sequelize.literal('"unitName"'), 'Unit Name'],
+          [Sequelize.literal('"mccName"'), 'Mcc Name'],
+          [Sequelize.literal('"plateName"'), 'Plant Name'],
+          [Sequelize.literal('"stateName"'), 'State Name'],
+          [Sequelize.literal('"districtName"'), 'District Name'],
+          [Sequelize.literal('"mendalName"'), 'Mandal Name'],
+          [Sequelize.literal('"panchayatName"'), 'Panchayat Name'],
+          [Sequelize.literal('"villageName"'), 'Village Name'],
+          [Sequelize.literal('"isVerified"'), 'isVerified'],
+          [Sequelize.literal('"password"'), 'Password'],
+          [Sequelize.literal('"firebaseToken"'), 'Firebase Token'],
+          [Sequelize.literal('"createdAt"'), 'Created At'],
+          [Sequelize.literal('"updatedAt"'), 'Updated At'],
+        ],
+      });
 
-    return updateData;
+      return data;
+    }
+
+    if (regionName !== 'HYDERABAD') {
+      const data = await Farmer.findAll({
+        where: { regionName },
+        attributes: [
+          [Sequelize.literal('"id"'), 'User ID'],
+          [Sequelize.literal('"profilePicture"'), 'ProfilePicture'],
+          [Sequelize.literal('"role"'), 'User Type'],
+          [Sequelize.literal('"status"'), 'Registration Status'],
+          [Sequelize.literal('"steps"'), 'Steps No'],
+          [Sequelize.literal('"appVersion"'), 'App Version'],
+          [Sequelize.literal('"farmerName"'), 'Farmer Name'],
+          [Sequelize.literal('"gender"'), 'Gender'],
+          [Sequelize.literal('"age"'), 'Age'],
+          [Sequelize.literal('"phone"'), 'Phone Number'],
+          [Sequelize.literal('"userCode"'), 'User Code'],
+          [Sequelize.literal('"pinCode"'), 'Pin Code'],
+          [Sequelize.literal('"unitCode"'), 'Unit Code'],
+          [Sequelize.literal('"mccCode"'), 'Mcc Code'],
+          [Sequelize.literal('"mccMobile"'), 'Mcc Rep Mobile'],
+          [Sequelize.literal('"plateCode"'), 'Plant Code'],
+          [Sequelize.literal('"regionName"'), 'Region Name'],
+          [Sequelize.literal('"unitName"'), 'Unit Name'],
+          [Sequelize.literal('"mccName"'), 'Mcc Name'],
+          [Sequelize.literal('"plateName"'), 'Plant Name'],
+          [Sequelize.literal('"stateName"'), 'State Name'],
+          [Sequelize.literal('"districtName"'), 'District Name'],
+          [Sequelize.literal('"mendalName"'), 'Mandal Name'],
+          [Sequelize.literal('"panchayatName"'), 'Panchayat Name'],
+          [Sequelize.literal('"villageName"'), 'Village Name'],
+          [Sequelize.literal('"isVerified"'), 'isVerified'],
+          [Sequelize.literal('"password"'), 'Password'],
+          [Sequelize.literal('"firebaseToken"'), 'Firebase Token'],
+          [Sequelize.literal('"createdAt"'), 'Created At'],
+          [Sequelize.literal('"updatedAt"'), 'Updated At'],
+        ],
+      });
+
+      return data;
+    }
+
+    return undefined;
   }
 
-  static async updateFarmerDetails(newbody, profilePicture, existbody) {
-    const updateFarmer = await Farmer.update({
-      role: newbody.role || existbody.role,
-      status: newbody.status || existbody.status,
-      profilePicture: profilePicture || existbody.profilePicture,
-      steps: newbody.steps || existbody.steps,
-      farmerName: newbody.farmerName || existbody.farmerName,
-      gender: newbody.gender || existbody.gender,
-      age: newbody.age || existbody.age,
-      phone: newbody.phone || existbody.phone,
-      userCode: newbody.userCode || existbody.userCode,
-      pinCode: newbody.pinCode || existbody.pinCode,
-      unitCode: newbody.unitCode || existbody.unitCode,
-      mccCode: newbody.mccCode || existbody.mccCode,
-      mccMobile: newbody.mccMobile || existbody.mccMobile,
-      plateCode: newbody.plateCode || existbody.plateCode,
-      regionName: newbody.regionName ? newbody.regionName.toUpperCase() : existbody.regionName,
-      unitName: newbody.unitName ? newbody.unitName.toUpperCase() : existbody.unitName,
-      mccName: newbody.mccName ? newbody.mccName.toUpperCase() : existbody.mccName,
-      plateName: newbody.plateName ? newbody.plateName.toUpperCase() : existbody.plateName,
-      stateName: newbody.stateName ? newbody.stateName.toUpperCase() : existbody.stateName,
-      districtName: newbody.districtName ? newbody.districtName.toUpperCase() : existbody.districtName,
-      mendalName: newbody.mendalName ? newbody.mendalName.toUpperCase() : existbody.mendalName,
-      panchayatName: newbody.panchayatName ? newbody.panchayatName.toUpperCase() : existbody.panchayatName,
-      villageName: newbody.villageName ? newbody.villageName.toUpperCase() : existbody.villageName,
-      isVerified: existbody.isVerified,
-      password: existbody.password,
-    }, { where: { id: existbody.id } });
-
-    if (updateFarmer) {
-      const farmer = await this.farmerExist('id', existbody.id);
-      return farmer;
+  static async adminReportCattlesByRegionName(regionName) {
+    if (regionName === 'HYDERABAD') {
+      const data = await Farmer.findAll({
+        attributes: [['id', 'id'], ['farmerName', 'farmerName']],
+        include: [{ model: Cattle, as: 'Cattle' }],
+      });
+      return data;
     }
-    return null;
+
+    const data = await Farmer.findAll({
+      where: { regionName },
+      attributes: [['id', 'id'], ['farmerName', 'farmerName']],
+      include: [{ model: Cattle, as: 'Cattle' }],
+    });
+    return data;
   }
 }
 

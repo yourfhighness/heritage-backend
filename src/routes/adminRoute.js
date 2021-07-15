@@ -32,7 +32,9 @@ adminRouter
   .post('/search-farmer-request', verifyAdminSession, validateSearchAppointment, admin.searchFarmerRequest)
   .post('/remove-all-farmers-by-fields', verifyAdminSession, validateRemoveAllFarmers, admin.removeAllFrmers)
 
-  .post('/export-farmer', verifyAdminSession, validateViewByStatus, admin.exportFarmersByStatus)
+  .post('/report-cattes', verifyAdminSession, validateViewByStatus, admin.reportCattlesByRegionName)
+  .post('/report-farmers', verifyAdminSession, validateViewByStatus, admin.reportFarmersByRegionName)
+  .post('/export-farmers', verifyAdminSession, validateViewByStatus, admin.exportFarmersByRegionName)
   .patch('/upate-farmer/:farmerId', verifyAdminSession, multipart, validateUpdateFarmer, admin.updateFarmerDetails)
   .patch('/upate-cattle/:farmerId/:cattleId', verifyAdminSession, multipart, validateUpdateCattle, admin.updateCattle);
 
