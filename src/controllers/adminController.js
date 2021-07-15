@@ -324,29 +324,6 @@ class AdminController {
     }
   }
 
-  static async updateFarmer(req, res) {
-    try {
-      let data = await adminHelper.farmerExist('id', req.params.id);
-      if (!data) {
-        responseHelper.handleError(NOT_FOUND, `Farmer with ${req.params.id} not found`);
-        return responseHelper.response(res);
-      }
-
-      data = await adminHelper.updateFarmerStatus(req.params.id, req.body.status);
-      if (data) {
-        data = await adminHelper.farmerExist('id', req.params.id);
-        responseHelper.handleSuccess(OK, 'Farmer update successfully', data);
-        return responseHelper.response(res);
-      }
-
-      responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
-      return responseHelper.response(res);
-    } catch (error) {
-      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
-      return responseHelper.response(res);
-    }
-  }
-
   static async updateFarmerDetails(req, res) {
     try {
       let document;
@@ -367,6 +344,52 @@ class AdminController {
       data = await adminHelper.updateFarmerDetails(req.body, document, data);
       if (data) {
         responseHelper.handleSuccess(OK, 'Farmer profile updated successfully', data);
+        return responseHelper.response(res);
+      }
+
+      responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
+      return responseHelper.response(res);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
+  static async updateFarmer(req, res) {
+    try {
+      let data = await adminHelper.farmerExist('id', req.params.id);
+      if (!data) {
+        responseHelper.handleError(NOT_FOUND, `Farmer with ${req.params.id} not found`);
+        return responseHelper.response(res);
+      }
+
+      data = await adminHelper.updateFarmerField(req.admin.regionName, req.params.id, req.body.status, 'status');
+      if (data[0] === 1) {
+        data = await adminHelper.farmerExist('id', req.params.id);
+        responseHelper.handleSuccess(OK, 'Farmer update successfully', data);
+        return responseHelper.response(res);
+      }
+
+      responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
+      return responseHelper.response(res);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
+  static async assignRepToEmployee(req, res) {
+    try {
+      const user = await adminHelper.farmerExist('id', req.params.id);
+      if (!user) {
+        responseHelper.handleError(NOT_FOUND, `Farmer with ${req.params.id} not found`);
+        return responseHelper.response(res);
+      }
+
+      let data = await adminHelper.updateFarmerField(req.admin.regionName, req.params.id, req.body.role, 'role');
+      if (data[0] === 1) {
+        data = await adminHelper.farmerExist('id', req.params.id);
+        responseHelper.handleSuccess(OK, `${user.role} updated successfully to ${req.body.role}`, data[0]);
         return responseHelper.response(res);
       }
 
@@ -419,6 +442,7 @@ class AdminController {
   static async adminUpdateFarmer(req, res) {
     try {
       await helper.adminUpdateFarmer(req.body.attribute, req.body.newValue, req.body.oldValue);
+
       responseHelper.handleSuccess(OK, 'Action Processed successfully');
       return responseHelper.response(res);
     } catch (error) {
@@ -562,6 +586,61 @@ class AdminController {
           const fileStream = await fileSystem.createReadStream(generatedFile);
 
           await uploadToS3(fileStream, 'Cattles', req.admin.adminName, res);
+        })
+        .pipe(file);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
+  static async reportFeedbacksByRegionName(req, res) {
+    try {
+      const data = await adminHelper.adminReportFeedbacksByRegionName(req.admin.regionName);
+      const viewedData = data.map((farmer) => farmer.FarmerFeedback).flat();
+
+      if (viewedData.length === 0) {
+        responseHelper.handleError(NOT_FOUND, 'Farmer feedback not found at the moment');
+        return responseHelper.response(res);
+      }
+
+      const dataContainer = [];
+      for (let i = 0; i < viewedData.length; i += 1) { dataContainer.push(viewedData[i].dataValues); }
+      const file = await fileSystem.createWriteStream(`${req.admin.adminName}-Feedbacks.csv`);
+      await fastcsv.write(dataContainer, { headers: true })
+        .on('finish', async () => {
+          const generatedFile = await path.resolve(`./${req.admin.adminName}-Feedbacks.csv`);
+          const fileStream = await fileSystem.createReadStream(generatedFile);
+
+          await uploadToS3(fileStream, 'Feedbacks', req.admin.adminName, res);
+        })
+        .pipe(file);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
+  static async reportConsultationsDetails(req, res) {
+    try {
+      const data = await adminHelper.adminReportConsultationsDetailsByRegionName(req.admin.regionName);
+
+      const viewedData = data.map((farmer) => farmer.Medical).flat();
+
+      if (viewedData.length === 0) {
+        responseHelper.handleError(NOT_FOUND, 'Farmer feedback not found at the moment');
+        return responseHelper.response(res);
+      }
+
+      const dataContainer = [];
+      for (let i = 0; i < viewedData.length; i += 1) { dataContainer.push(viewedData[i].dataValues); }
+      const file = await fileSystem.createWriteStream(`${req.admin.adminName}-Feedbacks.csv`);
+      await fastcsv.write(dataContainer, { headers: true })
+        .on('finish', async () => {
+          const generatedFile = await path.resolve(`./${req.admin.adminName}-Feedbacks.csv`);
+          const fileStream = await fileSystem.createReadStream(generatedFile);
+
+          await uploadToS3(fileStream, 'Feedbacks', req.admin.adminName, res);
         })
         .pipe(file);
     } catch (error) {

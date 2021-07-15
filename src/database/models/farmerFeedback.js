@@ -6,5 +6,13 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: { type: DataTypes.DATE },
   }, {});
 
+  farmerFeedback.associate = (models) => {
+    farmerFeedback.belongsTo(models.Farmer, {
+      foreignKey: 'farmerId',
+      as: 'Farmer',
+      onDelete: 'CASCADE',
+    });
+  };
+
   return farmerFeedback;
 };

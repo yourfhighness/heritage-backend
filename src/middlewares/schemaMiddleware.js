@@ -588,7 +588,7 @@ const validatePeriodicallySlip = (req, res, next) => {
 };
 
 const validateAppointment = (req, res, next) => {
-  const appointmentSchema = Joi.object()
+  const data = Joi.object()
     .keys({
       description: Joi.string().min(10).required()
         .messages({
@@ -620,11 +620,11 @@ const validateAppointment = (req, res, next) => {
     })
     .options({ abortEarly: false });
 
-  return validateSchema(appointmentSchema, req.body, res, next);
+  return validateSchema(data, req.body, res, next);
 };
 
 const validateViewByStatus = (req, res, next) => {
-  const appointmentSchema = Joi.object()
+  const data = Joi.object()
     .keys({
       status: Joi.string().min(4).required().valid('waiting', 'finished')
         .messages({
@@ -635,7 +635,21 @@ const validateViewByStatus = (req, res, next) => {
     })
     .options({ abortEarly: false });
 
-  return validateSchema(appointmentSchema, req.body, res, next);
+  return validateSchema(data, req.body, res, next);
+};
+
+const validateAssignRole = (req, res, next) => {
+  const data = Joi.object()
+    .keys({
+      role: Joi.string().required().valid('farmer', 'employee', 'MCC Representative')
+        .messages({
+          'any.required': 'role is required',
+          'string.empty': 'role is not allowed to be empty',
+        }),
+    })
+    .options({ abortEarly: false });
+
+  return validateSchema(data, req.body, res, next);
 };
 
 const validateAdminAndDoctorLogin = (req, res, next) => {
@@ -946,6 +960,7 @@ export {
   validateSignupOTP,
   validateUpdateSlip,
   validateFilterSlip,
+  validateAssignRole,
   validateAppointment,
   validateUpdateFarmer,
   validateUpdateCattle,

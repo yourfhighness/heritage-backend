@@ -50,6 +50,12 @@ module.exports = (sequelize, DataTypes) => {
       as: 'Medical',
       onDelete: 'CASCADE',
     });
+
+    farmer.hasMany(models.FarmerFeedback, {
+      foreignKey: 'farmerId',
+      as: 'FarmerFeedback',
+      onDelete: 'CASCADE',
+    });
   };
 
   return farmer;

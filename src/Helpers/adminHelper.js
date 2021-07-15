@@ -1,7 +1,7 @@
 import Sequelize, { Op } from 'sequelize';
 import models from '../database/models';
 
-const { Admins, Doctor, Farmer, Cattle, Milking, Appointment, Medical } = models;
+const { Admins, Doctor, Farmer, Cattle, Milking, Appointment, Medical, FarmerFeedback } = models;
 
 class AdminHelpers {
   static async adminExist(attribute, value) {
@@ -256,9 +256,13 @@ class AdminHelpers {
     return undefined;
   }
 
-  static async updateFarmerStatus(id, status) {
-    const updateData = await Farmer.update({ status }, { where: { [Op.and]: [{ id }] } });
+  static async updateFarmerField(regionName, id, value, field) {
+    if (regionName === 'HYDERABAD') {
+      const updateData = await Farmer.update({ [field]: value }, { where: { id } });
+      return updateData;
+    }
 
+    const updateData = await Farmer.update({ [field]: value }, { where: { regionName, id } });
     return updateData;
   }
 
@@ -562,6 +566,40 @@ class AdminHelpers {
       where: { regionName },
       attributes: [['id', 'id'], ['farmerName', 'farmerName']],
       include: [{ model: Cattle, as: 'Cattle' }],
+    });
+    return data;
+  }
+
+  static async adminReportFeedbacksByRegionName(regionName) {
+    if (regionName === 'HYDERABAD') {
+      const data = await Farmer.findAll({
+        attributes: [['id', 'id'], ['farmerName', 'farmerName']],
+        include: [{ model: FarmerFeedback, as: 'FarmerFeedback' }],
+      });
+      return data;
+    }
+
+    const data = await Farmer.findAll({
+      where: { regionName },
+      attributes: [['id', 'id'], ['farmerName', 'farmerName']],
+      include: [{ model: FarmerFeedback, as: 'FarmerFeedback' }],
+    });
+    return data;
+  }
+
+  static async adminReportConsultationsDetailsByRegionName(regionName) {
+    if (regionName === 'HYDERABAD') {
+      const data = await Farmer.findAll({
+        attributes: [['id', 'id'], ['farmerName', 'farmerName']],
+        include: [{ model: Medical, as: 'Medical' }],
+      });
+      return data;
+    }
+
+    const data = await Farmer.findAll({
+      where: { regionName },
+      attributes: [['id', 'id'], ['farmerName', 'farmerName']],
+      include: [{ model: Medical, as: 'Medical' }],
     });
     return data;
   }
