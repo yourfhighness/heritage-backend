@@ -5,6 +5,7 @@ const up = (queryInterface, Sequelize) => queryInterface.createTable('RegionUnit
     primaryKey: true,
     type: Sequelize.INTEGER,
   },
+  document: { type: Sequelize.STRING },
   pinCode: { type: Sequelize.STRING },
   unitCode: { type: Sequelize.STRING },
   mccCode: { type: Sequelize.STRING },

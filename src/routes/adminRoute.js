@@ -3,7 +3,7 @@ import multiparty from 'connect-multiparty';
 import admin from '../controllers/adminController';
 import paginate from '../middlewares/paginateMiddleware';
 import { verifyAdminSession } from '../middlewares/verifyMiddlewares';
-import { validateSaveData, validatePhone, validateUpdateFarmer, validateUpdateCattle, validateRemoveAllFarmers, validateSearchAppointment, validateProcced, validateViewByStatus, validateAssignRole, validateUpdateAppointment, validateViewUnitNameMccName } from '../middlewares/schemaMiddleware';
+import { validateSaveData, validateCreateRegion, validatePhone, validateUpdateFarmer, validateUpdateCattle, validateRemoveAllFarmers, validateSearchAppointment, validateProcced, validateViewByStatus, validateAssignRole, validateUpdateAppointment, validateViewUnitNameMccName } from '../middlewares/schemaMiddleware';
 
 const multipart = multiparty();
 const adminRouter = Router();
@@ -14,9 +14,12 @@ adminRouter
   .put('/add-edit-product/:productId', multipart, admin.addEditProductAPI)
 
   .get('/count-data', verifyAdminSession, admin.countData)
-  .post('/save-data', verifyAdminSession, validateSaveData, admin.saveData)
   .get('/view-farmer-details/:id', verifyAdminSession, admin.viewFarmerDetails)
+  .get('/view-appointments-details/:id', verifyAdminSession, admin.viewAppointmentDetails)
+
+  .post('/save-data', verifyAdminSession, validateSaveData, admin.saveData)
   .post('/save-semi-verified-farmer', verifyAdminSession, admin.saveSemiVerifiedFarmer)
+  .post('/create-region', verifyAdminSession, multipart, validateCreateRegion, admin.createRegion)
 
   .get('/view-all-farmers', verifyAdminSession, admin.viewAllFarmers, paginate.paginateData)
   .get('/view-all-doctors', verifyAdminSession, admin.viewAllDoctors, paginate.paginateData)

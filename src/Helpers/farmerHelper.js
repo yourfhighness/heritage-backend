@@ -105,6 +105,7 @@ class FarmerHelpers {
     const farmer = await Farmer.create({
       profilePicture,
       role: body.role,
+      assigned: body.assigned,
       status: body.status,
       steps: body.steps,
       appVersion: body.appVersion,
@@ -191,6 +192,7 @@ class FarmerHelpers {
   static async updateFarmerProfile(id, profilePicture, body, existingPassword) {
     const updateFarmer = await Farmer.update({
       role: body.role,
+      assigned: body.assigned,
       status: body.status,
       profilePicture,
       steps: body.steps,

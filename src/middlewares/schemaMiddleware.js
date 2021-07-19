@@ -17,6 +17,11 @@ const validateRegisterFarmer = (req, res, next) => {
           'any.required': 'role is required',
           'string.empty': 'role is not allowed to be empty',
         }),
+      assigned: Joi.string().trim().allow(null, '')
+        .messages({
+          'any.required': 'assigned is required',
+          'string.empty': 'assigned is not allowed to be empty',
+        }),
       steps: Joi.string().trim().allow(null, '')
         .messages({
           'any.required': 'steps is required',
@@ -389,6 +394,7 @@ const validateUpdateFarmer = (req, res, next) => {
     .keys({
       profilePicture: Joi.string().min(5),
       role: Joi.string().min(2),
+      assigned: Joi.string().min(2),
       status: Joi.string().min(2),
       steps: Joi.string(),
       appVersion: Joi.string(),
@@ -641,10 +647,10 @@ const validateViewByStatus = (req, res, next) => {
 const validateAssignRole = (req, res, next) => {
   const data = Joi.object()
     .keys({
-      role: Joi.string().required().valid('farmer', 'employee', 'MCC Representative')
+      assigned: Joi.string().required()
         .messages({
-          'any.required': 'role is required',
-          'string.empty': 'role is not allowed to be empty',
+          'any.required': 'assigned is required',
+          'string.empty': 'assigned is not allowed to be empty',
         }),
     })
     .options({ abortEarly: false });
@@ -761,6 +767,90 @@ const validateSaveData = (req, res, next) => {
         .messages({
           'any.required': 'mccName is required',
           'string.empty': 'mccName is not allowed to be empty',
+        }),
+    })
+    .options({ abortEarly: false });
+
+  return validateSchema(dataSchema, req.body, res, next);
+};
+
+const validateCreateRegion = (req, res, next) => {
+  const dataSchema = Joi.object()
+    .keys({
+      document: Joi.string()
+        .messages({
+          'any.required': 'document is required',
+          'string.empty': 'document is not allowed to be empty',
+        }),
+      pinCode: Joi.string().required()
+        .messages({
+          'any.required': 'pinCode is required',
+          'string.empty': 'pinCode is not allowed to be empty',
+        }),
+      unitCode: Joi.string().required()
+        .messages({
+          'any.required': 'unitCode is required',
+          'string.empty': 'unitCode is not allowed to be empty',
+        }),
+      mccCode: Joi.string().required()
+        .messages({
+          'any.required': 'mccCode is required',
+          'string.empty': 'mccCode is not allowed to be empty',
+        }),
+      mccMobile: Joi.string().required()
+        .messages({
+          'any.required': 'mccMobile is required',
+          'string.empty': 'mccMobile is not allowed to be empty',
+        }),
+      plateCode: Joi.string().required()
+        .messages({
+          'any.required': 'plateCode is required',
+          'string.empty': 'plateCode is not allowed to be empty',
+        }),
+      regionName: Joi.string().required()
+        .messages({
+          'any.required': 'regionName is required',
+          'string.empty': 'regionName is not allowed to be empty',
+        }),
+      unitName: Joi.string().required()
+        .messages({
+          'any.required': 'unitName is required',
+          'string.empty': 'unitName is not allowed to be empty',
+        }),
+      mccName: Joi.string().required()
+        .messages({
+          'any.required': 'mccName is required',
+          'string.empty': 'mccName is not allowed to be empty',
+        }),
+      plateName: Joi.string().required()
+        .messages({
+          'any.required': 'plateName is required',
+          'string.empty': 'plateName is not allowed to be empty',
+        }),
+      stateName: Joi.string().required()
+        .messages({
+          'any.required': 'stateName is required',
+          'string.empty': 'stateName is not allowed to be empty',
+        }),
+      districtName: Joi.string().required()
+        .messages({
+          'any.required': 'districtName is required',
+          'string.empty': 'districtName is not allowed to be empty',
+        }),
+      mendalName: Joi.string().required()
+        .messages({
+          'any.required': 'mendalName is required',
+          'string.empty': 'mendalName is not allowed to be empty',
+        }),
+      panchayatName: Joi.string().required()
+        .messages({
+          'any.required': 'panchayatName is required',
+          'string.empty': 'panchayatName is not allowed to be empty',
+        }),
+      villageName: Joi.string().required()
+        .messages({
+          'any.required': 'villageName is required',
+          'string.empty': 'villageName is not allowed to be empty',
         }),
     })
     .options({ abortEarly: false });
@@ -966,6 +1056,7 @@ export {
   validateUpdateCattle,
   validateViewByStatus,
   validateUpdateDoctor,
+  validateCreateRegion,
   validateChangePassword,
   validateRegisterFarmer,
   validateRegisterCattle,

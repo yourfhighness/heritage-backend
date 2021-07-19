@@ -7,12 +7,15 @@
     "lint": "eslint ./src",
     "kill": "Taskkill /IM node.exe /F",
     "server": "nodemon --exec babel-node ./src/index.js",
-    "createtables": "cross-env NODE_ENV=development npx sequelize db:migrate",
-    "createOnetables": "cross-env NODE_ENV=development npx sequelize db:migrate resetCode.js",
-    "inserttables": "cross-env NODE_ENV=development npx sequelize db:seed:all",
-    "insertOnetables": "cross-env NODE_ENV=development npx sequelize db:seed --seed 20200301173903-demo-resetCode.js",
+    
+    "deleteOnetables": "cross-env NODE_ENV=development npx sequelize db:migrate:undo --name 20200301172800-create-farmer.js",
+    "insertOnetables": "cross-env NODE_ENV=development npx sequelize db:seed --seed 20200301173903-demo-farmer.js",
+    "createOnetables": "cross-env NODE_ENV=development npx sequelize db:migrate farmer.js",
+
     "deletetables": "cross-env NODE_ENV=development npx sequelize db:migrate:undo:all",
-    "deleteOnetables": "cross-env NODE_ENV=development npx sequelize db:migrate:undo --name 20200301172800-create-resetCode.js",
+    "inserttables": "cross-env NODE_ENV=development npx sequelize db:seed:all",
+    "createtables": "cross-env NODE_ENV=development npx sequelize db:migrate",
+
     "start": "cross-env NODE_ENV=production babel-node ./src/index.js",
     "start:with-migrations": "cross-env NODE_ENV=production npx sequelize-cli db:migrate:undo:all && cross-env NODE_ENV=production npx sequelize-cli db:migrate && cross-env NODE_ENV=production npx sequelize-cli db:seed:all && cross-env NODE_ENV=production babel-node ./src/index.js"
   },

@@ -3,6 +3,7 @@ import passwordHelper from '../../Helpers/passwordHelper';
 const userOne = {
   profilePicture: 'https://media-exp1.licdn.com/dms/image/C5603AQGOa0HFf1180Q/profile-displayphoto-shrink_200_200/0/1580515635328?e=1617235200&v=beta&t=etBBU13eKaMCFHjwzPrY4xd3_uLayn6wTgeJp4E_whU',
   role: 'employee',
+  assigned: 'Arjun',
   status: 'confirmed',
   steps: 'steps one',
   appVersion: '2.0',
@@ -36,6 +37,7 @@ const userOne = {
 const userTwo = {
   profilePicture: 'https://media-exp1.licdn.com/dms/image/C4D03AQHU8lKhq5pTqw/profile-displayphoto-shrink_200_200/0/1600778354473?e=1617235200&v=beta&t=aPgNEhfMlA5MXQSQ_5iXL4fD1gY3w89EsGunzwwrVm8',
   role: 'employee',
+  assigned: 'Arjun',
   status: 'confirmed',
   steps: 'steps one',
   appVersion: '2.0',
@@ -69,6 +71,7 @@ const userTwo = {
 const userThree = {
   profilePicture: 'https://media-exp1.licdn.com/dms/image/C4D03AQHU8lKhq5pTqw/profile-displayphoto-shrink_200_200/0/1600778354473?e=1617235200&v=beta&t=aPgNEhfMlA5MXQSQ_5iXL4fD1gY3w89EsGunzwwrVm8',
   role: 'employee',
+  assigned: 'Arjun',
   status: 'confirmed',
   steps: 'steps one',
   appVersion: '2.0',
@@ -102,6 +105,7 @@ const userThree = {
 const userFour = {
   profilePicture: 'https://media-exp1.licdn.com/dms/image/C4D03AQHU8lKhq5pTqw/profile-displayphoto-shrink_200_200/0/1600778354473?e=1617235200&v=beta&t=aPgNEhfMlA5MXQSQ_5iXL4fD1gY3w89EsGunzwwrVm8',
   role: 'employee',
+  assigned: 'Arjun',
   status: 'confirmed',
   steps: 'steps one',
   appVersion: '2.0',
@@ -135,6 +139,7 @@ const userFour = {
 const userFive = {
   profilePicture: 'https://media-exp1.licdn.com/dms/image/C4D03AQHU8lKhq5pTqw/profile-displayphoto-shrink_200_200/0/1600778354473?e=1617235200&v=beta&t=aPgNEhfMlA5MXQSQ_5iXL4fD1gY3w89EsGunzwwrVm8',
   role: 'employee',
+  assigned: 'Arjun',
   status: 'confirmed',
   steps: 'steps one',
   appVersion: '2.0',

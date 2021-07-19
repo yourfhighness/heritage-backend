@@ -1,5 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const regionUnitMccname = sequelize.define('RegionUnitMccname', {
+    document: { type: DataTypes.STRING },
     pinCode: { type: DataTypes.STRING },
     unitCode: { type: DataTypes.STRING },
     mccCode: { type: DataTypes.STRING },

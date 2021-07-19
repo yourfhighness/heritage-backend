@@ -60,6 +60,7 @@ class AdminController {
         responseHelper.handleError(BAD_REQUEST, 'Mcc Name should have corresponding Unit Name');
         return responseHelper.response(res);
       }
+
       const data = await cattleHelper.saveData(req.body);
       if (data) {
         responseHelper.handleSuccess(CREATED, 'Data saved successfully', data);
@@ -83,6 +84,31 @@ class AdminController {
       }
 
       responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
+      return responseHelper.response(res);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
+  static async createRegion(req, res) {
+    try {
+      if (req.admin.regionName !== 'HYDERABAD' && req.admin.regionName !== req.body.regionName) {
+        responseHelper.handleError(BAD_REQUEST, `Region name ${req.body.regionName} does not belong in your region`);
+        return responseHelper.response(res);
+      }
+
+      let document;
+      if (req.files.document) {
+        document = await imageService(req.files.document);
+        if (document === 'Error' || document === undefined) {
+          responseHelper.handleError(BAD_REQUEST, 'Please check good internet and use correct type of files(jpg, png or pdf).');
+          return responseHelper.response(res);
+        }
+      }
+
+      const data = await adminHelper.createRegion(req.body, document);
+      responseHelper.handleSuccess(OK, 'Region saved successfully', data);
       return responseHelper.response(res);
     } catch (error) {
       responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
@@ -239,6 +265,27 @@ class AdminController {
     }
   }
 
+  static async viewAppointmentDetails(req, res) {
+    try {
+      const data = await adminHelper.appointmentExist('id', req.params.id);
+      if (!data) {
+        responseHelper.handleError(NOT_FOUND, `Appointment not found at the moment`);
+        return responseHelper.response(res);
+      }
+
+      if (data) {
+        responseHelper.handleSuccess(OK, 'Appointment viewed successfully', data);
+        return responseHelper.response(res);
+      }
+
+      responseHelper.handleError(SERVICE_UNAVAILABLE, 'Something wrong occured, please try again');
+      return responseHelper.response(res);
+    } catch (error) {
+      responseHelper.handleError(INTERNAL_SERVER_ERROR, error.toString());
+      return responseHelper.response(res);
+    }
+  }
+
   static async viewFarmersByStatus(req, res, next) {
     try {
       const { start, end, pages, skip, paginate } = await paginateHelper.paginateData(req.query);
@@ -386,10 +433,10 @@ class AdminController {
         return responseHelper.response(res);
       }
 
-      let data = await adminHelper.updateFarmerField(req.admin.regionName, req.params.id, req.body.role, 'role');
-      if (data[0] === 1) {
+      let data = await adminHelper.updateFarmerField(req.admin.regionName, req.params.id, req.body.assigned, 'assigned');
+      if (data) {
         data = await adminHelper.farmerExist('id', req.params.id);
-        responseHelper.handleSuccess(OK, `${user.role} updated successfully to ${req.body.role}`, data[0]);
+        responseHelper.handleSuccess(OK, `${req.body.assigned} assigned successfully to ${user.role} ${user.farmerName}`, data);
         return responseHelper.response(res);
       }
 

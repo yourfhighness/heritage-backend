@@ -2,6 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   const farmer = sequelize.define('Farmer', {
     profilePicture: { type: DataTypes.STRING(1000) },
     role: { type: DataTypes.STRING },
+    assigned: { type: DataTypes.STRING },
     status: { type: DataTypes.STRING },
     steps: { type: DataTypes.STRING },
     appVersion: { type: DataTypes.STRING },

@@ -1,7 +1,7 @@
 import Sequelize, { Op } from 'sequelize';
 import models from '../database/models';
 
-const { Admins, Doctor, Farmer, Cattle, Milking, Appointment, Medical, FarmerFeedback } = models;
+const { Admins, Doctor, Farmer, Cattle, Milking, Appointment, Medical, FarmerFeedback, RegionUnitMccname } = models;
 
 class AdminHelpers {
   static async adminExist(attribute, value) {
@@ -27,6 +27,34 @@ class AdminHelpers {
       ],
     });
 
+    return viewedData;
+  }
+
+  static async appointmentExist(attribute, value) {
+    const viewedData = await Appointment.findOne({
+      where: { [attribute]: value },
+      include: [
+        {
+          model: Farmer,
+          as: 'Farmer',
+        },
+        {
+          model: Cattle,
+          as: 'Cattle',
+
+          include: [
+            {
+              model: Milking,
+              as: 'Milking',
+            },
+          ],
+        },
+        {
+          model: Medical,
+          as: 'Medical',
+        },
+      ],
+    });
     return viewedData;
   }
 
@@ -256,18 +284,45 @@ class AdminHelpers {
     return undefined;
   }
 
+  static async createRegion(body, document) {
+    const data = await RegionUnitMccname.create({
+      document,
+      pinCode: body.pinCode,
+      unitCode: body.unitCode,
+      mccCode: body.mccCode,
+      mccMobile: body.mccMobile,
+      plateCode: body.plateCode,
+      regionName: body.regionName,
+      unitName: body.unitName,
+      mccName: body.mccName,
+      plateName: body.plateName,
+      stateName: body.stateName,
+      districtName: body.districtName,
+      mendalName: body.mendalName,
+      panchayatName: body.panchayatName,
+      villageName: body.villageName,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    return data;
+  }
+
   static async updateFarmerField(regionName, id, value, field) {
     if (regionName === 'HYDERABAD') {
       const updateData = await Farmer.update({ [field]: value }, { where: { id } });
-      return updateData;
+
+      if (updateData[0] === 1) return this.farmerExist('id', id);
+      return undefined;
     }
 
     const updateData = await Farmer.update({ [field]: value }, { where: { regionName, id } });
-    return updateData;
+    if (updateData[0] === 1) return this.farmerExist('id', id);
+    return undefined;
   }
 
   static async updateFarmerDetails(newbody, profilePicture, existbody) {
-    const updateFarmer = await Farmer.update({
+    const updateData = await Farmer.update({
       role: newbody.role || existbody.role,
       status: newbody.status || existbody.status,
       profilePicture: profilePicture || existbody.profilePicture,
@@ -295,11 +350,8 @@ class AdminHelpers {
       password: existbody.password,
     }, { where: { id: existbody.id } });
 
-    if (updateFarmer) {
-      const farmer = await this.farmerExist('id', existbody.id);
-      return farmer;
-    }
-    return null;
+    if (updateData[0] === 1) return this.farmerExist('id', existbody.id);
+    return undefined;
   }
 
   static async adminExportFarmersByStatusAndRegionName(regionName, value) {

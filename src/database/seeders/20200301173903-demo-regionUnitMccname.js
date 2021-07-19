@@ -1,4 +1,5 @@
 const data1 = {
+  document: null,
   pinCode: '111111',
   unitCode: '0120',
   mccCode: '0040040668',
